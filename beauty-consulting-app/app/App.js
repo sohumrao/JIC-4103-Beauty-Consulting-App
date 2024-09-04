@@ -7,6 +7,8 @@ import ClientDetails2 from './Pages/ClientDetails2';
 import ClientDetails3 from './Pages/ClientDetails3';
 import ClientDetailsComplete from './Pages/ClientDetailsComplete';
 import ProfilePage from './Pages/ProfilePage';
+import SignInPage from './Pages/SignInPage';
+import CreateAccountPage from './Pages/CreateAccountPage';
 
 const Stack = createNativeStackNavigator();
 
@@ -68,6 +70,8 @@ function App() {
     <UserContext.Provider value={userContext}>
     <NavigationContainer>
       <Stack.Navigator>
+        <Stack.Screen name="Sign In" component={SignInPage}/>
+        <Stack.Screen name="Create Account" component={CreateAccountPage}/>
         <Stack.Screen name="LandingPage" component={LandingPage} options={{ title: 'Welcome' }} />
         <Stack.Screen name="ClientDetails" component={ClientDetails} />
         <Stack.Screen name="ClientDetails2" component={ClientDetails2} />
