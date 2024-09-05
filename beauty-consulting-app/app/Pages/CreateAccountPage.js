@@ -74,9 +74,13 @@ const CreateAccountPage = () => {
                 return;
             }
             const res = await axios.post(apiUrl + ':5050/record/createAccount', req);
+            if (res.status == 409) {
+                console.error('Username already exists. Try another one or sign in to your existing account.');
+            }
             console.log('Account created: ', res.data);
         } catch (error) {
-            console.error('Error with API: ', error);
+            
+            console.error('Error with API: ', error.res.data.error);
         };
         navigation.navigate("LandingPage");
     }
