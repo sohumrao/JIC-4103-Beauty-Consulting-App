@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native';
 import { Link, useNavigation } from '@react-navigation/native';
+import axios from 'axios';
 
 const CreateAccountPage = () => {
-    const [emailAddress, setEmailAddress] = useState('');
+    const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const navigation = useNavigation();
 
@@ -59,7 +60,24 @@ const CreateAccountPage = () => {
         color: '#FF5252'
     }
 });
-    const handleCreateAccount = () => {
+
+    const handleCreateAccount = async () => {
+        req = {
+                username: username,
+                password: password
+        };
+        console.log(req.body);
+        try {
+            apiUrl = process.env.EXPO_PUBLIC_API_URL;
+            if (!apiUrl) {
+                console.error("API URL not defined");
+                return;
+            }
+            const res = await axios.post(apiUrl + ':5050/record/createAccount', req);
+            console.log('Account created: ', res.data);
+        } catch (error) {
+            console.error('Error with API: ', error);
+        };
         navigation.navigate("LandingPage");
     }
 
@@ -69,9 +87,9 @@ const CreateAccountPage = () => {
                 <Text style={styles.title}>Create Your Account</Text>
                 <TextInput
                     style={styles.input}
-                    placeholder="Email Address"
-                    value={emailAddress}
-                    onChangeText={setEmailAddress}
+                    placeholder="Username"
+                    value={username}
+                    onChangeText={setUsername}
                     keyboardType="email-address"
                     autoCapitalize="none"
                 />

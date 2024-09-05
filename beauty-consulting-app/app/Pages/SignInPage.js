@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-nativ
 import { Link, useNavigation } from '@react-navigation/native';
 
 const SignInPage = () => {
-    const [emailAddress, setEmailAddress] = useState('');
+    const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const navigation = useNavigation();
 
@@ -70,9 +70,9 @@ const SignInPage = () => {
                 <Text style={styles.title}>Sign In</Text>
                 <TextInput
                     style={styles.input}
-                    placeholder="Email Address"
-                    value={emailAddress}
-                    onChangeText={setEmailAddress}
+                    placeholder="Username"
+                    value={username}
+                    onChangeText={setUsername}
                     keyboardType="email-address"
                     autoCapitalize="none"
                 />

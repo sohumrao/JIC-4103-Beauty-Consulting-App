@@ -1,5 +1,5 @@
 import express from "express";
-import UserDB from "../models/model.js";
+import { UserDB, Account } from "../models/model.js";
 
 const router = express.Router();
 
@@ -30,7 +30,15 @@ router.post("/", async (req, res) => {
     }
 });
 
+router.post("/createAccount", async (req, res) => {
+    const newAccount = new Account({
+        username: req.body.username,
+        password: req.body.password
+    });
 
+    const savedAccount = await newAccount.save();
+    res.send(newAccount);
+})
 
 
 
