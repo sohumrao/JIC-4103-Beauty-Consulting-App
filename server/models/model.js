@@ -32,7 +32,19 @@ const userSchema = new mongoose.Schema({
     allergies: String,
 });
 
+const accountSchema = new mongoose.Schema({
+    username: {
+        type: String,
+        required: true
+    },
+    password: {
+        type: String,
+        required: true
+    }
+});
+
 // Creating a model based on the user schema
 const UserDB = mongoose.model('userdb', userSchema);
+const Account = mongoose.model('accounts', accountSchema);
 
-export default UserDB;
+export {Account, UserDB};

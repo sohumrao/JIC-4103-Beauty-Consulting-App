@@ -1,5 +1,5 @@
 import express from "express";
-import UserDB from "../models/model.js";
+import { UserDB, Account } from "../models/model.js";
 
 const router = express.Router();
 
@@ -30,7 +30,34 @@ router.post("/", async (req, res) => {
     }
 });
 
+router.post("/createAccount", async (req, res) => {
+    if (Account.find({username: req.body.username})) {
+        res.status(409).send("That username already exists! Try a different one.");
+        return;
+    }
 
+    const newAccount = new Account({
+        username: req.body.username,
+        password: req.body.password
+    });
+    
+
+    const savedAccount = await newAccount.save();
+    res.send(newAccount);
+})
+
+router.get("/signIn", async (req, res) => {
+    if (!Account.find({
+        username: req.body.username,
+        password: req.body.password
+    })) {
+        res.status(404).send('User with that username and password combination was not found.')
+    } else {
+        res.send(Account.find({
+            username: req.body.username
+        }));
+    }
+})
 
 
 
