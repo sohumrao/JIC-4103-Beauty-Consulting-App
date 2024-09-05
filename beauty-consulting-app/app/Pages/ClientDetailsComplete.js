@@ -10,6 +10,7 @@ import axios from 'axios';
 import ClientDetails from './ClientDetails';
 import ContinueButton from '../assets/components/ContinueButton';
 import { UserContext } from '../App';
+import ProfileImage from '../assets/components/ProfileImage';
 
 
 function ClientDetailsComplete() {
@@ -66,6 +67,7 @@ function ClientDetailsComplete() {
     return (
         <View style={styles.container}>
             <Text style={styles.title}>You're all set!</Text>
+            <ProfileImage/>
             <View style={styles.buttonContainer}>
                 <ContinueButton onPress={() => handleContinue()} />
             </View>
