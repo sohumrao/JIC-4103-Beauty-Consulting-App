@@ -14,7 +14,7 @@ const ProfileImage = () => {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
-      aspect: [4, 3],
+      aspect: [1, 1],
       quality: 1,
     });
 
@@ -26,7 +26,7 @@ const ProfileImage = () => {
   return (
     <View style={{ alignItems: 'center', justifyContent: 'center'}}>
       <Button title="Picture Test" onPress={pickImage} />
-      {imageUri && <Image source={{ uri: imageUri }} style={{ width: 200, height: 200 }} />}
+      {imageUri && <Image source={{ uri: imageUri }} style={{ width: 200, height: 200, borderRadius: 100, marginTop: 20 }} />}
     </View>
   );
 };
