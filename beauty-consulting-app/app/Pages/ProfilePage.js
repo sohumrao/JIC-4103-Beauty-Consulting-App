@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { UserContext } from '../App';
 
@@ -27,7 +27,17 @@ function ProfilePage() {
             paddingHorizontal: 20,
             paddingVertical: 20,
         },
+
+        button: {
+            backgroundColor: '#FF5252',
+            paddingVertical: 10,
+            borderRadius: 5,
+        }
     });
+
+    const profileView = () => {
+        navigation.navigate("ProfileView");
+    };
 
     return (
         <View style={styles.container}>
@@ -38,6 +48,9 @@ function ProfilePage() {
             <Text>Gender: {userContext.gender}</Text>
             <Text>Phone Number: {userContext.phoneNumber}</Text>
             <Text>Allergies: {userContext.allergies}</Text>
+            <TouchableOpacity style={styles.button} onPress={profileView}>
+                <Text> ProfileView </Text>
+            </TouchableOpacity>
         </View>
     );
 }

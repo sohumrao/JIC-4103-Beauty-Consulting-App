@@ -1,1 +1,8 @@
 .DS_Store
+beauty-consulting-app/node_modules
+server/node_modules
+beauty-consulting-app/android
+beauty-consulting-app/.expo
+server/config.env
+beauty-consulting-app/.env
+
