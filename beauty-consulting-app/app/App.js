@@ -9,6 +9,7 @@ import ClientDetailsComplete from './Pages/ClientDetailsComplete';
 import ProfilePage from './Pages/ProfilePage';
 import SignInPage from './Pages/SignInPage';
 import CreateAccountPage from './Pages/CreateAccountPage';
+import ProfileView from './Pages/ProfileView';
 
 const Stack = createNativeStackNavigator();
 
@@ -79,6 +80,7 @@ function App() {
         <Stack.Screen name="ClientDetails3" component={ClientDetails3} />
         <Stack.Screen name="ClientDetailsComplete" component={ClientDetailsComplete} />
         <Stack.Screen name="ProfilePage" component={ProfilePage} />
+        <Stack.Screen name="ProfileView" component={ProfileView} />
       </Stack.Navigator>
     </NavigationContainer>
     </UserContext.Provider>
