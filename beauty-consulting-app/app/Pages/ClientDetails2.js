@@ -39,6 +39,7 @@ function ClientDetails2() {
 
     const handleContinue = () => {
     userContext.updateUserContext({
+      username: userContext.username,
       name: userContext.name,
       age: userContext.age,
       gender: userContext.gender,

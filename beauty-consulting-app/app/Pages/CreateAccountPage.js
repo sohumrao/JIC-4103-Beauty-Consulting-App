@@ -1,12 +1,15 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native';
 import { Link, useNavigation } from '@react-navigation/native';
 import axios from 'axios';
+import { UserContext } from '../App';
 
 const CreateAccountPage = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const navigation = useNavigation();
+
+    const userContext = useContext(UserContext);
 
     const styles = StyleSheet.create({
     container: {
@@ -74,14 +77,23 @@ const CreateAccountPage = () => {
                 return;
             }
             const res = await axios.post(apiUrl + ':5050/record/createAccount', req);
-            if (res.status == 409) {
-                console.error('Username already exists. Try another one or sign in to your existing account.');
-            }
             console.log('Account created: ', res.data);
         } catch (error) {
-            
-            console.error('Error with API: ', error.res.data.error);
+            console.error('Error with Creation: ', error.response.data);
+            return;
         };
+        userContext.updateUserContext({
+            username: username,
+            name: userContext.name,
+            age: userContext.age,
+            gender: userContext.gender,
+            phoneNumber: userContext.phoneNumber,
+            email: userContext.email,
+            hairDetails: userContext.hairDetails,
+            allergies: userContext.allergies,
+            concerns: userContext.concerns,
+            updateUserContext: userContext.updateUserContext
+        });
         navigation.navigate("LandingPage");
     }
 

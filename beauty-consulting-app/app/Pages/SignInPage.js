@@ -1,11 +1,15 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native';
 import { Link, useNavigation } from '@react-navigation/native';
+import axios from 'axios';
+import { UserContext } from '../App';
 
 const SignInPage = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const navigation = useNavigation();
+
+    const userContext = useContext(UserContext);
 
     const styles = StyleSheet.create({
     container: {
@@ -60,7 +64,36 @@ const SignInPage = () => {
     }
 });
 
-    const handleSignIn = () => {
+    const handleSignIn = async () => {
+        req = {
+                username: username,
+                password: password
+        };
+        console.log(req.body);
+        try {
+            apiUrl = process.env.EXPO_PUBLIC_API_URL;
+            if (!apiUrl) {
+                console.error("API URL not defined");
+                return;
+            }
+            const res = await axios.post(apiUrl + ':5050/record/signIn', req);
+            console.log("Sign in successful: " + res.data.username);
+        } catch (error) {
+            console.error('Error with Sign In: ', error.response.data);
+            return;
+        };
+        userContext.updateUserContext({
+            username: username,
+            name: userContext.name,
+            age: userContext.age,
+            gender: userContext.gender,
+            phoneNumber: userContext.phoneNumber,
+            email: userContext.email,
+            hairDetails: userContext.hairDetails,
+            allergies: userContext.allergies,
+            concerns: userContext.concerns,
+            updateUserContext: userContext.updateUserContext
+        });
         navigation.navigate("ProfilePage");
     };
 

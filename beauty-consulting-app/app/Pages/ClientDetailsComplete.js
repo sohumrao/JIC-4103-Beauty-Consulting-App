@@ -20,6 +20,7 @@ function ClientDetailsComplete() {
 
     const handleContinue = async () => {
         req = {
+                username: userContext.username,
                 name: userContext.name,
                 email: userContext.email, 
                 gender: userContext.gender,

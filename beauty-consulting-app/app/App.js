@@ -13,6 +13,7 @@ import CreateAccountPage from './Pages/CreateAccountPage';
 const Stack = createNativeStackNavigator();
 
 const UserContext = React.createContext({
+  username: 'not signed in',
   name: 'No Name', 
   age: 0,
   gender: 'male',

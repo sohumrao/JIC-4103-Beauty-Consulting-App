@@ -28,6 +28,7 @@ const ClientDetails = () => {
   // Updating context values when continue button is hit
   const handleContinue = () => {
     userContext.updateUserContext({
+      username: userContext.username,
       name: name,
       age: age,
       gender: gender,

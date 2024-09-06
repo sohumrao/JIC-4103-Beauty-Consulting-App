@@ -13,6 +13,7 @@ router.post("/", async (req, res) => {
 
         // Create a new user object with request data
         const newUser = new UserDB({
+            username: req.body.username,
             name: req.body.name,
             email: req.body.email,
             gender: req.body.gender,
@@ -31,7 +32,8 @@ router.post("/", async (req, res) => {
 });
 
 router.post("/createAccount", async (req, res) => {
-    if (Account.find({username: req.body.username})) {
+    console.log(req.body);
+    if (await Account.exists({username: { $eq: req.body.username }})) {
         res.status(409).send("That username already exists! Try a different one.");
         return;
     }
@@ -46,17 +48,16 @@ router.post("/createAccount", async (req, res) => {
     res.send(newAccount);
 })
 
-router.get("/signIn", async (req, res) => {
-    if (!Account.find({
-        username: req.body.username,
-        password: req.body.password
+router.post("/signIn", async (req, res) => {
+    console.log(req.body);
+    if (!await Account.exists({
+        username: {$eq: req.body.username},
+        password: {$eq: req.body.password}
     })) {
         res.status(404).send('User with that username and password combination was not found.')
-    } else {
-        res.send(Account.find({
-            username: req.body.username
-        }));
+        return;
     }
+    res.send({username: req.body.username});
 })
 
 

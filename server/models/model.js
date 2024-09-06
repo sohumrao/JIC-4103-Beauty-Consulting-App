@@ -17,6 +17,7 @@ const HairDetailsSchema = new mongoose.Schema({
 
 
 const userSchema = new mongoose.Schema({
+    username: String,
     name: {
         type: String,
         required: true
@@ -39,7 +40,6 @@ const accountSchema = new mongoose.Schema({
     },
     password: {
         type: String,
-        required: true
     }
 });
 
