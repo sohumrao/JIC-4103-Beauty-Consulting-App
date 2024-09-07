@@ -43,8 +43,30 @@ const accountSchema = new mongoose.Schema({
     }
 });
 
+const resetPasswordSchema = new mongoose.Schema({
+    email: {
+        type: String,
+        required: true
+    },
+    //TODO: connect tables with IDs
+    // userId: {
+    //     type: Schema.Types.ObjectId,
+    //     required: true,
+    //     ref: "user",
+    //   },
+    token: {
+        type: String,
+        required: true,
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now,
+        expires: 60*60,// seconds
+    },
+});
 // Creating a model based on the user schema
 const UserDB = mongoose.model('userdb', userSchema);
 const Account = mongoose.model('accounts', accountSchema);
+const ResetPassword = mongoose.model('resetpassword', resetPasswordSchema);
 
-export {Account, UserDB};
+export {Account, UserDB, ResetPassword};
