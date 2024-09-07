@@ -100,7 +100,6 @@ const CreateAccountPage = () => {
 
     return (
         <SignupBackground>
-        <View style={styles.container}>
             <View style={styles.box}>
                 <Text style={styles.title}>Create Your Account</Text>
                 <TextInput
@@ -125,7 +124,6 @@ const CreateAccountPage = () => {
                 <Text style={styles.needAccountText}>Already have an account?</Text>
                 <Text style={styles.signInLink} onPress={() => {navigation.navigate("Sign In")}}>Sign in.</Text>
             </View>
-        </View>
         </SignupBackground>
     );
 }

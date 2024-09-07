@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { UserContext } from '../App';
+import SignupBackground from '../assets/components/SignupBackground';
 
 
 function ProfilePage() {
@@ -40,7 +41,8 @@ function ProfilePage() {
     };
 
     return (
-        <View style={styles.container}>
+        <SignupBackground>
+        <View style={styles.box}>
             <Text>API Request Successful! User added to database</Text>
             <Text>Name: {userContext.name}</Text>
             <Text>Age: {userContext.age}</Text>
@@ -52,6 +54,7 @@ function ProfilePage() {
                 <Text> ProfileView </Text>
             </TouchableOpacity>
         </View>
+        </SignupBackground>
     );
 }
 
