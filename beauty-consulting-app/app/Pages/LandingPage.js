@@ -9,6 +9,7 @@ import { Image } from 'react-native';
 import ClientDetails from './ClientDetails';
 import ContinueButton from '../assets/components/ContinueButton';
 import LandingPageImg from '../assets/images/LandingPageImg.png';
+import SignupBackground from '../assets/components/SignupBackground';
 
 function LandingPage() {
   const navigation = useNavigation();
@@ -48,7 +49,8 @@ function LandingPage() {
   });
 
   return (
-    <View style={styles.container}>
+    <SignupBackground>
+      <View style={styles.box}>
       <View style={styles.imageContainer}>
         <Image 
           source={LandingPageImg} 
@@ -59,7 +61,8 @@ function LandingPage() {
       <View style={styles.buttonContainer}>
         <ContinueButton onPress={() => navigation.navigate('ClientDetails')} />
       </View>
-    </View>
+      </View>
+    </SignupBackground>
   );
 }
 

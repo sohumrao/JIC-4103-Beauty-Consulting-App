@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-nativ
 import { Link, useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 import { UserContext } from '../App';
+import SignupBackground from '../assets/components/SignupBackground';
 
 const SignInPage = () => {
     const [username, setUsername] = useState('');
@@ -98,7 +99,7 @@ const SignInPage = () => {
     };
 
     return (
-        <View style={styles.container}>
+        <SignupBackground>
             <View style={styles.box}>
                 <Text style={styles.title}>Sign In</Text>
                 <TextInput
@@ -123,7 +124,7 @@ const SignInPage = () => {
                 <Text style={styles.needAccountText}>Dont have an account?</Text>
                 <Text style={styles.createAccountLink} onPress={() => {navigation.navigate("Create Account") }}>Create one.</Text>
             </View>
-        </View>
+        </SignupBackground>
     );
 }
 

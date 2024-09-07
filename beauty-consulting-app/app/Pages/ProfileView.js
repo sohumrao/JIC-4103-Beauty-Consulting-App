@@ -45,8 +45,7 @@ const ProfileView = () => {
     };
 
     return (
-        //a bunch of placeholders rn
-       <View style={styles.container}>
+        <View style={styles.container}>
             <TextInput 
                 style={styles.input}
                 value={"user id"} //should display user id
