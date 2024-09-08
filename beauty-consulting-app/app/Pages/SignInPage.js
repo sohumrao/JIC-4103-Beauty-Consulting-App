@@ -123,6 +123,7 @@ const SignInPage = () => {
                 </TouchableOpacity>
                 <Text style={styles.needAccountText}>Dont have an account?</Text>
                 <Text style={styles.createAccountLink} onPress={() => {navigation.navigate("Create Account") }}>Create one.</Text>
+                <Text style={styles.createAccountLink} onPress={() => {navigation.navigate("Forgot Password") }}>Forgot Password?</Text>
             </View>
         </SignupBackground>
     );

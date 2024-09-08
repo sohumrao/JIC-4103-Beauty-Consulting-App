@@ -10,6 +10,7 @@ import ProfilePage from './Pages/ProfilePage';
 import SignInPage from './Pages/SignInPage';
 import CreateAccountPage from './Pages/CreateAccountPage';
 import ProfileView from './Pages/ProfileView';
+import ForgotPasswordPage  from './Pages/ForgotPasswordPage';
 
 const Stack = createNativeStackNavigator();
 
@@ -81,6 +82,7 @@ function App() {
         <Stack.Screen name="ClientDetailsComplete" component={ClientDetailsComplete} />
         <Stack.Screen name="ProfilePage" component={ProfilePage} />
         <Stack.Screen name="ProfileView" component={ProfileView} />
+        <Stack.Screen name="Forgot Password" component={ForgotPasswordPage}/>
       </Stack.Navigator>
     </NavigationContainer>
     </UserContext.Provider>
