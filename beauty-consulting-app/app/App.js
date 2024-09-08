@@ -10,6 +10,7 @@ import ProfilePage from './Pages/ProfilePage';
 import SignInPage from './Pages/SignInPage';
 import CreateAccountPage from './Pages/CreateAccountPage';
 import ProfileView from './Pages/ProfileView';
+import PhotoUploadPage from './Pages/PhotoUploadPage';
 
 const Stack = createNativeStackNavigator();
 
@@ -80,6 +81,7 @@ function App() {
         <Stack.Screen name="ClientDetailsComplete" component={ClientDetailsComplete} />
         <Stack.Screen name="ProfilePage" component={ProfilePage} />
         <Stack.Screen name="ProfileView" component={ProfileView} />
+        <Stack.Screen name="PhotoUploadPage" component={PhotoUploadPage} />
       </Stack.Navigator>
     </NavigationContainer>
     </UserContext.Provider>
