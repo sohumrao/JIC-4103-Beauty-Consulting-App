@@ -8,7 +8,7 @@ This product is a mobile app for beauty consultations. The current product is a 
 * Photo upload interface and storage
 * Signup and Create Account screens
 
-### Bug Fixes{{}}
+### Bug Fixes
 * Added background image to signup screens
 
 ### Known Issues
