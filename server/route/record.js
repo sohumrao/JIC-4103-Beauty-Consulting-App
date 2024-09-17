@@ -1,11 +1,12 @@
 import express from "express";
-import { UserDB, Account, ResetPassword } from "../models/model.js";
-import { PhotoDB } from "../models/photoModel.js";
+import { UserDB, Account, ResetPassword } from "../model/model.js";
+import { PhotoDB } from "../model/photoModel.js";
 import multer from "multer";
 import crypto from "crypto"
 import nodemailer from "nodemailer"
 
-const router = express.Router();
+
+//const router = express.Router();
 
 // Create new user
 router.post("/", async (req, res) => {
@@ -127,10 +128,6 @@ router.post("/emailResetPasswordLink", async (req, res) => {
     });
 })
 
-router.post("/test", async (req, res) => {
-    console.log(req.body);
-    res.send(req.body);
-})
 
 
 // Configure Multer to handle file uploads in memory
@@ -233,4 +230,4 @@ router.delete("/delete/:id", async (req, res) => {
 });
 
 
-export default router;
+//export default router;
