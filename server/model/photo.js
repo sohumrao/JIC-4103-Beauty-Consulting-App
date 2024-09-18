@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 
+// Defining the schema for photos
 const PhotoSchema = new mongoose.Schema({
     username: {
         type: String,

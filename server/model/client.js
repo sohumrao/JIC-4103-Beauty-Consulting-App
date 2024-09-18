@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-// Defining the schema for clients (subject to change)
+// Defining the schema for clients
 const HairDetailsSchema = new mongoose.Schema({
         Natural: Boolean,
         Relaxed: Boolean,

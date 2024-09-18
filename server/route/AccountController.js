@@ -5,6 +5,14 @@ import { Account, ResetPassword } from "../model/account.js";
 import crypto from "crypto"
 import nodemailer from "nodemailer"
 
+/**
+ * This router handles...
+ * 
+ * 
+ * Dependencies:
+ *    - Mongoose Models: Client and Photo schemas for database interaction.
+ */
+
 const router = express.Router();
 
 router.post("/createAccount", async (req, res) => {
