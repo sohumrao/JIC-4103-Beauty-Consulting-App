@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 
+// Defining the schema for photos
 const PhotoSchema = new mongoose.Schema({
     username: {
         type: String,
@@ -19,6 +20,6 @@ const PhotoSchema = new mongoose.Schema({
     }
 });
 
-const PhotoDB = mongoose.model('PhotoDB', PhotoSchema);
+const Photo = mongoose.model('Photo', PhotoSchema);
 
-export { PhotoDB };
+export { Photo };

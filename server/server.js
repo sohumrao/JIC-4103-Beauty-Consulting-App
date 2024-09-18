@@ -1,18 +1,26 @@
 import express from "express";
 import cors from "cors";
-import records from "./routes/record.js";
 import mongoose from "mongoose";
+
 import connectDB from "./db/connection.js";
+import stylistController from "./route/StylistController.js";
+import accountController from "./route/AccountController.js";
+import clientController from "./route/ClientController.js";
 
 const PORT = process.env.PORT || 5050;
 const app = express();
-connectDB();
 
+// Middleware setup
+connectDB();
 app.use(cors());
 app.use(express.json());
-app.use("/record", records);
 
-// connect to MongoDB
+// Route Mounting
+app.use("/client", clientController);
+app.use("/stylist", stylistController);
+app.use("/account", accountController);
+
+// MongoDB Connection
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 db.once('open', function() {
