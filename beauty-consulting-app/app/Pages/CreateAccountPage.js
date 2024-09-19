@@ -77,7 +77,7 @@ const CreateAccountPage = () => {
                 console.error("API URL not defined");
                 return;
             }
-            const res = await axios.post(apiUrl + ':5050/record/createAccount', req);
+            const res = await axios.post(apiUrl + ':5050/account/createAccount', req);
             console.log('Account created: ', res.data);
         } catch (error) {
             console.error('Error with Creation: ', error.response.data);

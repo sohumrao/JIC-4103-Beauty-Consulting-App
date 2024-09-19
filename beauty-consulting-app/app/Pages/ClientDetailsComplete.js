@@ -36,7 +36,7 @@ function ClientDetailsComplete() {
                 console.error("API URL not defined");
                 return;
             }
-            const res = await axios.post(apiUrl + ':5050/record/', req);
+            const res = await axios.post(apiUrl + ':5050/client/', req);
             console.log('User created: ', res.data);
         } catch (error) {
             console.error('Error with API: ', error);

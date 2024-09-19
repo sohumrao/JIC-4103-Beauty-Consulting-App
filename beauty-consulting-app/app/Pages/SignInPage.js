@@ -77,7 +77,7 @@ const SignInPage = () => {
                 console.error("API URL not defined");
                 return;
             }
-            const res = await axios.post(apiUrl + ':5050/record/signIn', req);
+            const res = await axios.post(apiUrl + ':5050/account/signIn', req);
             console.log("Sign in successful: " + res.data.username);
         } catch (error) {
             console.error('Error with Sign In: ', error.response.data);
