@@ -2561,6 +2561,7 @@
     "axios" "^1.6.8"
     "beauty-consulting-app" "file:"
     "expo" "^51.0.32"
+    "expo-image-picker" "^15.0.7"
     "expo-status-bar" "~1.11.1"
     "react" "18.2.0"
     "react-dom" "^18.2.0"
