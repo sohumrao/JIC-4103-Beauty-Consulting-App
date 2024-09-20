@@ -4,7 +4,7 @@ import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 import { UserContext } from '../App';
 import SignupBackground from '../assets/components/SignupBackground';
-import globalStyles from '../GlobalStyles';
+import globalStyles from '../assets/GlobalStyles';
 
 const SignInPage = () => {
     const [username, setUsername] = useState('');
