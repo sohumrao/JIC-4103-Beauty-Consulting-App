@@ -5918,10 +5918,10 @@
   "resolved" "https://registry.npmjs.org/react-is/-/react-is-18.2.0.tgz"
   "version" "18.2.0"
 
-"react-native-paper@^5.12.3":
-  "integrity" "sha512-nH1e1pGPE/aOE5YR2GRX7CfMHFA9cAfrAfgCtwL4amJPDZCoVjc5yt2VDiUE1rT+JUfk0qdICMP3UggxvjMgug=="
-  "resolved" "https://registry.npmjs.org/react-native-paper/-/react-native-paper-5.12.3.tgz"
-  "version" "5.12.3"
+"react-native-paper@^5.12.5":
+  "integrity" "sha512-Qpqd1g9PClmjGj/Dkr1htAwt8cTZ3SCHVmhttxRuG/QML7KzHm5ArLNgR7vz5dW1EwJqTmyl/3gd6gnrtw90mw=="
+  "resolved" "https://registry.npmjs.org/react-native-paper/-/react-native-paper-5.12.5.tgz"
+  "version" "5.12.5"
   dependencies:
     "@callstack/react-theme-provider" "^3.0.9"
     "color" "^3.1.2"
