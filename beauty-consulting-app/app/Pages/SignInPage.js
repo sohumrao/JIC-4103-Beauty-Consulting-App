@@ -26,7 +26,7 @@ const SignInPage = () => {
                 return;
             }
             const res = await axios.post(apiUrl + ':5050/account/signIn', req);
-            console.log("Sign in successful: " + res.data.username);
+            console.log("Sign in successful: " + res.data);
         } catch (error) {
             console.error('Error with Sign In: ', error.response.data);
             return;

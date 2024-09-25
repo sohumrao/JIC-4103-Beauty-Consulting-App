@@ -16,32 +16,49 @@ import nodemailer from "nodemailer"
 const router = express.Router();
 
 router.post("/createAccount", async (req, res) => {
-    console.log(req.body);
-    if (await Account.exists({username: { $eq: req.body.username }})) {
-        res.status(409).send("That username already exists! Try a different one.");
+
+    // Check if username/password are blank or contain spaces. Those are bad!
+    if (req.body.username == '' || req.body.password == '') {
+        res.status(404).send('Username and password are required fields.')
+        return;
+    }
+    else if (req.body.username.includes(' ') || req.body.password.includes(' ')) {
+        res.status(404).send('Username and password cannot contain spaces.')
         return;
     }
 
-    const newAccount = new Account({
-        username: req.body.username,
-        password: req.body.password
-    });
-    
+    // Check if account with this username exists
+    if (await Account.exists({username: { $eq: req.body.username }})) {
+        res.status(409).send("That username already exists! Try a different one or sign in to your account.");
+        return;
+    }
 
+    const newAccount = new Account();
+
+    // Hash the password for the new user before storing in the database
+    newAccount.username = req.body.username;
+    newAccount.createHashedPassword(req.body.password);
+    
+    // Save account to database
     const savedAccount = await newAccount.save();
     res.send(newAccount);
 })
 
 router.post("/signIn", async (req, res) => {
-    console.log(req.body);
-    if (!await Account.exists({
-        username: {$eq: req.body.username},
-        password: {$eq: req.body.password}
-    })) {
-        res.status(404).send('User with that username and password combination was not found.')
+    var account =  await Account.findOne({username: { $eq: req.body.username }})
+    // Send response if account doesn't exist
+    if (account == null) {
+        res.status(409).send('Account with that username does not exist.');
         return;
+    } else {
+        // Check password from request against hashed password in database
+        if (account.validateHashedPassword(req.body.password)) {
+            res.status(200).send('Signed in successfully!');
+        } else {
+            res.status(400).send('Wrong password for that username. Try again.');
+            return;
+        }
     }
-    res.send({username: req.body.username});
 })
 
 router.post("/emailResetPasswordLink", async (req, res) => {
