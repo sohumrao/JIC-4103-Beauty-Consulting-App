@@ -18,7 +18,7 @@ const SignInPage = () => {
             username: username,
             password: password
         };
-        console.log(req.body);
+        console.log(req);
         try {
             const apiUrl = process.env.EXPO_PUBLIC_API_URL;
             if (!apiUrl) {
@@ -57,6 +57,7 @@ const SignInPage = () => {
                     onChangeText={setUsername}
                     keyboardType="email-address"
                     autoCapitalize="none"
+                    autoCorrect ='off'
                 />
                 <TextInput
                     style={globalStyles.input}
@@ -65,6 +66,7 @@ const SignInPage = () => {
                     onChangeText={setPassword}
                     secureTextEntry
                     autoCapitalize="none"
+                    autoCorrect = 'off'
                 />
                 <TouchableOpacity style={globalStyles.button} onPress={handleSignIn}>
                     <Text style={globalStyles.buttonText}>Sign In</Text>
