@@ -1,66 +1,31 @@
-import React, { useContext, useState } from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native';
-import { Link, useNavigation } from '@react-navigation/native';
-import { UserContext } from '../App';
+import React, { useState } from 'react';
+import { View, TextInput, TouchableOpacity, Text } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import globalStyles from '../assets/GlobalStyles';
 
 const ProfileView = () => {
-    //const userContext = useContext(UserContext);
-    const  [isEdit, setIsEdit] = useState(false);
-
-    const styles = StyleSheet.create({
-        container: {
-            justifyContent: 'center',
-            alignItems: 'center',
-            backgroundColor: 'fff'
-        },
-
-        input: {
-            height: 40,
-            width: 120,
-            bordercolor: '#ccc',
-            borderWidth: 1,
-            borderRadius: 5,
-            paddingHorizontal: 10,
-            marginBottom: 15,
-            marginRight: 10,
-            color: "000",
-        },
-
-        button: {
-            height: 40,
-            justifyContent: 'center',
-            backgroundColor: "#FF5252",
-            borderRadius: 10,
-        },
-
-        buttonText: {
-            color: '#fff',
-            textAlign: 'center',
-            fontWeight: 'bold',
-        },
-    });
+    const [isEdit, setIsEdit] = useState(false);
 
     const handleEdit = () => {
         setIsEdit(!isEdit);
     };
 
     return (
-        <View style={styles.container}>
+        <View style={globalStyles.container}>
             <TextInput 
-                style={styles.input}
-                value={"user id"} //should display user id
-                // add on change text handling
+                style={globalStyles.input}
+                value={"user id"} // should display user id
                 editable={isEdit}
                 keyboardType='email-address'
                 autoCapitalize='none'
             />
             <TextInput
-                style={styles.input}
+                style={globalStyles.input}
                 value={"this is proof of concept"}
                 editable={isEdit}
             />
-            <TouchableOpacity style={styles.button} onPress={handleEdit}>
-                <Text style={styles.buttonText}>{isEdit ? 'Update' : 'Edit'}</Text>
+            <TouchableOpacity style={globalStyles.button} onPress={handleEdit}>
+                <Text style={globalStyles.buttonText}>{isEdit ? 'Update' : 'Edit'}</Text>
             </TouchableOpacity>
         </View>
     );
