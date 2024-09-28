@@ -4,6 +4,7 @@ import { Link, useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 import { UserContext } from '../App';
 import SignupBackground from '../assets/components/SignupBackground';
+import globalStyles from '../assets/GlobalStyles';
 
 const CreateAccountPage = () => {
     const [username, setUsername] = useState('');
@@ -35,6 +36,7 @@ const CreateAccountPage = () => {
         fontWeight: 'bold',
         marginBottom: 20,
         textAlign: 'center',
+        color: '#FFF',
     },
     input: {
         height: 40,
@@ -101,17 +103,19 @@ const CreateAccountPage = () => {
     return (
         <SignupBackground>
             <View style={styles.box}>
-                <Text style={styles.title}>Create Your Account</Text>
+                <Text style={globalStyles.title}>Create Your Account</Text>
+                <Text style={globalStyles.linkText}>Username</Text>
                 <TextInput
-                    style={styles.input}
+                    style={globalStyles.input}
                     placeholder="Username"
                     value={username}
                     onChangeText={setUsername}
                     keyboardType="email-address"
                     autoCapitalize="none"
                 />
+                <Text style={globalStyles.linkText}>Password</Text>
                 <TextInput
-                    style={styles.input}
+                    style={globalStyles.input}
                     placeholder="Password"
                     value={password}
                     onChangeText={setPassword}
