@@ -104,4 +104,41 @@ router.get("/:username/photo", async (req, res) => {
     }
 });
 
+// Update user
+router.put("/:username", async (req, res) => {
+    try {
+        // Find the user by username and update their info
+        const updatedUser = await Client.findOneAndUpdate(
+            { username: req.params.username },
+            { $set: req.body }, // Update the user with the new data from the request body
+            { new: true } // Return the updated document
+        );
+
+        if (!updatedUser) {
+            return res.status(404).send({ message: "User not found." });
+        }
+
+        res.send(updatedUser); // Send the updated user data back as a response
+    } catch (err) {
+        res.status(500).send({ message: err.message || "Some error occurred while updating the user." });
+    }
+});
+
+// Delete user
+router.delete("/:username", async (req, res) => {
+    try {
+        // Find the user by username and delete them
+        const deletedUser = await Client.findOneAndDelete({ username: req.params.username });
+
+        if (!deletedUser) {
+            return res.status(404).send({ message: "User not found." });
+        }
+
+        res.send({ message: "User deleted successfully." });
+    } catch (err) {
+        res.status(500).send({ message: err.message || "Some error occurred while deleting the user." });
+    }
+});
+
+
 export default router;
