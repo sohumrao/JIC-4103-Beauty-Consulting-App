@@ -1,4 +1,6 @@
-import { StyleSheet } from 'react-native';
+import { 
+    StyleSheet, 
+} from 'react-native';
 
 const globalStyles = StyleSheet.create({
     container: {
@@ -49,6 +51,9 @@ const globalStyles = StyleSheet.create({
         color: '#FF5252',
         textAlign: 'center',
         marginTop: 10,
+    },
+    inputHeaderText: {
+        color: '#FF5252',
     },
     promptText: {
         textAlign: 'center',

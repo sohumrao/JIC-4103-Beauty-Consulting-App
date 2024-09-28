@@ -42,6 +42,7 @@ function LandingPage() {
       fontWeight: 'bold',
       textAlign: 'center',
       marginTop: -48, 
+      color: '#fff',
     },
     buttonContainer: {
       width: '100%',
@@ -58,7 +59,7 @@ function LandingPage() {
           style={styles.circleImage}
         />
       </View>
-      <Text style={styles.title}>Sign up as a client</Text>
+      <Text style={styles.title}>Sign Up as a Client</Text>
       <View style={styles.buttonContainer}>
         <ContinueButton onPress={() => navigation.navigate('ClientDetails')} />
       </View>

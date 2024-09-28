@@ -12,7 +12,6 @@ const CreateAccountPage = () => {
     const navigation = useNavigation();
 
     const userContext = useContext(UserContext);
-
     const handleCreateAccount = async () => {
         const req = {
             username: username,
@@ -48,8 +47,9 @@ const CreateAccountPage = () => {
 
     return (
         <SignupBackground>
-            <View style={globalStyles.box}>
+            <View style={styles.box}>
                 <Text style={globalStyles.title}>Create Your Account</Text>
+                <Text style={globalStyles.linkText}>Username</Text>
                 <TextInput
                     style={globalStyles.input}
                     placeholder="Username"
@@ -58,6 +58,7 @@ const CreateAccountPage = () => {
                     keyboardType="email-address"
                     autoCapitalize="none"
                 />
+                <Text style={globalStyles.linkText}>Password</Text>
                 <TextInput
                     style={globalStyles.input}
                     placeholder="Password"
