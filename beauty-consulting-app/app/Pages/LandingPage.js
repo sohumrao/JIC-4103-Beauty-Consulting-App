@@ -7,6 +7,7 @@ import { useNavigation } from '@react-navigation/native';
 import { Image } from 'react-native';
 
 import ClientDetails from './ClientDetails';
+import StylistDetails from './StylistDetails';
 import ContinueButton from '../assets/components/ContinueButton';
 import LandingPageImg from '../assets/images/LandingPageImg.png';
 import SignupBackground from '../assets/components/SignupBackground';
@@ -60,6 +61,10 @@ function LandingPage() {
       <Text style={styles.title}>Sign up as a client</Text>
       <View style={styles.buttonContainer}>
         <ContinueButton onPress={() => navigation.navigate('ClientDetails')} />
+      </View>
+      <Text style={styles.title}>Sign up as a Stylist</Text>
+      <View style={styles.buttonContainer}>
+        <ContinueButton onPress={() => navigation.navigate('StylistDetails')} />
       </View>
     </SignupBackground>
   );
