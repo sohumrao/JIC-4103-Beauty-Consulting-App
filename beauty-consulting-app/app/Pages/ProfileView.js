@@ -8,7 +8,9 @@ import KeyboardAvoidingInput from '../assets/components/KeyboardAvoidingInput';
 import  axios  from 'axios';
 
 const ProfileView = () => {
-    const userContext = useContext(UserContext);
+    const navigation = useNavigation();
+
+    var userContext = useContext(UserContext);
     var [name ,setName] = useState('');
     var [age, setAge] = useState('');
     var [gender, setGender] = useState('');
@@ -19,17 +21,6 @@ const ProfileView = () => {
 
     const handleEdit = async () => {
         if (isEdit) {
-            // prevent clearing data if no edits are made
-            /*
-            name = name == '' ? userContext.name : name;
-            gender = gender == '' ? userContext.gender : gender;
-            concerns = concerns == '' ? userContext.concerns : concerns;
-            allergies = allergies == '' ? userContext.allergies : allergies;
-            age = userContext.age;
-            phoneNumber = userContext.phoneNumber;
-            */
-
-            // send request
             req = {
                 username: userContext.username,
                 name: name,
@@ -41,14 +32,39 @@ const ProfileView = () => {
                 allergies: allergies,
                 concerns: concerns,
             };
+            try {
+                const apiURL = process.env.EXPO_PUBLIC_API_URL + ':5050/client/' + userContext.username;
+                if (!apiURL) {
+                    console.error("apiURL not defined");
+                    return;
+                } 
+                const res = await axios.put(apiURL, req);
+                console.log("update successful: ", res.data);
+            } catch (error) {
+                console.error("Error with request: ", error);
+            }
 
-            // backend call goes here
+            // update user context for rest of session
+            userContext = userContext.updateUserContext(req)
         }
         setIsEdit(!isEdit);
     };
 
     const deleteAccount = async () => {
-        //handle
+        // TODO: update with a separate flow for password validation after backend rework
+
+        try {
+            const apiURL = process.env.EXPO_PUBLIC_API_URL + ':5050/client/' + userContext.username;
+            if (!apiURL) {
+                console.error("apiURL not defined");
+            }
+            const res = axios.delete(apiURL, userContext)
+            console.log(res.message);
+
+        } catch (error) {
+            console.error("Error with request: ", error);
+        }
+        navigation.navigate("SignInPage");
     }
 
     const styles = StyleSheet.create({
