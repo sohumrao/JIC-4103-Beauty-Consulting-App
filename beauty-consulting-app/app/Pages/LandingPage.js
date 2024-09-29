@@ -59,13 +59,13 @@ function LandingPage() {
           style={styles.circleImage}
         />
       </View>
-      <Text style={styles.title}>Sign Up as a Client</Text>
+      <View>
       <View style={styles.buttonContainer}>
-        <ContinueButton onPress={() => navigation.navigate('ClientDetails')} />
+        <ContinueButton title='Sign up as a Client' onPress={() => navigation.navigate('ClientDetails')} />
       </View>
-      <Text style={styles.title}>Sign up as a Stylist</Text>
       <View style={styles.buttonContainer}>
-        <ContinueButton onPress={() => navigation.navigate('Stylist Details')} />
+        <ContinueButton title='Sign up as a stylist' onPress={() => navigation.navigate('Stylist Details')} />
+      </View>
       </View>
     </SignupBackground>
   );

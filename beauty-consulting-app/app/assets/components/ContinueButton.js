@@ -30,10 +30,10 @@ const styles = StyleSheet.create({
     }
   });
 
-  const ContinueButton = ({ onPress }) => {
+  const ContinueButton = ({ onPress, title = 'Continue' }) => {
     return (
       <TouchableOpacity style={styles.button} onPress={onPress}>
-        <Text style={styles.buttonText}>Continue</Text>
+        <Text style={styles.buttonText}>{title}</Text>
       </TouchableOpacity>
     );
   };
