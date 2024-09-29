@@ -57,7 +57,7 @@ const SignInPage = () => {
                     onChangeText={setUsername}
                     keyboardType="email-address"
                     autoCapitalize="none"
-                    autoCorrect ='off'
+                    autoCorrect={false}
                 />
                 <TextInput
                     style={globalStyles.input}
@@ -66,7 +66,7 @@ const SignInPage = () => {
                     onChangeText={setPassword}
                     secureTextEntry
                     autoCapitalize="none"
-                    autoCorrect = 'off'
+                    autoCorrect={false}
                 />
                 <TouchableOpacity style={globalStyles.button} onPress={handleSignIn}>
                     <Text style={globalStyles.buttonText}>Sign In</Text>
