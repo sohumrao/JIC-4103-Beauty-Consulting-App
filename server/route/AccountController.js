@@ -3,6 +3,8 @@ import { Account, ResetPassword } from "../model/account.js";
 import crypto from "crypto";
 import nodemailer from "nodemailer";
 import { body, validationResult } from "express-validator";
+import { Client } from "../model/client.js";
+import { Stylist } from "../model/stylist.js";
 
 /**
  * This router handles...
@@ -79,67 +81,74 @@ router.post(
 	}
 );
 
-// router.post("/emailResetPasswordLink", async (req, res) => {
-// 	console.log(req.body);
-// 	const { email } = req.body;
+router.post(
+	"/emailResetPasswordCode",
+	[
+		body("email")
+			.exists()
+			.withMessage("Email is required")
+			.trim()
+			.escape()
+			.notEmpty()
+			.withMessage("Email cannot be empty")
+			.isEmail()
+			.withMessage("Email is not valid"),
+	],
+	async (req, res) => {
+		const errors = validationResult(req);
+		if (!errors.isEmpty()) {
+			return res.status(400).send(errors.array()[0].msg);
+		}
 
-// 	if (!email) {
-// 		return res.status(400).send("Email is required");
-// 	}
+		//TODO: refactor Account to include email and other common account fields
+		// email must be unique
+		const { email } = req.body;
 
-// 	const user = await UserDB.findOne({ email });
-// 	if (!user) {
-// 		return res.status(404).send("No user with the provided email.");
-// 	}
+		let user = await Client.findOne({ email });
+		if (!user) {
+			user = await Stylist.findOne({ email });
+			if (!user) {
+				return res.status(409).send("No user with the provided email.");
+			}
+		}
 
-// 	//TODO: what to do when user is inactive?
-// 	//TODO: handle case when there already is a token
+		//create token
+		const resetCode = Math.floor(Math.random() * 900000) + 100000;
+		await ResetPassword.findOneAndUpdate(
+			{ email: user.email, username: user.username },
+			{ code: resetCode },
+			{ upsert: true }
+		);
 
-// 	//create token
-// 	let resetToken = crypto.randomBytes(20).toString("hex");
-// 	resetToken = crypto.createHash("sha256").update(resetToken).digest("hex");
+		//TODO: create a centralized place for dev/production environment logic
+		// service: 'gmail',
+		// auth: {
+		//     user: process.env.EMAIL_ADDRESS,
+		//     pass: process.env.EMAIL_PASSWORD
+		// }
+		//TODO: add local testing smtp server to npm start
+		const email_credentials = {
+			port: 1025,
+		};
 
-// 	//add to database
-// 	const newReset = new ResetPassword({
-// 		email: user.email,
-// 		token: resetToken,
-// 	});
+		const transporter = nodemailer.createTransport(email_credentials);
 
-// 	// Save user in the database
-// 	await newReset.save();
-// 	//TODO: handle database failure
+		const mailOptions = {
+			to: user.email,
+			from: process.env.EMAIL_ADDRESS,
+			subject: "Password Reset Code",
+			text: `You are receiving this because you have requested a password reset.\nYour reset code is ${resetCode}.\n\nIf you did not request this, please ignore this email.`,
+		};
 
-// 	//TODO: handle case when email fails
-// 	// Create reset URL
-// 	const resetUrl = resetToken; //TODO: deep linking
-
-// 	//TODO: create a centralized place for dev/production environment logic
-// 	// service: 'gmail',
-// 	// auth: {
-// 	//     user: process.env.EMAIL_ADDRESS,
-// 	//     pass: process.env.EMAIL_PASSWORD
-// 	// }
-// 	//TODO: add local testing smtp server to npm start
-// 	const email_credentials = {
-// 		port: 1025,
-// 	};
-
-// 	const transporter = nodemailer.createTransport(email_credentials);
-
-// 	const mailOptions = {
-// 		to: user.email,
-// 		from: process.env.EMAIL_ADDRESS,
-// 		subject: "Password Reset Request",
-// 		text: `You are receiving this because you have requested a password reset. Please click on the following link, or paste it into your browser to complete the process: \n\n ${resetUrl} \n\n If you did not request this, please ignore this email.`,
-// 	};
-
-// 	transporter.sendMail(mailOptions, (err, info) => {
-// 		if (err) {
-// 			console.error("Error sending email:", err);
-// 			return res.status(500).json({ message: "Email could not be sent" });
-// 		}
-// 		res.status(201).json({ message: "Password reset email sent" });
-// 	});
-// });
+		//TODO: handle case when email fails
+		transporter.sendMail(mailOptions, (err, info) => {
+			if (err) {
+				console.error("Error sending email:", err);
+				return res.status(500).json({ message: "Email could not be sent" });
+			}
+			res.status(201).json({ message: "Password reset email sent" });
+		});
+	}
+);
 
 export default router;
