@@ -47,7 +47,7 @@ const CreateAccountPage = () => {
 
     return (
         <SignupBackground>
-            <View style={styles.box}>
+            <View style={globalStyles.box}>
                 <Text style={globalStyles.title}>Create Your Account</Text>
                 <Text style={globalStyles.linkText}>Username</Text>
                 <TextInput
