@@ -5,10 +5,12 @@ import axios from 'axios';
 import { UserContext } from '../App';
 import SignupBackground from '../assets/components/SignupBackground';
 import globalStyles from '../assets/GlobalStyles';
+import ErrorMessage from '../components/ErrorMessage';
 
 const SignInPage = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
     const navigation = useNavigation();
 
     const userContext = useContext(UserContext);
@@ -28,7 +30,7 @@ const SignInPage = () => {
             const res = await axios.post(apiUrl + ':5050/account/signIn', req);
             console.log("Sign in successful: " + res.data);
         } catch (error) {
-            console.error('Error with Sign In: ', error.response.data);
+            setErrorMessage(error.response.data);
             return;
         };
         userContext.updateUserContext({
@@ -68,6 +70,7 @@ const SignInPage = () => {
                     autoCapitalize="none"
                     autoCorrect={false}
                 />
+                <ErrorMessage message={errorMessage} />
                 <TouchableOpacity style={globalStyles.button} onPress={handleSignIn}>
                     <Text style={globalStyles.buttonText}>Sign In</Text>
                 </TouchableOpacity>
