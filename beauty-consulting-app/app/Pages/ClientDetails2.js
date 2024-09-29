@@ -46,7 +46,7 @@ function ClientDetails2() {
     };
 
     return (
-        <ScrollView style={globalStyles.container}>
+        <ScrollView contentContainerStyle ={globalStyles.container}>
             <Text style={globalStyles.header}>Client Details</Text>
             <View style={globalStyles.stepIndicator}>
                 <View style={[globalStyles.step, globalStyles.stepCompleted]}></View>

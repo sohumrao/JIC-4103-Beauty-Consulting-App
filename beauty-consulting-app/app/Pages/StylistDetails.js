@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { View, Text, TextInput, ScrollView } from 'react-native';
+import { View, Text, TextInput, ScrollView, TouchableOpacity } from 'react-native';
 import { RadioButton } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 import { UserContext } from '../App';
@@ -40,7 +40,7 @@ const StylistDetails = () => {
   };    
 
   return (
-    <ScrollView style={globalStyles.container}>
+    <ScrollView contentContainerStyle ={globalStyles.container}>
       <Text style={globalStyles.header}>Stylist Details</Text>
 
       <View style={globalStyles.stepIndicator}>
@@ -106,8 +106,12 @@ const StylistDetails = () => {
 
       <ContinueButton onPress={handleContinue} />
 
-      <Button title="Go to Business Info" onPress={navigateToBusinessInfo} />
-
+	  <TouchableOpacity
+			style={globalStyles.button}
+			onPress={navigateToBusinessInfo}
+		>
+			<Text style={globalStyles.buttonText}>Go to Business Info</Text>
+		</TouchableOpacity>
     </ScrollView>
   );
 };

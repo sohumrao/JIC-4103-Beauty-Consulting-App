@@ -33,7 +33,7 @@ function StylistDetails2() {
     };
 
     return (
-        <ScrollView style={globalStyles.container}>
+        <ScrollView contentContainerStyle ={globalStyles.container}>
             <Text style={globalStyles.header}>Stylist Details</Text>
             <View style={globalStyles.stepIndicator}>
                 <View style={[globalStyles.step, globalStyles.stepCompleted]}></View>

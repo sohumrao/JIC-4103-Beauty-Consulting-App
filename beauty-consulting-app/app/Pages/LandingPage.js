@@ -47,7 +47,7 @@ function LandingPage() {
     buttonContainer: {
       width: '100%',
       paddingHorizontal: 20,
-      paddingVertical: 20,
+      paddingVertical: 40,
     },
   });
 
@@ -65,7 +65,7 @@ function LandingPage() {
       </View>
       <Text style={styles.title}>Sign up as a Stylist</Text>
       <View style={styles.buttonContainer}>
-        <ContinueButton onPress={() => navigation.navigate('StylistDetails')} />
+        <ContinueButton onPress={() => navigation.navigate('Stylist Details')} />
       </View>
     </SignupBackground>
   );
