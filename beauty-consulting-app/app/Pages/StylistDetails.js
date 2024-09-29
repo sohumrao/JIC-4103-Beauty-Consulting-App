@@ -35,6 +35,10 @@ const StylistDetails = () => {
     navigation.navigate('StylistDetails2');
   };
 
+  const navigateToBusinessInfo = () => {
+    navigation.navigate('BusinessInfoPage');
+  };    
+
   return (
     <ScrollView style={globalStyles.container}>
       <Text style={globalStyles.header}>Stylist Details</Text>
@@ -101,6 +105,9 @@ const StylistDetails = () => {
       </View>
 
       <ContinueButton onPress={handleContinue} />
+
+      <Button title="Go to Business Info" onPress={navigateToBusinessInfo} />
+
     </ScrollView>
   );
 };

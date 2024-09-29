@@ -14,6 +14,8 @@ import ForgotPasswordPage  from './Pages/ForgotPasswordPage';
 import StylistDetails from './Pages/StylistDetails';
 import StylistDetails2 from './Pages/StylistDetails2';
 import StylistDetailsComplete from './Pages/StylistDetailsComplete';
+import BusinessInfoPage from './Pages/BusinessInfoPage';
+
 
 const Stack = createNativeStackNavigator();
 
@@ -99,8 +101,7 @@ function App() {
         <Stack.Screen name="Stylist Details" component={StylistDetails}/>
         <Stack.Screen name="Stylist Details2" component={StylistDetails2}/>
         <Stack.Screen name="Stylist Details3" component={StylistDetailsComplete}/>
-
-
+        <Stack.Screen name="BusinessInfoPage" component={BusinessInfoPage} />
       </Stack.Navigator>
     </NavigationContainer>
     </UserContext.Provider>
