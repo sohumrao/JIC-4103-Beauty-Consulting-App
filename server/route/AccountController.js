@@ -5,7 +5,7 @@ import nodemailer from "nodemailer";
 import { body, validationResult } from "express-validator";
 import { Client } from "../model/client.js";
 import { Stylist } from "../model/stylist.js";
-
+import mongoose from "mongoose";
 /**
  * This router handles...
  *
@@ -148,6 +148,85 @@ router.post(
 			}
 			res.status(201).json({ message: "Password reset email sent" });
 		});
+	}
+);
+
+router.post(
+	"/verifyResetPasswordCode",
+	[
+		body("code")
+			.exists()
+			.withMessage("Code is required")
+			.trim()
+			.escape()
+			.notEmpty()
+			.withMessage("Code cannot be empty"),
+	],
+	async (req, res) => {
+		const errors = validationResult(req);
+		if (!errors.isEmpty()) {
+			return res.status(400).send(errors.array()[0].msg);
+		}
+		const { code } = req.body;
+
+		let reset = await ResetPassword.findOne({ code });
+		if (!reset) return res.status(409).send("Invalid reset code.");
+
+		return res.status(201).send("Valid reset code.");
+	}
+);
+
+router.post(
+	"/resetPassword",
+	[
+		body("code")
+			.exists()
+			.withMessage("Code is required")
+			.trim()
+			.escape()
+			.notEmpty()
+			.withMessage("Code cannot be empty"),
+		//TODO: store common validation logic in one place
+		body("password")
+			.exists()
+			.withMessage("Password is required")
+			.notEmpty()
+			.withMessage("Password cannot be empty"),
+	],
+	async (req, res) => {
+		const errors = validationResult(req);
+		if (!errors.isEmpty()) {
+			return res.status(400).send(errors.array()[0].msg);
+		}
+		const { code } = req.body;
+
+		let reset = await ResetPassword.findOne({ code });
+		if (!reset) return res.status(409).send("Invalid reset code.");
+
+		let session;
+		try {
+			session = await mongoose.startSession();
+			session.startTransaction();
+
+			const account = await Account.findOne({
+				username: reset.username,
+			}).session(session);
+			account.createHashedPassword(req.body.password);
+			const savedAccount = await account.save({ session });
+
+			await ResetPassword.deleteOne({ code: reset.code }).session(session);
+			await session.commitTransaction();
+			res.status(201).send("Password reset successfully.");
+		} catch (error) {
+			if (session) {
+				await session.abortTransaction();
+			}
+			throw error;
+		} finally {
+			if (session) {
+				await session.endSession();
+			}
+		}
 	}
 );
 
