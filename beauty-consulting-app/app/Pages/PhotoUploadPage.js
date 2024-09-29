@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { View, Button, Image, Alert } from 'react-native';
+import { View, Image, Alert, TouchableOpacity, Text } from 'react-native';
 import axios from 'axios';
 import { launchImageLibrary } from 'react-native-image-picker';
+import globalStyles from '../assets/GlobalStyles';
 
 const PhotoUpload = () => {
   const [photo, setPhoto] = useState(null);
@@ -45,19 +46,25 @@ const PhotoUpload = () => {
   };
 
   return (
-    <View style={{ padding: 20 }}>
-      <Button title="Pick an Image" onPress={pickImage} />
+    <View style={globalStyles.container}>
+      <TouchableOpacity style={globalStyles.button} onPress={pickImage}>
+        <Text style={globalStyles.buttonText}>Pick an Image</Text>
+      </TouchableOpacity>
       {photo && (
         <Image
           source={{ uri: photo.uri }}
           style={{ width: 200, height: 200, marginTop: 20 }}
         />
       )}
-      <Button title="Upload Photo" onPress={uploadPhoto} disabled={!photo} />
+      <TouchableOpacity
+        style={[globalStyles.button, { marginTop: 20 }]} // Adding marginTop to separate buttons
+        onPress={uploadPhoto}
+        disabled={!photo}
+      >
+        <Text style={globalStyles.buttonText}>Upload Photo</Text>
+      </TouchableOpacity>
     </View>
   );
 };
 
 export default PhotoUpload;
-
-// this needs to work with server.js (express.js, npm install express multer mongoose) and models/image.js 

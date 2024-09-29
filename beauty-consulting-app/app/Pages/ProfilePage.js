@@ -1,40 +1,13 @@
 import React, { useContext } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { UserContext } from '../App';
 import SignupBackground from '../assets/components/SignupBackground';
-
+import globalStyles from '../assets/GlobalStyles';
 
 function ProfilePage() {
     const userContext = useContext(UserContext);
-
     const navigation = useNavigation();
-
-    const styles = StyleSheet.create({
-        container: {
-            flex: 1,
-            backgroundColor: '#fff',
-            alignItems: 'center',
-            justifyContent: 'space-around',
-        },
-        title: {
-            fontSize: 24,
-            fontWeight: 'bold',
-            textAlign: 'center',
-            marginTop: -48,
-        },
-        buttonContainer: {
-            width: '100%',
-            paddingHorizontal: 20,
-            paddingVertical: 20,
-        },
-
-        button: {
-            backgroundColor: '#FF5252',
-            paddingVertical: 10,
-            borderRadius: 5,
-        }
-    });
 
     const profileView = () => {
         navigation.navigate("ProfileView");
@@ -42,18 +15,18 @@ function ProfilePage() {
 
     return (
         <SignupBackground>
-        <View style={styles.box}>
-            <Text>API Request Successful! User added to database</Text>
-            <Text>Name: {userContext.name}</Text>
-            <Text>Age: {userContext.age}</Text>
-            <Text>Email: {userContext.email}</Text>
-            <Text>Gender: {userContext.gender}</Text>
-            <Text>Phone Number: {userContext.phoneNumber}</Text>
-            <Text>Allergies: {userContext.allergies}</Text>
-            <TouchableOpacity style={styles.button} onPress={profileView}>
-                <Text> ProfileView </Text>
-            </TouchableOpacity>
-        </View>
+            <View style={globalStyles.box}>
+                <Text>API Request Successful! User added to database</Text>
+                <Text>Name: {userContext.name}</Text>
+                <Text>Age: {userContext.age}</Text>
+                <Text>Email: {userContext.email}</Text>
+                <Text>Gender: {userContext.gender}</Text>
+                <Text>Phone Number: {userContext.phoneNumber}</Text>
+                <Text>Allergies: {userContext.allergies}</Text>
+                <TouchableOpacity style={globalStyles.button} onPress={profileView}>
+                    <Text style={globalStyles.buttonText}>ProfileView</Text>
+                </TouchableOpacity>
+            </View>
         </SignupBackground>
     );
 }

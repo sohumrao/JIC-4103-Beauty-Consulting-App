@@ -8,7 +8,7 @@ import ContinueButton from '../assets/components/ContinueButton';
 import { UserContext } from '../App';
 import globalStyles from '../assets/GlobalStyles';
 
-function ClientDetailsComplete() {
+function StylistDetailsComplete() {
     const navigation = useNavigation();
     const userContext = useContext(UserContext);
 
@@ -16,12 +16,15 @@ function ClientDetailsComplete() {
         const req = {
             username: userContext.username,
             name: userContext.name,
-            email: userContext.email, 
+            email: userContext.email,
             gender: userContext.gender,
             age: userContext.age,
             phoneNumber: userContext.phoneNumber,
-            hairDetails: userContext.hairDetails,
-            allergies: userContext.allergies,
+            stylistDetails: {
+                experience: userContext.stylistDetails.experience,
+                specialty: userContext.stylistDetails.specialty,
+                additionalInfo: userContext.stylistDetails.additionalInfo
+            }
         };
         console.log(req.body);
         try {
@@ -30,8 +33,8 @@ function ClientDetailsComplete() {
                 console.error("API URL not defined");
                 return;
             }
-            const res = await axios.post(apiUrl + ':5050/client/', req);
-            console.log('User created: ', res.data);
+            const res = await axios.post(apiUrl + ':5050/stylist/', req);
+            console.log('Stylist created: ', res.data);
         } catch (error) {
             console.error('Error with API: ', error);
         }
@@ -40,7 +43,7 @@ function ClientDetailsComplete() {
 
     return (
         <View style={globalStyles.container}>
-            <Text style={globalStyles.title}>You're all set!</Text>
+            <Text style={globalStyles.title}>You're all set, stylist!</Text>
             <View style={globalStyles.buttonContainer}>
                 <ContinueButton onPress={() => handleContinue()} />
             </View>
@@ -48,4 +51,4 @@ function ClientDetailsComplete() {
     );
 }
 
-export default ClientDetailsComplete;
+export default StylistDetailsComplete;

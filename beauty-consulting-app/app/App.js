@@ -11,6 +11,9 @@ import SignInPage from './Pages/SignInPage';
 import CreateAccountPage from './Pages/CreateAccountPage';
 import ProfileView from './Pages/ProfileView';
 import ForgotPasswordPage  from './Pages/ForgotPasswordPage';
+import StylistDetails from './Pages/StylistDetails';
+import StylistDetails2 from './Pages/StylistDetails2';
+import StylistDetailsComplete from './Pages/StylistDetailsComplete';
 
 const Stack = createNativeStackNavigator();
 
@@ -34,6 +37,11 @@ const UserContext = React.createContext({
         Thick: false},
   allergies: '',
   concerns: '', 
+  stylistDetails: {
+    experience: '',
+    specialty: '',
+    additionalInfo: '',
+  },
   updateUserContext: () => {}
 });
 
@@ -65,6 +73,11 @@ function App() {
         Thick: false},
   allergies: '',
   concerns: '', 
+  stylistDetails: {
+    experience: '',
+    specialty: '',
+    additionalInfo: '',
+  },
   updateUserContext
 });
 
@@ -83,6 +96,11 @@ function App() {
         <Stack.Screen name="ProfilePage" component={ProfilePage} />
         <Stack.Screen name="ProfileView" component={ProfileView} />
         <Stack.Screen name="Forgot Password" component={ForgotPasswordPage}/>
+        <Stack.Screen name="Stylist Details" component={StylistDetails}/>
+        <Stack.Screen name="Stylist Details2" component={StylistDetails2}/>
+        <Stack.Screen name="Stylist Details3" component={StylistDetailsComplete}/>
+
+
       </Stack.Navigator>
     </NavigationContainer>
     </UserContext.Provider>

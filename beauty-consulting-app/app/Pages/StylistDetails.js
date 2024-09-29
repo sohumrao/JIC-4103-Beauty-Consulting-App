@@ -6,7 +6,7 @@ import { UserContext } from '../App';
 import ContinueButton from '../assets/components/ContinueButton';
 import globalStyles from '../assets/GlobalStyles';
 
-const ClientDetails = () => {
+const StylistDetails = () => {
   
   const navigation = useNavigation();
   const [gender, setGender] = useState('male');
@@ -25,22 +25,22 @@ const ClientDetails = () => {
       gender: gender,
       phoneNumber: phoneNumber,
       email: email,
-      hairDetails: userContext.hairDetails,
-      allergies: userContext.allergies,
-      concerns: userContext.concerns,
+      stylistDetails: {
+        experience: experience,
+        specialty: specialty,
+        additionalInfo: additionalInfo,
+    },
       updateUserContext: userContext.updateUserContext
     });
-    navigation.navigate('ClientDetails2');
+    navigation.navigate('StylistDetails2');
   };
 
   return (
     <ScrollView style={globalStyles.container}>
-      <Text style={globalStyles.header}>Client Details</Text>
+      <Text style={globalStyles.header}>Stylist Details</Text>
 
       <View style={globalStyles.stepIndicator}>
         <View style={[globalStyles.step, globalStyles.stepCompleted]}></View>
-        <View style={globalStyles.step}></View>
-        <View style={globalStyles.step}></View>
         <View style={globalStyles.step}></View>
       </View>
 
@@ -105,4 +105,4 @@ const ClientDetails = () => {
   );
 };
 
-export default ClientDetails;
+export default StylistDetails;
