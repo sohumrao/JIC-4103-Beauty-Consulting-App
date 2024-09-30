@@ -230,4 +230,53 @@ router.post(
 	}
 );
 
+
+// Configure Multer to handle file uploads in memory
+const storage = multer.memoryStorage(); // Store files in memory
+const upload = multer({ storage });
+
+// POST route to handle photo upload and save data in MongoDB
+router.post("/photo", upload.single('photo'), async (req, res) => {
+    try {
+        // Check if the file and username are provided
+        if (!req.file || !req.body.username) {
+            return res.status(400).send({ message: "Photo and username are required!" });
+        }
+
+        // Create a new photo object with binary data and MIME type
+        const newPhoto = new Photo({
+            username: req.body.username,
+            photoData: req.file.buffer, // Store the binary data
+            photoContentType: req.file.mimetype // Store the file's MIME type
+        });
+
+        // Save the photo in the database
+        const savedPhoto = await newPhoto.save();
+        res.send({ message: "Photo uploaded and saved in MongoDB successfully!", data: savedPhoto });
+    } catch (err) {
+        res.status(500).send({ message: err.message || "Some error occurred while uploading the photo." });
+    }
+});
+
+// Route to retrieve photo by username and serve it as an image
+router.get("/:username/photo", async (req, res) => {
+    try {
+        // Fetch the photo from the database by username
+        const photo = await Photo.findOne({ username: req.params.username });
+
+        if (!photo) {
+            return res.status(404).send({ message: "No photo found for the given username." });
+        }
+
+        // Set the content type of the response to the photo's MIME type
+        res.set("Content-Type", photo.photoContentType);
+
+        // Send the photo binary data as the response
+        res.send(photo.photoData);
+    } catch (err) {
+        res.status(500).send({ message: err.message || "Some error occurred while retrieving the photo." });
+    }
+});
+
+
 export default router;
