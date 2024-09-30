@@ -253,7 +253,7 @@ const StylistDetails2 = () => {
 
       <View style={styles.stepIndicator}>
         <View style={[styles.step, styles.stepCompleted]}></View>
-        <View style={styles.step}></View>
+        <View style={[styles.step, styles.stepCompleted]}></View>
       </View>
 
       <View style={styles.form}>

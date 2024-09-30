@@ -1,35 +1,54 @@
-import React, { useState } from 'react';
-import { View, Text, Button, Image, StyleSheet } from 'react-native';
-import * as ImagePicker from 'expo-image-picker';
+import React, { useContext } from 'react';
+import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { UserContext } from '../App';
+import ProfileImage from '../assets/components/ProfileImage';
 
 const BusinessInfoPage = () => {
-  const [profileImage, setProfileImage] = useState(null);
+  // Access the user context
+  const userContext = useContext(UserContext);
 
-  const pickImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
-
-    if (!result.cancelled) {
-      setProfileImage(result.uri);
-    }
-  };
+  const { name, age, phoneNumber, email, stylistDetails } = userContext;
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Business Info</Text>
-      {profileImage && <Image source={{ uri: profileImage }} style={styles.image} />}
-      <Button title="Change Profile Image" onPress={pickImage} />
-      <Text style={styles.info}>Business Name: </Text>
-      <Text style={styles.info}>Contact: (123) 456-7890</Text>
-      <Text style={styles.info}>Email: info@salon.com</Text>
-      <Text style={styles.description}>
-        Welcome! We offer a variety of beauty services to help you look and feel your best.
-      </Text>
-    </View>
+    <ScrollView style={styles.container}>
+      <Text style={styles.header}>Business Information</Text>
+
+      <View style={styles.infoContainer}>
+        <Text style={styles.label}>Name:</Text>
+        <Text style={styles.value}>{name}</Text>
+      </View>
+
+      <View style={styles.infoContainer}>
+        <Text style={styles.label}>Age:</Text>
+        <Text style={styles.value}>{age}</Text>
+      </View>
+
+      <View style={styles.infoContainer}>
+        <Text style={styles.label}>Phone Number:</Text>
+        <Text style={styles.value}>{phoneNumber}</Text>
+      </View>
+
+      <View style={styles.infoContainer}>
+        <Text style={styles.label}>Email:</Text>
+        <Text style={styles.value}>{email}</Text>
+      </View>
+
+      <View style={styles.infoContainer}>
+        <Text style={styles.label}>Years of Experience:</Text>
+        <Text style={styles.value}>{stylistDetails.experience}</Text>
+      </View>
+
+      <View style={styles.infoContainer}>
+        <Text style={styles.label}>Specialty:</Text>
+        <Text style={styles.value}>{stylistDetails.specialty}</Text>
+      </View>
+
+      <View style={styles.infoContainer}>
+        <Text style={styles.label}>Additional Info:</Text>
+        <Text style={styles.value}>{stylistDetails.additionalInfo}</Text>
+      </View>
+        <ProfileImage/>
+    </ScrollView>
   );
 };
 
@@ -37,27 +56,24 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    alignItems: 'center',
+    backgroundColor: '#fff',
   },
-  title: {
+  header: {
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
-  },
-  image: {
-    width: 200,
-    height: 200,
-    borderRadius: 100,
-    marginBottom: 20,
-  },
-  info: {
-    fontSize: 18,
-    marginBottom: 10,
-  },
-  description: {
-    fontSize: 16,
     textAlign: 'center',
-    marginTop: 20,
+  },
+  infoContainer: {
+    marginBottom: 15,
+  },
+  label: {
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  value: {
+    fontSize: 16,
+    color: '#555',
   },
 });
 
