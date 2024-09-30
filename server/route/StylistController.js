@@ -44,8 +44,7 @@ router.post("/", async (req, res) => {
             gender: req.body.gender,
             age: req.body.age,
             phoneNumber: req.body.phoneNumber,
-            hairDetails: req.body.hairDetails,
-            allergies: req.body.allergies
+            stylistDetails: req.body.stylistDetails
         });
 		
         // Save user in the database
@@ -53,6 +52,30 @@ router.post("/", async (req, res) => {
         res.send(savedUser);
     } catch (err) {
         res.status(500).send({ message: err.message || "Some error occurred while creating a user." });
+    }
+});
+
+router.get("/:username", async(req, res) => {
+    try {
+        // Check for username param
+        if (!req.params || !req.params.username) {
+            return res.status(400).send({ message: "More information is required to retrieve user data." });
+        }
+
+        // Find user data for username
+        const user = await Stylist.findOne(
+            { username: req.params.username }
+        )
+
+        // Check if user exists
+        if (!user) {
+            return res.status(404).send({ message: "User has no profile data." });
+        }
+
+        // Return user data
+        res.send(user);
+    } catch (err) {
+        res.status(500).send({ message: err.message || "Some error occurred while retrieving user data." });
     }
 });
 

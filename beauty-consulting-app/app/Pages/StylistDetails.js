@@ -266,7 +266,9 @@ const StylistDetails = () => {
   const [email, setEmail] = useState('');
   const [experience, setExperience] = useState(''); 
   const [specialty, setSpecialty] = useState(''); 
-  const [additionalInfo, setAdditionalInfo] = useState(''); 
+  const [additionalInfo, setAdditionalInfo] = useState('');
+  const [businessName, setBusinessName] = useState(''); 
+  const [businessAddress, setBusinessAddress] = useState('');
 
   const userContext = useContext(UserContext);
 
@@ -283,6 +285,8 @@ const StylistDetails = () => {
         experience: experience,
         specialty: specialty,
         additionalInfo: additionalInfo,
+        businessName: businessName,
+        businessAddress: businessAddress
       },
       updateUserContext: userContext.updateUserContext
     });
