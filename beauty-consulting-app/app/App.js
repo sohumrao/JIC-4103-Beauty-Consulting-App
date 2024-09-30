@@ -101,8 +101,8 @@ function App() {
         <Stack.Screen name="Forgot Password" component={ForgotPasswordPage}/>
         <Stack.Screen name="Reset Password" component={ResetPasswordPage}/>
         <Stack.Screen name="Stylist Details" component={StylistDetails}/>
-        <Stack.Screen name="Stylist Details2" component={StylistDetails2}/>
-        <Stack.Screen name="Stylist Details3" component={StylistDetailsComplete}/>
+        <Stack.Screen name="StylistDetails2" component={StylistDetails2}/>
+        <Stack.Screen name="StylistDetails3" component={StylistDetailsComplete}/>
         <Stack.Screen name="BusinessInfoPage" component={BusinessInfoPage} />
       </Stack.Navigator>
     </NavigationContainer>

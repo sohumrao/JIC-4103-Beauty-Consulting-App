@@ -286,6 +286,7 @@ const StylistDetails = () => {
       },
       updateUserContext: userContext.updateUserContext
     });
+    // console.log('Navigating to StylistDetails2');
     navigation.navigate('StylistDetails2');
   };
 
