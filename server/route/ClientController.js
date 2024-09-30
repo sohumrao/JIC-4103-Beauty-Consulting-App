@@ -1,5 +1,6 @@
 import express from "express";
 import { Client } from "../model/client.js";
+import { Account } from "../model/account.js"
 import { Photo } from "../model/photo.js";
 import multer from "multer";
 
@@ -159,10 +160,15 @@ router.put("/:username", async (req, res) => {
 // Delete user
 router.delete("/:username", async (req, res) => {
     try {
+        console.log(req.params.username);
         // Find the user by username and delete them
         const deletedUser = await Client.findOneAndDelete({ username: req.params.username });
+        const deletedAccount = await Account.findOneAndDelete({ username: req.params.username });
 
-        if (!deletedUser) {
+        console.log(req.params.username);
+        console.log(deletedUser);
+
+        if (!deletedUser || !deletedAccount) {
             return res.status(404).send({ message: "User not found." });
         }
 

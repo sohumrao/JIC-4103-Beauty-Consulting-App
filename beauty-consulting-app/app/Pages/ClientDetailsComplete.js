@@ -35,7 +35,7 @@ function ClientDetailsComplete() {
         } catch (error) {
             console.error('Error with API: ', error);
         }
-        navigation.navigate('ProfilePage');
+        navigation.navigate('ProfileView');
     };
 
     return (

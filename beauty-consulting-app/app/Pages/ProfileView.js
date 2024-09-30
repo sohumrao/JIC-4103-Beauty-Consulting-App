@@ -30,9 +30,9 @@ const ProfileView = () => {
       req = {
         username: userContext.username,
         name: name,
-        age: age,
+        age: userContext.age,
         gender: gender,
-        phoneNumber: phoneNumber,
+        phoneNumber: userContext.phoneNumber,
         email: userContext.email,
         hairDetails: userContext.hairDetails,
         allergies: allergies,
@@ -54,7 +54,17 @@ const ProfileView = () => {
       }
 
       // update user context for rest of session
-      userContext = userContext.updateUserContext(req);
+      userContext = userContext.updateUserContext({username: userContext.username,
+        name: name,
+        age: age,
+        gender: gender,
+        phoneNumber: userContext.phoneNumber,
+        email: userContext.email,
+        hairDetails: userContext.hairDetails,
+        allergies: allergies,
+        concerns: concerns,
+        updateUserContext: userContext.updateUserContext
+    });
     }
     setIsEdit(!isEdit);
   };
@@ -63,6 +73,7 @@ const ProfileView = () => {
     // TODO: update with a separate flow for password validation after backend rework
 
     try {
+        console.log(userContext);
       const apiURL =
         process.env.EXPO_PUBLIC_API_URL +
         ":5050/client/" +
@@ -70,12 +81,13 @@ const ProfileView = () => {
       if (!apiURL) {
         console.error("apiURL not defined");
       }
-      const res = axios.delete(apiURL, userContext);
+      const res = axios.delete(apiURL);
       console.log(res.message);
     } catch (error) {
       console.error("Error with request: ", error);
+      return;
     }
-    navigation.navigate("SignInPage");
+    navigation.navigate("Sign In");
   };
 
   const styles = StyleSheet.create({

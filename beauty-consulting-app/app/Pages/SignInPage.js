@@ -45,7 +45,7 @@ const SignInPage = () => {
             console.log(res.data);
             userProfileDataExists = true;
             userContext.updateUserContext({
-                username: userContext.username,
+                username: username,
                 name: res.data.name,
                 age: res.data.age,
                 gender: res.data.gender,
@@ -70,7 +70,7 @@ const SignInPage = () => {
                 const res = await axios.get(apiUrl + ':5050/stylist/' + username);
                 userProfileDataExists = true;
                 userContext.updateUserContext({
-                    username: userContext.username,
+                    username: username,
                     name: res.data.name,
                     age: res.data.age,
                     gender: res.data.gender,
