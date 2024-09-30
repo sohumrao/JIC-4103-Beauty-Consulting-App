@@ -75,7 +75,7 @@ const ProfileView = () => {
     } catch (error) {
       console.error("Error with request: ", error);
     }
-    navigation.navigate("SignInPage");
+    navigation.navigate("Sign In");
   };
 
   const styles = StyleSheet.create({
