@@ -11,11 +11,16 @@ const BusinessInfoPage = () => {
 
   return (
     <ScrollView style={styles.container}>
-      <Text style={styles.header}>Business Information</Text>
+      <Text style={styles.header}>{stylistDetails.businessName}</Text>
 
       <View style={styles.infoContainer}>
-        <Text style={styles.label}>Name:</Text>
+        <Text style={styles.label}>Stylist Name:</Text>
         <Text style={styles.value}>{name}</Text>
+      </View>
+
+      <View style={styles.infoContainer}>
+        <Text style={styles.label}>Business Address:</Text>
+        <Text style={styles.value}>{stylistDetails.businessAddress}</Text>
       </View>
 
       <View style={styles.infoContainer}>

@@ -1,5 +1,6 @@
 import express from "express";
 import { Client } from "../model/client.js";
+import { Account } from "../model/account.js"
 import { Photo } from "../model/photo.js";
 import multer from "multer";
 
@@ -61,6 +62,30 @@ router.post("/", async (req, res) => {
         res.send(savedUser);
     } catch (err) {
         res.status(500).send({ message: err.message || "Some error occurred while creating a user." });
+    }
+});
+
+router.get("/:username", async(req, res) => {
+    try {
+        // Check for username param
+        if (!req.params || !req.params.username) {
+            return res.status(400).send({ message: "More information is required to retrieve user data." });
+        }
+
+        // Find user data for username
+        const user = await Client.findOne(
+            { username: req.params.username }
+        )
+
+        // Check if user exists
+        if (!user) {
+            return res.status(404).send({ message: "User has no profile data." });
+        }
+
+        // Return user data
+        res.send(user);
+    } catch (err) {
+        res.status(500).send({ message: err.message || "Some error occurred while retrieving user data." });
     }
 });
 
@@ -135,10 +160,15 @@ router.put("/:username", async (req, res) => {
 // Delete user
 router.delete("/:username", async (req, res) => {
     try {
+        console.log(req.params.username);
         // Find the user by username and delete them
         const deletedUser = await Client.findOneAndDelete({ username: req.params.username });
+        const deletedAccount = await Account.findOneAndDelete({ username: req.params.username });
 
-        if (!deletedUser) {
+        console.log(req.params.username);
+        console.log(deletedUser);
+
+        if (!deletedUser || !deletedAccount) {
             return res.status(404).send({ message: "User not found." });
         }
 

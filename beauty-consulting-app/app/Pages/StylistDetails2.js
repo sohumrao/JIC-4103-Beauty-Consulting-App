@@ -176,7 +176,9 @@ const StylistDetails2 = () => {
   // State for stylist-specific inputs, initialized with context values if available
   const [experience, setExperience] = useState(userContext.stylistDetails.experience || ''); 
   const [specialty, setSpecialty] = useState(userContext.stylistDetails.specialty || ''); 
-  const [additionalInfo, setAdditionalInfo] = useState(userContext.stylistDetails.additionalInfo || ''); 
+  const [additionalInfo, setAdditionalInfo] = useState(userContext.stylistDetails.additionalInfo || '');
+  const [businessName, setBusinessName] = useState(userContext.stylistDetails.businessName || '');
+  const [businessAddress, setBusinessAddress] = useState(userContext.stylistDetails.businessAddress || '');
 
   const handleContinue = () => {
     // Update context with stylist details
@@ -186,6 +188,8 @@ const StylistDetails2 = () => {
         experience: experience,
         specialty: specialty,
         additionalInfo: additionalInfo,
+        businessName: businessName,
+        businessAddress: businessAddress
       },
     });
     navigation.navigate('StylistDetails3');
@@ -255,6 +259,24 @@ const StylistDetails2 = () => {
         <View style={[styles.step, styles.stepCompleted]}></View>
         <View style={[styles.step, styles.stepCompleted]}></View>
       </View>
+
+
+      <Text style={styles.label}>Name of Business</Text>
+        <TextInput
+          style={styles.input}
+          value={businessName}
+          onChangeText={setBusinessName}
+          placeholder="Enter your business name"
+        />
+
+        <Text style={styles.label}>Address of Business</Text>
+        <TextInput
+          style={styles.input}
+          value={businessAddress}
+          onChangeText={setBusinessAddress}
+          placeholder="Enter your business address"
+        />
+
 
       <View style={styles.form}>
         <Text style={styles.label}>Years of Experience</Text>

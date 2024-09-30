@@ -80,6 +80,8 @@ function App() {
     experience: '',
     specialty: '',
     additionalInfo: '',
+    businessName: '',
+    businessAddress: ''
   },
   updateUserContext
 });

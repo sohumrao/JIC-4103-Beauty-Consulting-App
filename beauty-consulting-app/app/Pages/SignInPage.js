@@ -21,12 +21,15 @@ const SignInPage = () => {
             password: password
         };
         console.log(req);
+
+        const apiUrl = process.env.EXPO_PUBLIC_API_URL;
+        if (!apiUrl) {
+            console.error("API URL not defined");
+            return;
+        }
+
+        // Validate account information
         try {
-            const apiUrl = process.env.EXPO_PUBLIC_API_URL;
-            if (!apiUrl) {
-                console.error("API URL not defined");
-                return;
-            }
             const res = await axios.post(apiUrl + ':5050/account/signIn', req);
             setErrorMessage('');
             console.log("Sign in successful: " + res.data);
@@ -34,19 +37,74 @@ const SignInPage = () => {
             setErrorMessage(error.response.data);
             return;
         };
-        userContext.updateUserContext({
-            username: username,
-            name: userContext.name,
-            age: userContext.age,
-            gender: userContext.gender,
-            phoneNumber: userContext.phoneNumber,
-            email: userContext.email,
-            hairDetails: userContext.hairDetails,
-            allergies: userContext.allergies,
-            concerns: userContext.concerns,
-            updateUserContext: userContext.updateUserContext
-        });
-        navigation.navigate("ProfilePage");
+
+        // Check if account has associated client data. If so, navigate to profile
+        var userProfileDataExists = false;
+        try {
+            const res = await axios.get(apiUrl + ':5050/client/' + username);
+            console.log(res.data);
+            userProfileDataExists = true;
+            userContext.updateUserContext({
+                username: username,
+                name: res.data.name,
+                age: res.data.age,
+                gender: res.data.gender,
+                phoneNumber: res.data.phoneNumber,
+                email: res.data.email,
+                hairDetails: res.data.hairDetails,
+                allergies: res.data.allergies,
+                concerns: res.data.concerns,
+                updateUserContext: userContext.updateUserContext
+            });
+            navigation.navigate('ProfileView');
+        } catch (error) {
+            if (error.response.status !== 404) {
+                setErrorMessage(error.response.data);
+                return;
+            }
+        }
+
+        // Check if account has associated stylist data. If so, navigate to business page.
+        if (!userProfileDataExists) {
+            try {
+                const res = await axios.get(apiUrl + ':5050/stylist/' + username);
+                userProfileDataExists = true;
+                userContext.updateUserContext({
+                    username: username,
+                    name: res.data.name,
+                    age: res.data.age,
+                    gender: res.data.gender,
+                    phoneNumber: res.data.phoneNumber,
+                    email: res.data.email,
+                    stylistDetails: res.data.stylistDetails,
+                    updateUserContext: userContext.updateUserContext
+                });
+                navigation.navigate('BusinessInfoPage');
+            } catch (error) {
+                if (error.response.status !== 404) {
+                    setErrorMessage(error.response.data);
+                    return;
+                }
+            }
+        }
+
+        // If no profile data exists, take to landing page.
+        if (!userProfileDataExists) {
+            userContext.updateUserContext({
+                username: username,
+                name: userContext.name,
+                age: userContext.age,
+                gender: userContext.gender,
+                phoneNumber: userContext.phoneNumber,
+                email: userContext.email,
+                hairDetails: userContext.hairDetails,
+                allergies: userContext.allergies,
+                concerns: userContext.concerns,
+                stylistDetails: userContext.stylistDetails,
+                updateUserContext: userContext.updateUserContext
+            });
+            navigation.navigate('LandingPage');
+        }
     };
 
     return (
