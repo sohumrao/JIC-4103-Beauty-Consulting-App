@@ -28,6 +28,7 @@ const SignInPage = () => {
                 return;
             }
             const res = await axios.post(apiUrl + ':5050/account/signIn', req);
+            setErrorMessage('');
             console.log("Sign in successful: " + res.data);
         } catch (error) {
             setErrorMessage(error.response.data);

@@ -23,17 +23,17 @@ const styles = StyleSheet.create({
       paddingHorizontal: 84,
     },
     buttonText: {
-      fontSize: 24,
+      fontSize: 16,
       color: "#fff",
       fontWeight: "bold",
       alignSelf: "center",
     }
   });
 
-  const ContinueButton = ({ onPress }) => {
+  const ContinueButton = ({ onPress, title = 'Continue' }) => {
     return (
       <TouchableOpacity style={styles.button} onPress={onPress}>
-        <Text style={styles.buttonText}>Continue</Text>
+        <Text style={styles.buttonText}>{title}</Text>
       </TouchableOpacity>
     );
   };

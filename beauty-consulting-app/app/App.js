@@ -15,6 +15,8 @@ import ResetPasswordPage from './Pages/ResetPassword/ResetPasswordPage';
 import StylistDetails from './Pages/StylistDetails';
 import StylistDetails2 from './Pages/StylistDetails2';
 import StylistDetailsComplete from './Pages/StylistDetailsComplete';
+import BusinessInfoPage from './Pages/BusinessInfoPage';
+
 
 const Stack = createNativeStackNavigator();
 
@@ -99,10 +101,9 @@ function App() {
         <Stack.Screen name="Forgot Password" component={ForgotPasswordPage}/>
         <Stack.Screen name="Reset Password" component={ResetPasswordPage}/>
         <Stack.Screen name="Stylist Details" component={StylistDetails}/>
-        <Stack.Screen name="Stylist Details2" component={StylistDetails2}/>
-        <Stack.Screen name="Stylist Details3" component={StylistDetailsComplete}/>
-
-
+        <Stack.Screen name="StylistDetails2" component={StylistDetails2}/>
+        <Stack.Screen name="StylistDetails3" component={StylistDetailsComplete}/>
+        <Stack.Screen name="BusinessInfoPage" component={BusinessInfoPage} />
       </Stack.Navigator>
     </NavigationContainer>
     </UserContext.Provider>

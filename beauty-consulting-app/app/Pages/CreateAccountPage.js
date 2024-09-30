@@ -5,10 +5,12 @@ import axios from 'axios';
 import { UserContext } from '../App';
 import SignupBackground from '../assets/components/SignupBackground';
 import globalStyles from '../assets/GlobalStyles';
+import ErrorMessage from '../components/ErrorMessage';
 
 const CreateAccountPage = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
     const navigation = useNavigation();
 
     const userContext = useContext(UserContext);
@@ -27,7 +29,7 @@ const CreateAccountPage = () => {
             const res = await axios.post(apiUrl + ':5050/account/createAccount', req);
             console.log('Account created: ', res.data);
         } catch (error) {
-            console.error('Error with Creation: ', error.response.data);
+            setErrorMessage(error.response.data);
             return;
         }
         userContext.updateUserContext({
@@ -67,6 +69,7 @@ const CreateAccountPage = () => {
                     secureTextEntry
                     autoCapitalize="none"
                 />
+                <ErrorMessage message={errorMessage} />
                 <TouchableOpacity style={globalStyles.button} onPress={handleCreateAccount}>
                     <Text style={globalStyles.buttonText}>Create Account</Text>
                 </TouchableOpacity>
