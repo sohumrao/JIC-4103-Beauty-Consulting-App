@@ -15,7 +15,6 @@ const HairDetailsSchema = new mongoose.Schema({
         Thick: Boolean,
 });
 
-
 const StylistSchema = new mongoose.Schema({
     username: String,
     name: {

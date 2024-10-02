@@ -6,6 +6,7 @@ import { UserContext } from '../App';
 import SignupBackground from '../assets/components/SignupBackground';
 import globalStyles from '../assets/GlobalStyles';
 import ErrorMessage from '../components/ErrorMessage';
+import KeyboardMove from '../assets/components/KeyboardMove'
 
 const SignInPage = () => {
     const [username, setUsername] = useState('');
@@ -49,6 +50,7 @@ const SignInPage = () => {
     };
 
     return (
+        <KeyboardMove>
         <SignupBackground>
             <View style={globalStyles.box}>
                 <Text style={globalStyles.title}>Sign In</Text>
@@ -79,6 +81,7 @@ const SignInPage = () => {
                 <Text style={globalStyles.linkText} onPress={() => { navigation.navigate("Forgot Password") }}>Forgot Password?</Text>
             </View>
         </SignupBackground>
+        </KeyboardMove>
     );
 }
 
