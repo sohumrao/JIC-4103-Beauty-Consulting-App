@@ -78,8 +78,6 @@ function MainTabNavigator() {
   return (
     <Tab.Navigator>
       <Tab.Screen name="Home" component={LandingPage} />
-      <Tab.Screen name="Client Details" component={ClientDetailsStack} />
-      <Tab.Screen name="Stylist Details" component={StylistDetailsStack} />
       <Tab.Screen name="Profile" component={ProfilePage} />
     </Tab.Navigator>
   );
@@ -123,6 +121,8 @@ function App() {
         <Stack.Navigator>
           <Stack.Screen name="Sign In" component={SignInPage} screenOptions={{ headerShown: false }}/>
           <Stack.Screen name="Create Account" component={CreateAccountPage} />
+          <Stack.Screen name="Client Details Stack" component={ClientDetailsStack} />
+          <Stack.Screen name="Stylist Details Stack" component={StylistDetailsStack} />
           <Stack.Screen name="Forgot Password" component={ForgotPasswordPage} />
           <Stack.Screen name="Reset Password" component={ResetPasswordPage} />
           <Stack.Screen
