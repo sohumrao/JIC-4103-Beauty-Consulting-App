@@ -2,6 +2,8 @@ import React, { useContext } from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { UserContext } from '../App';
 import ProfileImage from '../assets/components/ProfileImage';
+import axios from 'axios';
+
 
 const BusinessInfoPage = () => {
   // Access the user context
@@ -52,7 +54,6 @@ const BusinessInfoPage = () => {
         <Text style={styles.label}>Additional Info:</Text>
         <Text style={styles.value}>{stylistDetails.additionalInfo}</Text>
       </View>
-        <ProfileImage/>
     </ScrollView>
   );
 };
@@ -83,3 +84,5 @@ const styles = StyleSheet.create({
 });
 
 export default BusinessInfoPage;
+
+
