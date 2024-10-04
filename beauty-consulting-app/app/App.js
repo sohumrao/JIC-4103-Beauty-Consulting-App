@@ -14,6 +14,7 @@ import ForgotPasswordPage from './Pages/ResetPassword/ForgotPasswordPage';
 import ResetPasswordPage from './Pages/ResetPassword/ResetPasswordPage';
 import StylistDetails from './Pages/StylistDetails';
 import StylistDetails2 from './Pages/StylistDetails2';
+import StylistDetails3 from './Pages/StylistDetails3';
 import StylistDetailsComplete from './Pages/StylistDetailsComplete';
 import BusinessInfoPage from './Pages/BusinessInfoPage';
 
@@ -104,7 +105,8 @@ function App() {
         <Stack.Screen name="Reset Password" component={ResetPasswordPage}/>
         <Stack.Screen name="Stylist Details" component={StylistDetails}/>
         <Stack.Screen name="StylistDetails2" component={StylistDetails2}/>
-        <Stack.Screen name="StylistDetails3" component={StylistDetailsComplete}/>
+        <Stack.Screen name="StylistDetails3" component={StylistDetails3}/>
+        <Stack.Screen name="StylistDetailsComplete" component={StylistDetailsComplete}/>
         <Stack.Screen name="BusinessInfoPage" component={BusinessInfoPage} />
       </Stack.Navigator>
     </NavigationContainer>
