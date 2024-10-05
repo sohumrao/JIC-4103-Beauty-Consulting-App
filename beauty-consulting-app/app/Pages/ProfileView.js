@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { Link, useNavigation } from "@react-navigation/native";
-import { UserContext } from "../App";
+import { UserContext } from "../contexts/userContext";
 import SignupBackground from "../assets/components/SignupBackground";
 import globalStyles from "../assets/GlobalStyles";
 import axios from "axios";
@@ -25,6 +25,12 @@ const ProfileView = () => {
   var [isEdit, setIsEdit] = useState(false);
 
   const handleEdit = async () => {
+
+    name = name != '' ? name : userContext.name;
+    gender = gender != '' ? gender : userContext.gender;
+    allergies = allergies != '' ? allergies : userContext.allergies;
+    concerns = concerns != '' ? concerns : userContext.concerns;
+
     if (isEdit) {
       req = {
         username: userContext.username,
