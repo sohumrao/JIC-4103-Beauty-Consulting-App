@@ -1,33 +1,19 @@
 import mongoose from "mongoose";
-
-// Defining the schema for stylists (subject to change)
-const StylistDetailsSchema = new mongoose.Schema({
-        experience: String,
-        specialty: String,
-        additionalInfo: String,
-        businessName: String,
-        businessAddress: String
-});
-
+import { Account } from "./account.js";
 
 const StylistSchema = new mongoose.Schema({
-    username: String,
-    name: {
-        type: String,
-        required: true
-    },
-    email: {
-        type: String,
-        required: true
-    },
-    gender: String,
-    age: String,
-    phoneNumber: String,
-    stylistDetails: StylistDetailsSchema
+	business: {
+		name: String,
+		address: String,
+		experience: String,
+		specialty: String,
+		additionalInfo: String,
+		// TODO: refactor Business Schema
+		// hours: { type: HoursSchema, required: true },
+		// services: [ ServiceSchema],
+		// gallery: [{ type: Schema.Types.ObjectId, ref: "Photo" }],
+	},
 });
 
-// Creating a model based on the client schema
-const Stylist = mongoose.model('Stylist', StylistSchema);
-
-
-export {Stylist};
+const Stylist = Account.discriminator("Stylist", StylistSchema);
+export { Stylist };

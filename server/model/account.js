@@ -1,31 +1,43 @@
 import mongoose from "mongoose";
 import crypto from "crypto";
+const Schema = mongoose.Schema;
 
-const AccountSchema = new mongoose.Schema({
-	username: {
-		type: String,
-		required: true,
+const AccountSchema = new Schema({
+	username: { type: String, required: true, unique: true },
+	email: { type: String, unique: true },
+	//TODO: refactor password to be required
+	password: {
+		hash: String,
+		salt: String
 	},
-	hash: String,
-	salt: String,
+	info: {
+		name: String,
+		age: Number,
+		gender: String,
+		zipcode: String,
+		phoneNumber: String,
+	},
+	// profilePhoto: { type: Schema.Types.ObjectId, ref: "Photo" },
+	// authToken: JWT token
+	// resetToken: JWT token
 });
 
 AccountSchema.methods.createHashedPassword = function (password) {
 	// Creating a unique salt for a particular user
-	this.salt = crypto.randomBytes(16).toString("hex");
+	this.password.salt = crypto.randomBytes(16).toString("hex");
 
 	// Hashing user's salt and password with 1000 iterations,
 	// 64 length and sha512 digest
-	this.hash = crypto
-		.pbkdf2Sync(password, this.salt, 1000, 64, `sha512`)
+	this.password.hash = crypto
+		.pbkdf2Sync(password, this.password.salt, 1000, 64, `sha512`)
 		.toString(`hex`);
 };
 
 AccountSchema.methods.validateHashedPassword = function (password) {
 	var hash = crypto
-		.pbkdf2Sync(password, this.salt, 1000, 64, `sha512`)
+		.pbkdf2Sync(password, this.password.salt, 1000, 64, `sha512`)
 		.toString(`hex`);
-	return this.hash === hash;
+	return this.password.hash === hash;
 };
 
 const ResetPasswordSchema = new mongoose.Schema({
@@ -48,9 +60,8 @@ const ResetPasswordSchema = new mongoose.Schema({
 		expires: 60 * 60, // seconds
 	},
 });
-// Creating a model based on the user schema
 
-const Account = mongoose.model("accounts", AccountSchema);
+const Account = mongoose.model("Account", AccountSchema);
 const ResetPassword = mongoose.model("resetpassword", ResetPasswordSchema);
 
 export { Account, ResetPassword };
