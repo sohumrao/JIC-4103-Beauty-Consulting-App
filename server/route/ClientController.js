@@ -44,28 +44,35 @@ router.post("/", async (req, res) => {
 				.send({ message: "More information is required to make a new user" });
 		}
 
-		// Create a new user object with request data
-		const newUser = new Client({
-			username: req.body.username,
-			name: req.body.name,
-			email: req.body.email,
-			gender: req.body.gender,
-			age: req.body.age,
-			phoneNumber: req.body.phoneNumber,
-			hairDetails: req.body.hairDetails,
-			allergies: req.body.allergies,
-		});
-
-		// Save user in the database
-		const savedUser = await newUser.save();
-		res.send(savedUser);
+		const oldUser = await Account.findOneAndUpdate(
+			{ username: req.body.username },
+			{
+				email: req.body.email,
+				info: {
+					name: req.body.name,
+					age: req.body.age,
+					gender: req.body.gender,
+					phoneNumber: req.body.phoneNumber,
+					//NOTE: current code forclient HTTP request does not send zipcode
+				},
+				hairDetails: req.body.hairDetails,
+				allergies: req.body.allergies,
+				/* -------------------------------------------------------------------------- */
+				//needed to cast User into Stylist, can be removed after refactoring one-step account creation
+				__t: "Client",
+			},
+			{ overwriteDiscriminatorKey: true, new: true }
+			/* -------------------------------------------------------------------------- */
+		);
+		// TODO: don't return user data, should just send 201 ok
+		const newUser = await Client.findOne({ username: req.body.username });
+		res.send(newUser);
 	} catch (err) {
 		res.status(500).send({
 			message: err.message || "Some error occurred while creating a user.",
 		});
 	}
 });
-
 router.get("/:username", async (req, res) => {
 	try {
 		// Check for username param
@@ -156,6 +163,7 @@ router.put("/:username", async (req, res) => {
 		// Find the user by username and update their info
 		const updatedUser = await Client.findOneAndUpdate(
 			{ username: req.params.username },
+			//FIXME: req.body should be formatted to Client Schema
 			{ $set: req.body }, // Update the user with the new data from the request body
 			{ new: true } // Return the updated document
 		);
@@ -164,6 +172,7 @@ router.put("/:username", async (req, res) => {
 			return res.status(404).send({ message: "User not found." });
 		}
 
+		// FIXME: should not send password/any other extra information
 		res.send(updatedUser); // Send the updated user data back as a response
 	} catch (err) {
 		res.status(500).send({
@@ -180,14 +189,11 @@ router.delete("/:username", async (req, res) => {
 		const deletedUser = await Client.findOneAndDelete({
 			username: req.params.username,
 		});
-		const deletedAccount = await Account.findOneAndDelete({
-			username: req.params.username,
-		});
 
 		console.log(req.params.username);
 		console.log(deletedUser);
 
-		if (!deletedUser || !deletedAccount) {
+		if (!deletedUser) {
 			return res.status(404).send({ message: "User not found." });
 		}
 

@@ -1,4 +1,5 @@
 import express from "express";
+import { Account } from "../model/account.js";
 import { Stylist } from "../model/stylist.js";
 import { Photo } from "../model/photo.js";
 import multer from "multer";
@@ -36,20 +37,28 @@ router.post("/", async (req, res) => {
 				.send({ message: "More information is required to make a new user" });
 		}
 
-		// Create a new user object with request data
-		const newUser = new Stylist({
-			username: req.body.username,
-			name: req.body.name,
-			email: req.body.email,
-			gender: req.body.gender,
-			age: req.body.age,
-			phoneNumber: req.body.phoneNumber,
-			stylistDetails: req.body.stylistDetails,
-		});
-
-		// Save user in the database
-		const savedUser = await newUser.save();
-		res.send(savedUser);
+		const oldUser = await Account.findOneAndUpdate(
+			{ username: req.body.username },
+			{
+				email: req.body.email,
+				info: {
+					name: req.body.name,
+					age: req.body.age,
+					gender: req.body.gender,
+					phoneNumber: req.body.phoneNumber,
+					//NOTE: current code forclient HTTP request does not send zipcode
+				},
+				business: req.body.stylistDetails,
+				/* -------------------------------------------------------------------------- */
+				//needed to cast User into Stylist, can be removed after refactoring one-step account creation
+				__t: "Stylist",
+			},
+			{ overwriteDiscriminatorKey: true, new: true }
+			/* -------------------------------------------------------------------------- */
+		);
+		// TODO: don't return user data, should just send 201 ok
+		const newUser = await Stylist.findOne({ username: req.body.username });
+		res.send(newUser);
 	} catch (err) {
 		res.status(500).send({
 			message: err.message || "Some error occurred while creating a user.",
