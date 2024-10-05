@@ -22,36 +22,6 @@ import BusinessInfoPage from './Pages/BusinessInfoPage';
 const Stack = createNativeStackNavigator();
 
 function App() {
-/*
-  const [userContext, setUserContext] = React.useState({
-  name: 'No Name', 
-  age: ,
-  gender: 'male',
-  phoneNumber: '0000000000',
-  email: 'email@emailsite.com',
-  hairDetails: {Natural: false,
-        Relaxed: false,
-        Straight: false,
-        Wavy: false,
-        Curly: false,
-        DeepWave: false,
-        LooseCurl: false,
-        TightlyCoiled: false,
-        Fine: false,
-        Medium: false,
-        Thick: false},
-  allergies: '',
-  concerns: '', 
-  stylistDetails: {
-    experience: '',
-    specialty: '',
-    additionalInfo: '',
-    businessName: '',
-    businessAddress: ''
-  },
-  updateUserContext
-});
-*/
   return (
     <UserContextProvider>
       <NavigationContainer>
