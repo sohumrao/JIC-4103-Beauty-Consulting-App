@@ -22,6 +22,7 @@ function ClientDetailsComplete() {
             phoneNumber: userContext.phoneNumber,
             hairDetails: userContext.hairDetails,
             allergies: userContext.allergies,
+            role: 'client'
         };
         console.log(req.body);
         try {
@@ -32,10 +33,18 @@ function ClientDetailsComplete() {
             }
             const res = await axios.post(apiUrl + ':5050/client/', req);
             console.log('User created: ', res.data);
+            
+            userContext.updateUserContext({
+                ...userContext,
+                role: 'client'
+            });
+                navigation.reset({
+                index: 0,
+                routes: [{ name: 'Main' }],
+            });
         } catch (error) {
             console.error('Error with API: ', error);
         }
-        navigation.navigate('ProfileView');
     };
 
     return (

@@ -192,7 +192,7 @@ const StylistDetails2 = () => {
         businessAddress: businessAddress
       },
     });
-    navigation.navigate('StylistDetails3');
+    navigation.navigate('StylistDetailsComplete');
   };
 
   const styles = StyleSheet.create({

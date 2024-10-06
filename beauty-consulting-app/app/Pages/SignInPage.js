@@ -21,15 +21,13 @@ const SignInPage = () => {
             username: username,
             password: password
         };
-        console.log(req);
-
+    
         const apiUrl = process.env.EXPO_PUBLIC_API_URL;
         if (!apiUrl) {
             console.error("API URL not defined");
             return;
         }
-
-        // Validate account information
+    
         try {
             const res = await axios.post(apiUrl + ':5050/account/signIn', req);
             setErrorMessage('');
@@ -37,50 +35,54 @@ const SignInPage = () => {
         } catch (error) {
             setErrorMessage(error.response.data);
             return;
-        };
-
-        // Check if account has associated client data. If so, navigate to profile
-        var userProfileDataExists = false;
+        }
+    
+        let userProfileDataExists = false;
+    
         try {
-            const res = await axios.get(apiUrl + ':5050/client/' + username);
-            console.log(res.data);
+            const clientRes = await axios.get(apiUrl + ':5050/client/' + username);
             userProfileDataExists = true;
             userContext.updateUserContext({
                 username: username,
-                name: res.data.name,
-                age: res.data.age,
-                gender: res.data.gender,
-                phoneNumber: res.data.phoneNumber,
-                email: res.data.email,
-                hairDetails: res.data.hairDetails,
-                allergies: res.data.allergies,
-                concerns: res.data.concerns,
+                name: clientRes.data.name,
+                age: clientRes.data.age,
+                gender: clientRes.data.gender,
+                phoneNumber: clientRes.data.phoneNumber,
+                email: clientRes.data.email,
+                hairDetails: clientRes.data.hairDetails,
+                allergies: clientRes.data.allergies,
+                concerns: clientRes.data.concerns,
+                role: 'client', 
                 updateUserContext: userContext.updateUserContext
             });
-            navigation.navigate('ProfileView');
+                navigation.replace('Main');
+            return;
         } catch (error) {
             if (error.response.status !== 404) {
                 setErrorMessage(error.response.data);
                 return;
             }
         }
-
-        // Check if account has associated stylist data. If so, navigate to business page.
+    
         if (!userProfileDataExists) {
             try {
-                const res = await axios.get(apiUrl + ':5050/stylist/' + username);
+                const stylistRes = await axios.get(apiUrl + ':5050/stylist/' + username);
                 userProfileDataExists = true;
                 userContext.updateUserContext({
                     username: username,
-                    name: res.data.name,
-                    age: res.data.age,
-                    gender: res.data.gender,
-                    phoneNumber: res.data.phoneNumber,
-                    email: res.data.email,
-                    stylistDetails: res.data.stylistDetails,
+                    name: stylistRes.data.name,
+                    age: stylistRes.data.age,
+                    gender: stylistRes.data.gender,
+                    phoneNumber: stylistRes.data.phoneNumber,
+                    email: stylistRes.data.email,
+                    stylistDetails: stylistRes.data.stylistDetails,
+                    role: 'stylist',
                     updateUserContext: userContext.updateUserContext
                 });
-                navigation.navigate('BusinessInfoPage');
+                
+    
+                navigation.replace('Main');
+                return;
             } catch (error) {
                 if (error.response.status !== 404) {
                     setErrorMessage(error.response.data);
@@ -88,26 +90,12 @@ const SignInPage = () => {
                 }
             }
         }
-
-        // If no profile data exists, take to landing page.
-        if (!userProfileDataExists) {
-            userContext.updateUserContext({
-                username: username,
-                name: userContext.name,
-                age: userContext.age,
-                gender: userContext.gender,
-                phoneNumber: userContext.phoneNumber,
-                email: userContext.email,
-                hairDetails: userContext.hairDetails,
-                allergies: userContext.allergies,
-                concerns: userContext.concerns,
-                stylistDetails: userContext.stylistDetails,
-                updateUserContext: userContext.updateUserContext
-            });
-            navigation.navigate('LandingPage');
+            if (!userProfileDataExists) {
+            console.log('no navigation');
+            navigation.replace('LandingPage');
         }
     };
-
+    
     return (
         <KeyboardMove>
         <SignupBackground>
