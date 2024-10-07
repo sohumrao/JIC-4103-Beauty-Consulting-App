@@ -8,7 +8,7 @@ import { ScrollView } from 'react-native';
 import { useState } from 'react';
 import { RadioButton } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
-import { UserContext } from '../App';
+import { UserContext } from '../contexts/userContext';
 
 import OptionsButton from '../assets/components/OptionsButton';
 import ContinueButton from '../assets/components/ContinueButton';

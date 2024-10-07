@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { UserContext } from '../App';
+import { UserContext } from '../contexts/userContext';
 import SignupBackground from '../assets/components/SignupBackground';
 import globalStyles from '../assets/GlobalStyles';
 

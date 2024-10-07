@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
-import { UserContext } from '../App';
+import { UserContext } from '../contexts/userContext';
 import SignupBackground from '../assets/components/SignupBackground';
 import globalStyles from '../assets/GlobalStyles';
 import ErrorMessage from '../components/ErrorMessage';

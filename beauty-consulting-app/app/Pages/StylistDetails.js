@@ -247,12 +247,11 @@
 
 // export default StylistDetails;
 
-
 import React, { useState, useContext } from 'react';
 import { View, Text, TextInput, ScrollView, StyleSheet } from 'react-native';
 import { RadioButton } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
-import { UserContext } from '../App';
+import { UserContext } from '../contexts/userContext';
 import ContinueButton from '../assets/components/ContinueButton';
 
 const StylistDetails = () => {
