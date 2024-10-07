@@ -77,7 +77,8 @@ function StylistDetailsComplete() {
             gender: userContext.gender,
             age: userContext.age,
             phoneNumber: userContext.phoneNumber,
-            stylistDetails: userContext.stylistDetails
+            stylistDetails: userContext.stylistDetails,
+            role: 'stylist',
         };
         console.log(req.body);
         try {
@@ -91,8 +92,10 @@ function StylistDetailsComplete() {
         } catch (error) {
             console.error('Error with API: ', error);
         }
-        // Navigate to BusinessInfoPage
-        navigation.navigate('BusinessInfoPage');
+        navigation.reset({
+            index: 0,
+            routes: [{ name: 'Main' }],
+        });
     };
 
     return (

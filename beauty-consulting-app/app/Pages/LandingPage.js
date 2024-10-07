@@ -61,10 +61,10 @@ function LandingPage() {
       </View>
       <View>
       <View style={styles.buttonContainer}>
-        <ContinueButton title='Sign up as a Client' onPress={() => navigation.navigate('ClientDetails')} />
+        <ContinueButton title='Sign up as a Client' onPress={() => navigation.navigate('Client Details Stack', { screen: 'ClientDetails' })} />
       </View>
       <View style={styles.buttonContainer}>
-        <ContinueButton title='Sign up as a Stylist' onPress={() => navigation.navigate('Stylist Details')} />
+        <ContinueButton title='Sign up as a Stylist' onPress={() => navigation.navigate('Stylist Details Stack', { screen: 'StylistDetails' })} />
       </View>
       </View>
     </SignupBackground>
