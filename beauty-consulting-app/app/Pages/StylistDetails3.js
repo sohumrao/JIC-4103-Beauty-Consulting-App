@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { View, Text, ScrollView, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { UserContext } from '../App';
+import { UserContext } from '../contexts/userContext';
 
 import OptionsButton from '../assets/components/OptionsButton';
 import ContinueButton from '../assets/components/ContinueButton';

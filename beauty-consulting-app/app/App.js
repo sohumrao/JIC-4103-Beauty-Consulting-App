@@ -18,6 +18,7 @@ import ForgotPasswordPage from "./Pages/ResetPassword/ForgotPasswordPage";
 import ResetPasswordPage from "./Pages/ResetPassword/ResetPasswordPage";
 import StylistDetails from "./Pages/StylistDetails";
 import StylistDetails2 from "./Pages/StylistDetails2";
+import StylistDetails3 from "./Pages/StylistDetails3";
 import StylistDetailsComplete from "./Pages/StylistDetailsComplete";
 import BusinessInfoPage from "./Pages/BusinessInfoPage";
 
@@ -43,6 +44,7 @@ function StylistDetailsStack() {
     <Stack.Navigator screenOptions={{ headerShown: true, headerTitle: "" }}>
       <Stack.Screen name="StylistDetails" component={StylistDetails} />
       <Stack.Screen name="StylistDetails2" component={StylistDetails2} />
+      <Stack.Screen name="StylistDetails3" component={StylistDetails3} />
       <Stack.Screen
         name="StylistDetailsComplete"
         component={StylistDetailsComplete}

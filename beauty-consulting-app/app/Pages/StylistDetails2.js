@@ -29,7 +29,7 @@ const StylistDetails2 = () => {
         businessAddress: businessAddress
       },
     });
-    navigation.navigate('StylistDetailsComplete');
+    navigation.navigate('StylistDetails3');
   };
 
   const styles = StyleSheet.create({
