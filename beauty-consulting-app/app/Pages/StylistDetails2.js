@@ -11,22 +11,23 @@ const StylistDetails2 = () => {
   const userContext = useContext(UserContext);
 
   // State for stylist-specific inputs, initialized with context values if available
-  const [experience, setExperience] = useState(userContext.stylistDetails.experience || ''); 
-  const [specialty, setSpecialty] = useState(userContext.stylistDetails.specialty || ''); 
-  const [additionalInfo, setAdditionalInfo] = useState(userContext.stylistDetails.additionalInfo || '');
-  const [businessName, setBusinessName] = useState(userContext.stylistDetails.businessName || '');
-  const [businessAddress, setBusinessAddress] = useState(userContext.stylistDetails.businessAddress || '');
+  const [experience, setExperience] = useState(userContext.business.experience || ''); 
+  const [specialty, setSpecialty] = useState(userContext.business.specialty || ''); 
+  const [additionalInfo, setAdditionalInfo] = useState(userContext.business.additionalInfo || '');
+  const [businessName, setBusinessName] = useState(userContext.business.name || '');
+  const [businessAddress, setBusinessAddress] = useState(userContext.business.address || '');
 
   const handleContinue = () => {
     // Update context with stylist details
     userContext.updateUserContext({
       ...userContext, // Keep existing fields in the context (name, age, gender, etc.)
-      stylistDetails: {
+      business: {
+        ...userContext.business,
         experience: experience,
         specialty: specialty,
         additionalInfo: additionalInfo,
-        businessName: businessName,
-        businessAddress: businessAddress
+        name: businessName,
+        address: businessAddress
       },
     });
     navigation.navigate('StylistDetails3');

@@ -1,6 +1,7 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { UserContext, userContextProvider } from '../contexts/userContext';
+import globalStyles from '../assets/GlobalStyles';
 import ProfileImage from '../assets/components/ProfileImage';
 import axios from 'axios';
 
@@ -9,50 +10,81 @@ const BusinessInfoPage = () => {
   // Access the user context
   const userContext = useContext(UserContext);
 
-  const { name, age, phoneNumber, email, stylistDetails } = userContext;
+  var [stylistData, setStylistData] = useState(null);
+
+  useEffect(() => {
+    populateStylistData(userContext.username);
+  }, [userContext.username]);
+
+  const populateStylistData = async (username) => {
+    try {
+      const apiURL =
+          process.env.EXPO_PUBLIC_API_URL +
+          ":5050/stylist/" +
+          username;
+        if (!apiURL) {
+          console.error("apiURL not defined");
+          return;
+        }
+
+      const res = await axios.get(apiURL);
+      setStylistData(res.data);
+      
+    } catch (error) {
+      console.error("There was an error retrieving user data: ", error)
+    }
+  }
+
+  if (!stylistData) {
+    return (
+      <View style={globalStyles.box}>
+        <Text style={globalStyles.promptText}>Loading...</Text>
+      </View>
+    )
+  }
 
   return (
     <ScrollView style={styles.container}>
-      <Text style={styles.header}>{stylistDetails.businessName}</Text>
+      <Text style={styles.header}>{stylistData.business.name}</Text>
 
       <View style={styles.infoContainer}>
         <Text style={styles.label}>Stylist Name:</Text>
-        <Text style={styles.value}>{name}</Text>
+        <Text style={styles.value}>{stylistData.info.name}</Text>
       </View>
 
       <View style={styles.infoContainer}>
         <Text style={styles.label}>Business Address:</Text>
-        <Text style={styles.value}>{stylistDetails.businessAddress}</Text>
+        <Text style={styles.value}>{stylistData.business.address}</Text>
       </View>
 
       <View style={styles.infoContainer}>
         <Text style={styles.label}>Age:</Text>
-        <Text style={styles.value}>{age}</Text>
+        <Text style={styles.value}>{stylistData.info.age}</Text>
       </View>
 
       <View style={styles.infoContainer}>
         <Text style={styles.label}>Phone Number:</Text>
-        <Text style={styles.value}>{phoneNumber}</Text>
+        <Text style={styles.value}>{stylistData.info.phoneNumber}</Text>
       </View>
 
       <View style={styles.infoContainer}>
         <Text style={styles.label}>Email:</Text>
-        <Text style={styles.value}>{email}</Text>
+        <Text style={styles.value}>{stylistData.email}</Text>
       </View>
 
       <View style={styles.infoContainer}>
         <Text style={styles.label}>Years of Experience:</Text>
-        <Text style={styles.value}>{stylistDetails.experience}</Text>
+        <Text style={styles.value}>{stylistData.business.experience}</Text>
       </View>
 
       <View style={styles.infoContainer}>
         <Text style={styles.label}>Specialty:</Text>
-        <Text style={styles.value}>{stylistDetails.specialty}</Text>
+        <Text style={styles.value}>{stylistData.business.specialty}</Text>
       </View>
 
       <View style={styles.infoContainer}>
         <Text style={styles.label}>Additional Info:</Text>
-        <Text style={styles.value}>{stylistDetails.additionalInfo}</Text>
+        <Text style={styles.value}>{stylistData.business.additionalInfo}</Text>
       </View>
     </ScrollView>
   );

@@ -32,8 +32,8 @@ const StylistDetails3 = () => {
     // Update context with stylist's hair type experience
     userContext.updateUserContext({
       ...userContext,
-      stylistDetails: {
-        ...userContext.stylistDetails,
+      business: {
+        ...userContext.business,
         workedWithHairTypes: workedWithHairTypes,
       },
     });

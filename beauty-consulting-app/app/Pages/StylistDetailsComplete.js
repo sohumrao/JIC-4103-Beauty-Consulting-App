@@ -19,7 +19,7 @@ function StylistDetailsComplete() {
             gender: userContext.gender,
             age: userContext.age,
             phoneNumber: userContext.phoneNumber,
-            stylistDetails: userContext.stylistDetails,
+            business: userContext.business,
             role: 'stylist',
         };
 
@@ -29,11 +29,15 @@ function StylistDetailsComplete() {
                 console.error("API URL not defined");
                 return;
             }
-            const res = await axios.post(apiUrl + '/stylist/', req);
+            const res = await axios.post(apiUrl + ':5050/stylist/', req);
             console.log('Stylist created: ', res.data);
         } catch (error) {
             console.error('Error with API: ', error);
         }
+        userContext.updateUserContext({
+            username: userContext.username,
+            role: 'stylist'
+        })
         navigation.reset({
             index: 0,
             routes: [{ name: 'Main' }],

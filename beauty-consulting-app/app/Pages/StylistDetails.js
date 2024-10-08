@@ -25,19 +25,12 @@ const StylistDetails = () => {
   // Handle continue button press
   const handleContinue = () => {
     userContext.updateUserContext({
-      username: userContext.username,
+      ...userContext,
       name: name,
       age: age,
       gender: gender,
       phoneNumber: phoneNumber,
-      email: email,
-      stylistDetails: {
-        experience: experience,
-        specialty: specialty,
-        additionalInfo: additionalInfo,
-        businessName: businessName,
-        businessAddress: businessAddress
-      }
+      email: email
     });
     // console.log('Navigating to StylistDetails2');
     navigation.navigate('StylistDetails2');
