@@ -60,28 +60,25 @@ function MainTabNavigator() {
     </Tab.Navigator>
   );
 }
-
+function App() {
   return (
     <UserContextProvider>
       <NavigationContainer>
-        <Stack.Navigator>
-          <Stack.Screen name="Sign In" component={SignInPage}/>
-          <Stack.Screen name="Create Account" component={CreateAccountPage}/>
-          <Stack.Screen name="LandingPage" component={LandingPage} options={{ title: 'Welcome' }} />
-          <Stack.Screen name="ClientDetails" component={ClientDetails} />
-          <Stack.Screen name="ClientDetails2" component={ClientDetails2} />
-          <Stack.Screen name="ClientDetails3" component={ClientDetails3} />
-          <Stack.Screen name="ClientDetailsComplete" component={ClientDetailsComplete} />
-          <Stack.Screen name="ProfilePage" component={ProfilePage} />
-          <Stack.Screen name="ProfileView" component={ProfileView} />
-          <Stack.Screen name="Forgot Password" component={ForgotPasswordPage}/>
-          <Stack.Screen name="Reset Password" component={ResetPasswordPage}/>
-          <Stack.Screen name="Stylist Details" component={StylistDetails}/>
-          <Stack.Screen name="StylistDetails2" component={StylistDetails2}/>
-          <Stack.Screen name="StylistDetails3" component={StylistDetailsComplete}/>
-          <Stack.Screen name="BusinessInfoPage" component={BusinessInfoPage} />
-        </Stack.Navigator>
-      </NavigationContainer>
+      <Stack.Navigator screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="Sign In" component={SignInPage} />
+        <Stack.Screen name="Create Account" component={CreateAccountPage} />
+        <Stack.Screen name="LandingPage" component={LandingPage} />
+        <Stack.Screen name="Client Details Stack" component={ClientDetailsStack} />
+        <Stack.Screen name="Stylist Details Stack" component={StylistDetailsStack} />
+        <Stack.Screen name="Forgot Password" component={ForgotPasswordPage} />
+        <Stack.Screen name="Reset Password" component={ResetPasswordPage} />
+        <Stack.Screen
+          name="Main"
+          component={MainTabNavigator}
+          options={{ headerShown: false }}
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
     </UserContextProvider>
   );
 }
