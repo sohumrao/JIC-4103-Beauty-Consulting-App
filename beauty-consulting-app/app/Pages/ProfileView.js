@@ -7,10 +7,9 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { Link, useNavigation } from "@react-navigation/native";
-import { UserContext } from "../App";
+import { UserContext } from "../contexts/userContext";
 import SignupBackground from "../assets/components/SignupBackground";
 import globalStyles from "../assets/GlobalStyles";
-import KeyboardAvoidingInput from "../assets/components/KeyboardAvoidingInput";
 import axios from "axios";
 
 const ProfileView = () => {
@@ -26,6 +25,12 @@ const ProfileView = () => {
   var [isEdit, setIsEdit] = useState(false);
 
   const handleEdit = async () => {
+
+    name = name != '' ? name : userContext.name;
+    gender = gender != '' ? gender : userContext.gender;
+    allergies = allergies != '' ? allergies : userContext.allergies;
+    concerns = concerns != '' ? concerns : userContext.concerns;
+
     if (isEdit) {
       req = {
         username: userContext.username,
@@ -99,7 +104,6 @@ const ProfileView = () => {
   return (
     <SignupBackground>
       <View style={globalStyles.box}>
-        <KeyboardAvoidingInput>
           <View style={styles.inputContainer}>
             <Text style={globalStyles.inputHeaderText}>Name</Text>
             <TextInput
@@ -147,7 +151,6 @@ const ProfileView = () => {
               editable={isEdit}
             />
           </View>
-        </KeyboardAvoidingInput>
 
         <TouchableOpacity
           style={[globalStyles.button, { marginBottom: 15 }]}

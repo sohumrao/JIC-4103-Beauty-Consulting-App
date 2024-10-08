@@ -5,7 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 
 import ContinueButton from '../assets/components/ContinueButton';
-import { UserContext } from '../App';
+import { UserContext } from '../contexts/userContext';
 import globalStyles from '../assets/GlobalStyles';
 
 function ClientDetailsComplete() {

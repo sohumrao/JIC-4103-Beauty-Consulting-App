@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
-import { UserContext } from '../App';
+import { UserContext, userContextProvider } from '../contexts/userContext';
 import ProfileImage from '../assets/components/ProfileImage';
 
 const BusinessInfoPage = () => {

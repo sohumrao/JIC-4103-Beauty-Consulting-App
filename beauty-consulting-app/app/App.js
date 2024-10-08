@@ -20,41 +20,10 @@ import {
   StylistDetailsComplete,
   BusinessInfoPage,
 } from './Pages';
+import { UserContext, UserContextProvider } from "./contexts/userContext";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
-
-const UserContext = React.createContext({
-  username: 'not signed in',
-  name: 'No Name',
-  age: 0,
-  gender: 'male',
-  phoneNumber: '0000000000',
-  email: 'email@emailsite.com',
-  hairDetails: {
-    Natural: false,
-    Relaxed: false,
-    Straight: false,
-    Wavy: false,
-    Curly: false,
-    DeepWave: false,
-    LooseCurl: false,
-    TightlyCoiled: false,
-    Fine: false,
-    Medium: false,
-    Thick: false,
-  },
-  allergies: '',
-  concerns: '',
-  stylistDetails: {
-    experience: '',
-    specialty: '',
-    additionalInfo: '',
-  },
-  updateUserContext: () => {},
-});
-
-export { UserContext };
 
 function ClientDetailsStack() {
   return (
@@ -92,59 +61,28 @@ function MainTabNavigator() {
   );
 }
 
-
-function App() {
-  const [userContext, setUserContext] = React.useState({
-    name: 'No Name',
-    age: 0,
-    gender: 'male',
-    phoneNumber: '0000000000',
-    email: 'email@emailsite.com',
-    hairDetails: {
-      Natural: false,
-      Relaxed: false,
-      Straight: false,
-      Wavy: false,
-      Curly: false,
-      DeepWave: false,
-      LooseCurl: false,
-      TightlyCoiled: false,
-      Fine: false,
-      Medium: false,
-      Thick: false,
-    },
-    allergies: '',
-    concerns: '',
-    stylistDetails: {
-      experience: '',
-      specialty: '',
-      additionalInfo: '',
-      businessName: '',
-      businessAddress: '',
-    },
-    updateUserContext: (userContextObject) => setUserContext(userContextObject),
-  });
-
   return (
-    <UserContext.Provider value={userContext}>
-    <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="Sign In" component={SignInPage} />
-        <Stack.Screen name="Create Account" component={CreateAccountPage} />
-        <Stack.Screen name="LandingPage" component={LandingPage} />
-        <Stack.Screen name="Client Details Stack" component={ClientDetailsStack} />
-        <Stack.Screen name="Stylist Details Stack" component={StylistDetailsStack} />
-        <Stack.Screen name="Forgot Password" component={ForgotPasswordPage} />
-        <Stack.Screen name="Reset Password" component={ResetPasswordPage} />
-
-        <Stack.Screen
-          name="Main"
-          component={MainTabNavigator}
-          options={{ headerShown: false }}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
-    </UserContext.Provider>
+    <UserContextProvider>
+      <NavigationContainer>
+        <Stack.Navigator>
+          <Stack.Screen name="Sign In" component={SignInPage}/>
+          <Stack.Screen name="Create Account" component={CreateAccountPage}/>
+          <Stack.Screen name="LandingPage" component={LandingPage} options={{ title: 'Welcome' }} />
+          <Stack.Screen name="ClientDetails" component={ClientDetails} />
+          <Stack.Screen name="ClientDetails2" component={ClientDetails2} />
+          <Stack.Screen name="ClientDetails3" component={ClientDetails3} />
+          <Stack.Screen name="ClientDetailsComplete" component={ClientDetailsComplete} />
+          <Stack.Screen name="ProfilePage" component={ProfilePage} />
+          <Stack.Screen name="ProfileView" component={ProfileView} />
+          <Stack.Screen name="Forgot Password" component={ForgotPasswordPage}/>
+          <Stack.Screen name="Reset Password" component={ResetPasswordPage}/>
+          <Stack.Screen name="Stylist Details" component={StylistDetails}/>
+          <Stack.Screen name="StylistDetails2" component={StylistDetails2}/>
+          <Stack.Screen name="StylistDetails3" component={StylistDetailsComplete}/>
+          <Stack.Screen name="BusinessInfoPage" component={BusinessInfoPage} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </UserContextProvider>
   );
 }
 
