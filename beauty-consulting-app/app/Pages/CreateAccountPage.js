@@ -43,7 +43,6 @@ const CreateAccountPage = () => {
             allergies: userContext.allergies,
             concerns: userContext.concerns,
             stylistDetails: userContext.stylistDetails,
-            updateUserContext: userContext.updateUserContext
         });
         navigation.navigate("LandingPage");
     }

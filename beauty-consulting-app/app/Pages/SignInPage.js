@@ -44,16 +44,7 @@ const SignInPage = () => {
             userProfileDataExists = true;
             userContext.updateUserContext({
                 username: username,
-                name: clientRes.data.name,
-                age: clientRes.data.age,
-                gender: clientRes.data.gender,
-                phoneNumber: clientRes.data.phoneNumber,
-                email: clientRes.data.email,
-                hairDetails: clientRes.data.hairDetails,
-                allergies: clientRes.data.allergies,
-                concerns: clientRes.data.concerns,
-                role: 'client', 
-                updateUserContext: userContext.updateUserContext
+                role: 'client'
             });
                 navigation.replace('Main');
             return;
@@ -70,14 +61,7 @@ const SignInPage = () => {
                 userProfileDataExists = true;
                 userContext.updateUserContext({
                     username: username,
-                    name: stylistRes.data.name,
-                    age: stylistRes.data.age,
-                    gender: stylistRes.data.gender,
-                    phoneNumber: stylistRes.data.phoneNumber,
-                    email: stylistRes.data.email,
-                    stylistDetails: stylistRes.data.stylistDetails,
-                    role: 'stylist',
-                    updateUserContext: userContext.updateUserContext
+                    role: 'stylist'
                 });
                 
     

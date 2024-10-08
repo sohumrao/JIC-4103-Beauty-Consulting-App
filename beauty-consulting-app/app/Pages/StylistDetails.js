@@ -286,8 +286,7 @@ const StylistDetails = () => {
         additionalInfo: additionalInfo,
         businessName: businessName,
         businessAddress: businessAddress
-      },
-      updateUserContext: userContext.updateUserContext
+      }
     });
     // console.log('Navigating to StylistDetails2');
     navigation.navigate('StylistDetails2');

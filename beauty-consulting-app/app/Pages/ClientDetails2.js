@@ -48,7 +48,6 @@ function ClientDetails2() {
       hairDetails: selections,
       allergies: userContext.allergies,
       concerns: userContext.concerns,
-      updateUserContext: userContext.updateUserContext
     });
     navigation.navigate('ClientDetails3');
   };
