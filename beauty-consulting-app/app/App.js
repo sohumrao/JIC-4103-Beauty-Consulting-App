@@ -17,6 +17,7 @@ import {
   ResetPasswordPage,
   StylistDetails,
   StylistDetails2,
+  StylistDetails3,
   StylistDetailsComplete,
   BusinessInfoPage,
 } from './Pages';

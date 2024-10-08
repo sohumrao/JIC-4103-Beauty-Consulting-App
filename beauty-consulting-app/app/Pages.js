@@ -11,6 +11,7 @@ import ForgotPasswordPage from './Pages/ResetPassword/ForgotPasswordPage';
 import ResetPasswordPage from './Pages/ResetPassword/ResetPasswordPage';
 import StylistDetails from './Pages/StylistDetails';
 import StylistDetails2 from './Pages/StylistDetails2';
+import StylistDetails3 from './Pages/StylistDetails3';
 import StylistDetailsComplete from './Pages/StylistDetailsComplete';
 import BusinessInfoPage from './Pages/BusinessInfoPage';
 
@@ -28,6 +29,7 @@ export {
   ResetPasswordPage,
   StylistDetails,
   StylistDetails2,
+  StylistDetails3,
   StylistDetailsComplete,
   BusinessInfoPage,
 };
