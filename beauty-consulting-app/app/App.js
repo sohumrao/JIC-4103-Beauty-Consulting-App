@@ -52,11 +52,11 @@ function MainTabNavigator() {
   return (
     <Tab.Navigator screenOptions={{ headerShown: false }}>
       {role === 'client' ? (
-        <Tab.Screen name="ProfileView" component={ProfileView} />
+        <Tab.Screen name="My Profile" component={ProfileView} />
       ) : (
         <Tab.Screen name="BusinessInfoPage" component={BusinessInfoPage} />
       )}
-      <Tab.Screen name="Profile" component={ProfilePage} />
+      <Tab.Screen name="APIcheck" component={ProfilePage} />
     </Tab.Navigator>
   );
 }

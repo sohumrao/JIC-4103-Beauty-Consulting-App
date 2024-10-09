@@ -11,6 +11,9 @@ import { UserContext } from "../contexts/userContext";
 import SignupBackground from "../assets/components/SignupBackground";
 import globalStyles from "../assets/GlobalStyles";
 import axios from "axios";
+import AboutMeBox from "../assets/components/AboutMeBox";
+import ProfilePicture from "../assets/components/ProfilePicture";
+import EditImage from '../assets/images/pen.svg';
 
 const ProfileView = () => {
   const navigation = useNavigation();
@@ -23,6 +26,8 @@ const ProfileView = () => {
   var [allergies, setAllergies] = useState("");
   var [concerns, setConcerns] = useState("");
   var [isEdit, setIsEdit] = useState(false);
+
+  const { profilePicture } = useContext(UserContext);
 
   const handleEdit = async () => {
 
@@ -101,9 +106,9 @@ const ProfileView = () => {
     },
   });
 
-  return (
+ /* return (
     <SignupBackground>
-      <View style={globalStyles.box}>
+    <View style={globalStyles.box}>
           <View style={styles.inputContainer}>
             <Text style={globalStyles.inputHeaderText}>Name</Text>
             <TextInput
@@ -166,6 +171,28 @@ const ProfileView = () => {
         </TouchableOpacity>
       </View>
     </SignupBackground>
+  ); */
+
+  return (
+      <SignupBackground>
+          <View style={{flex: 1}}>
+            <View style={{flexDirection: 'row', alignItems: 'flex-start', marginTop: 100, marginLeft: 20,}}>
+                <ProfilePicture picture={profilePicture}/>
+            </View>
+            <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+                <Text>{userContext.name}</Text>
+                <EditImage/>
+            </View>
+            <View style={{marginTop: 180}}>
+                <AboutMeBox
+                age={userContext.age}
+                phoneNumber={userContext.phoneNumber}
+                gender={userContext.gender}
+                email={userContext.email}
+                />
+                </View>
+            </View>
+      </SignupBackground>
   );
 };
 
