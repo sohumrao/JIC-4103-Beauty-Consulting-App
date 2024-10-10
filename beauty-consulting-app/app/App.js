@@ -1,8 +1,8 @@
-import * as React from 'react';
-import { useContext } from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import * as React from "react";
+import { useContext } from "react";
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import {
   LandingPage,
   ClientDetails,
@@ -20,7 +20,7 @@ import {
   StylistDetails3,
   StylistDetailsComplete,
   BusinessInfoPage,
-} from './Pages';
+} from "./Pages";
 import { UserContext, UserContextProvider } from "./contexts/userContext";
 
 const Stack = createNativeStackNavigator();

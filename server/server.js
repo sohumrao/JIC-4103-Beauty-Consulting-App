@@ -22,13 +22,12 @@ app.use("/account", accountController);
 
 // MongoDB Connection
 const db = mongoose.connection;
-db.on('error', console.error.bind(console, 'MongoDB connection error:'));
-db.once('open', function() {
-  console.log('MongoDB connection is open');
+db.on("error", console.error.bind(console, "MongoDB connection error:"));
+db.once("open", function () {
+  console.log("MongoDB connection is open");
 });
-
 
 // start the Express server
 app.listen(PORT, () => {
-	console.log(`Server listening on port ${PORT}`);
+  console.log(`Server listening on port ${PORT}`);
 });

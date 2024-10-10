@@ -1,8 +1,8 @@
-import React, { useContext, useState } from 'react';
-import { View, Text, TextInput, ScrollView, StyleSheet } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { UserContext } from '../contexts/userContext';
-import ContinueButton from '../assets/components/ContinueButton';
+import React, { useContext, useState } from "react";
+import { View, Text, TextInput, ScrollView, StyleSheet } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import { UserContext } from "../contexts/userContext";
+import ContinueButton from "../assets/components/ContinueButton";
 
 const StylistDetails2 = () => {
   const navigation = useNavigation();
@@ -11,11 +11,21 @@ const StylistDetails2 = () => {
   const userContext = useContext(UserContext);
 
   // State for stylist-specific inputs, initialized with context values if available
-  const [experience, setExperience] = useState(userContext.business.experience || ''); 
-  const [specialty, setSpecialty] = useState(userContext.business.specialty || ''); 
-  const [additionalInfo, setAdditionalInfo] = useState(userContext.business.additionalInfo || '');
-  const [businessName, setBusinessName] = useState(userContext.business.name || '');
-  const [businessAddress, setBusinessAddress] = useState(userContext.business.address || '');
+  const [experience, setExperience] = useState(
+    userContext.business.experience || "",
+  );
+  const [specialty, setSpecialty] = useState(
+    userContext.business.specialty || "",
+  );
+  const [additionalInfo, setAdditionalInfo] = useState(
+    userContext.business.additionalInfo || "",
+  );
+  const [businessName, setBusinessName] = useState(
+    userContext.business.name || "",
+  );
+  const [businessAddress, setBusinessAddress] = useState(
+    userContext.business.address || "",
+  );
 
   const handleContinue = () => {
     // Update context with stylist details
@@ -27,38 +37,38 @@ const StylistDetails2 = () => {
         specialty: specialty,
         additionalInfo: additionalInfo,
         name: businessName,
-        address: businessAddress
+        address: businessAddress,
       },
     });
-    navigation.navigate('StylistDetails3');
+    navigation.navigate("StylistDetails3");
   };
 
   const styles = StyleSheet.create({
     container: {
       flex: 1,
       padding: 20,
-      backgroundColor: '#fff',
+      backgroundColor: "#fff",
     },
     header: {
       fontSize: 22,
-      fontWeight: 'bold',
+      fontWeight: "bold",
       marginBottom: 20,
-      textAlign: 'center',
+      textAlign: "center",
     },
     stepIndicator: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
+      flexDirection: "row",
+      justifyContent: "space-between",
       marginBottom: 20,
     },
     step: {
       flex: 1,
       height: 5,
-      backgroundColor: '#eee',
+      backgroundColor: "#eee",
       borderRadius: 2.5,
       marginHorizontal: 2,
     },
     stepCompleted: {
-      backgroundColor: 'red',
+      backgroundColor: "red",
     },
     form: {
       marginBottom: 20,
@@ -70,22 +80,22 @@ const StylistDetails2 = () => {
     input: {
       fontSize: 16,
       borderWidth: 1,
-      borderColor: '#ccc',
+      borderColor: "#ccc",
       borderRadius: 5,
       padding: 10,
       marginBottom: 20,
     },
     continueButton: {
-      backgroundColor: 'red',
+      backgroundColor: "red",
       padding: 15,
       borderRadius: 5,
-      alignItems: 'center',
-      justifyContent: 'center',
+      alignItems: "center",
+      justifyContent: "center",
     },
     continueButtonText: {
       fontSize: 16,
-      color: '#fff',
-      fontWeight: 'bold',
+      color: "#fff",
+      fontWeight: "bold",
     },
   });
 
@@ -99,23 +109,21 @@ const StylistDetails2 = () => {
         <View style={styles.step}></View>
       </View>
 
-
       <Text style={styles.label}>Name of Business</Text>
-        <TextInput
-          style={styles.input}
-          value={businessName}
-          onChangeText={setBusinessName}
-          placeholder="Enter your business name"
-        />
+      <TextInput
+        style={styles.input}
+        value={businessName}
+        onChangeText={setBusinessName}
+        placeholder="Enter your business name"
+      />
 
-        <Text style={styles.label}>Address of Business</Text>
-        <TextInput
-          style={styles.input}
-          value={businessAddress}
-          onChangeText={setBusinessAddress}
-          placeholder="Enter your business address"
-        />
-
+      <Text style={styles.label}>Address of Business</Text>
+      <TextInput
+        style={styles.input}
+        value={businessAddress}
+        onChangeText={setBusinessAddress}
+        placeholder="Enter your business address"
+      />
 
       <View style={styles.form}>
         <Text style={styles.label}>Years of Experience</Text>

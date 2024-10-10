@@ -1,10 +1,10 @@
-import React, { useState, useContext } from 'react';
-import { View, Text, ScrollView, StyleSheet } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { UserContext } from '../contexts/userContext';
+import React, { useState, useContext } from "react";
+import { View, Text, ScrollView, StyleSheet } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import { UserContext } from "../contexts/userContext";
 
-import OptionsButton from '../assets/components/OptionsButton';
-import ContinueButton from '../assets/components/ContinueButton';
+import OptionsButton from "../assets/components/OptionsButton";
+import ContinueButton from "../assets/components/ContinueButton";
 
 const StylistDetails3 = () => {
   const navigation = useNavigation();
@@ -25,7 +25,7 @@ const StylistDetails3 = () => {
   });
 
   const handleSelectionChange = (option) => {
-    setWorkedWithHairTypes(prev => ({ ...prev, [option]: !prev[option] }));
+    setWorkedWithHairTypes((prev) => ({ ...prev, [option]: !prev[option] }));
   };
 
   const handleContinue = () => {
@@ -37,35 +37,35 @@ const StylistDetails3 = () => {
         workedWithHairTypes: workedWithHairTypes,
       },
     });
-    navigation.navigate('StylistDetailsComplete');
+    navigation.navigate("StylistDetailsComplete");
   };
 
   const styles = StyleSheet.create({
     container: {
       flex: 1,
       padding: 20,
-      backgroundColor: '#fff',
+      backgroundColor: "#fff",
     },
     header: {
       fontSize: 22,
-      fontWeight: 'bold',
+      fontWeight: "bold",
       marginBottom: 20,
-      textAlign: 'center',
+      textAlign: "center",
     },
     stepIndicator: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
+      flexDirection: "row",
+      justifyContent: "space-between",
       marginBottom: 20,
     },
     step: {
       flex: 1,
       height: 5,
-      backgroundColor: '#eee',
+      backgroundColor: "#eee",
       borderRadius: 2.5,
       marginHorizontal: 2,
     },
     stepCompleted: {
-      backgroundColor: 'red',
+      backgroundColor: "red",
     },
     form: {
       marginBottom: 20,
@@ -75,15 +75,15 @@ const StylistDetails3 = () => {
       marginBottom: 10,
     },
     optionsContainer: {
-      flexDirection: 'column',
+      flexDirection: "column",
       flex: 1,
-      justifyContent: 'space-between',
+      justifyContent: "space-between",
       marginBottom: 20,
     },
     allOptionsContainer: {
-      flexDirection: 'row',
+      flexDirection: "row",
       flex: 1,
-      justifyContent: 'space-between',
+      justifyContent: "space-between",
       marginBottom: 20,
     },
   });
@@ -102,29 +102,67 @@ const StylistDetails3 = () => {
         <Text style={styles.header}>Hair Type Experience</Text>
         <View style={styles.allOptionsContainer}>
           <View style={styles.optionsContainer}>
-            <OptionsButton title="Natural" onPress={() => handleSelectionChange('Natural')} />
-            <OptionsButton title="Relaxed" onPress={() => handleSelectionChange('Relaxed')} />
-            <OptionsButton title="Straight" onPress={() => handleSelectionChange('Straight')} />
-            <OptionsButton title="Wavy" onPress={() => handleSelectionChange('Wavy')} />
+            <OptionsButton
+              title="Natural"
+              onPress={() => handleSelectionChange("Natural")}
+            />
+            <OptionsButton
+              title="Relaxed"
+              onPress={() => handleSelectionChange("Relaxed")}
+            />
+            <OptionsButton
+              title="Straight"
+              onPress={() => handleSelectionChange("Straight")}
+            />
+            <OptionsButton
+              title="Wavy"
+              onPress={() => handleSelectionChange("Wavy")}
+            />
           </View>
           <View style={styles.optionsContainer}>
-            <OptionsButton title="Curly" onPress={() => handleSelectionChange('Curly')} />
-            <OptionsButton title="Deep Wave" onPress={() => handleSelectionChange('DeepWave')} />
-            <OptionsButton title="Loose Curl" onPress={() => handleSelectionChange('LooseCurl')} />
-            <OptionsButton title="Tightly Coiled" onPress={() => handleSelectionChange('TightlyCoiled')} />
+            <OptionsButton
+              title="Curly"
+              onPress={() => handleSelectionChange("Curly")}
+            />
+            <OptionsButton
+              title="Deep Wave"
+              onPress={() => handleSelectionChange("DeepWave")}
+            />
+            <OptionsButton
+              title="Loose Curl"
+              onPress={() => handleSelectionChange("LooseCurl")}
+            />
+            <OptionsButton
+              title="Tightly Coiled"
+              onPress={() => handleSelectionChange("TightlyCoiled")}
+            />
           </View>
         </View>
 
         <Text style={styles.header}>Hair Density Experience</Text>
-        <View style={[styles.optionsContainer, { justifyContent: 'space-between', flexDirection: 'row' }]}>
+        <View
+          style={[
+            styles.optionsContainer,
+            { justifyContent: "space-between", flexDirection: "row" },
+          ]}
+        >
           <View style={[styles.optionsContainer]}>
-            <OptionsButton title="Fine" onPress={() => handleSelectionChange('Fine')} />
+            <OptionsButton
+              title="Fine"
+              onPress={() => handleSelectionChange("Fine")}
+            />
           </View>
           <View style={[styles.optionsContainer]}>
-            <OptionsButton title="Medium" onPress={() => handleSelectionChange('Medium')} />
+            <OptionsButton
+              title="Medium"
+              onPress={() => handleSelectionChange("Medium")}
+            />
           </View>
           <View style={[styles.optionsContainer]}>
-            <OptionsButton title="Thick" onPress={() => handleSelectionChange('Thick')} />
+            <OptionsButton
+              title="Thick"
+              onPress={() => handleSelectionChange("Thick")}
+            />
           </View>
         </View>
       </View>

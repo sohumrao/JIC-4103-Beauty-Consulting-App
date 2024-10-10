@@ -1,5 +1,12 @@
-import React from 'react';
-import { KeyboardAvoidingView, Platform, StatusBar, TouchableWithoutFeedback, Keyboard, View } from 'react-native';
+import React from "react";
+import {
+  KeyboardAvoidingView,
+  Platform,
+  StatusBar,
+  TouchableWithoutFeedback,
+  Keyboard,
+  View,
+} from "react-native";
 
 const KeyboardMove = ({ children }) => {
   const keyboardVerticalOffset = Platform.select({
@@ -12,7 +19,7 @@ const KeyboardMove = ({ children }) => {
       <View style={{ flex: 1 }}>
         <KeyboardAvoidingView
           style={{ flex: 1 }}
-          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
           keyboardVerticalOffset={keyboardVerticalOffset}
         >
           {children}
