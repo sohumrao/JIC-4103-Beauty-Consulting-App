@@ -32,13 +32,11 @@ const ProfileView = () => {
   const populateClientData = async (username) => {
     try {
       const apiURL =
-          process.env.EXPO_PUBLIC_API_URL +
-          ":5050/client/" +
-          username;
-        if (!apiURL) {
-          console.error("apiURL not defined");
-          return;
-        }
+        process.env.EXPO_PUBLIC_API_URL + ":5050/client/" + username;
+      if (!apiURL) {
+        console.error("apiURL not defined");
+        return;
+      }
 
       const res = await axios.get(apiURL);
       setClientData(res.data);
@@ -46,18 +44,16 @@ const ProfileView = () => {
       setName(res.data.info.name);
       setAllergies(res.data.allergies);
       setConcerns(res.data.additionalConcerns);
-      
     } catch (error) {
-      console.error("There was an error retrieving user data: ", error)
+      console.error("There was an error retrieving user data: ", error);
     }
-  }
+  };
 
   const handleEdit = async () => {
-
-    name = name != '' ? name : clientData.info.name;
-    gender = gender != '' ? gender : clientData.info.gender;
-    allergies = allergies != '' ? allergies : clientData.allergies;
-    concerns = concerns != '' ? concerns : clientData.additionalConcerns;
+    name = name != "" ? name : clientData.info.name;
+    gender = gender != "" ? gender : clientData.info.gender;
+    allergies = allergies != "" ? allergies : clientData.allergies;
+    concerns = concerns != "" ? concerns : clientData.additionalConcerns;
 
     if (isEdit) {
       req = {
@@ -65,10 +61,10 @@ const ProfileView = () => {
         info: {
           ...clientData.info,
           name: name,
-          gender: gender
+          gender: gender,
         },
         allergies: allergies,
-        additionalConcerns: concerns
+        additionalConcerns: concerns,
       };
       try {
         const apiURL =
@@ -92,7 +88,7 @@ const ProfileView = () => {
     // TODO: update with a separate flow for password validation after backend rework
 
     try {
-        console.log(userContext);
+      console.log(userContext);
       const apiURL =
         process.env.EXPO_PUBLIC_API_URL +
         ":5050/client/" +
@@ -120,59 +116,59 @@ const ProfileView = () => {
       <View style={globalStyles.box}>
         <Text style={globalStyles.promptText}>Loading...</Text>
       </View>
-    )
+    );
   }
 
   return (
     <SignupBackground>
       <View style={globalStyles.box}>
-          <View style={styles.inputContainer}>
-            <Text style={globalStyles.inputHeaderText}>Name</Text>
-            <TextInput
-              style={globalStyles.input}
-              placeholder={name}
-              placeholderTextColor={"#000"}
-              value={name}
-              onChangeText={setName}
-              editable={isEdit}
-            />
-          </View>
+        <View style={styles.inputContainer}>
+          <Text style={globalStyles.inputHeaderText}>Name</Text>
+          <TextInput
+            style={globalStyles.input}
+            placeholder={name}
+            placeholderTextColor={"#000"}
+            value={name}
+            onChangeText={setName}
+            editable={isEdit}
+          />
+        </View>
 
-          <View style={styles.inputContainer}>
-            <Text style={globalStyles.inputHeaderText}>Gender</Text>
-            <TextInput
-              style={globalStyles.input}
-              placeholder={gender}
-              placeholderTextColor={"#000"}
-              value={gender}
-              onChangeText={setGender}
-              editable={isEdit}
-            />
-          </View>
+        <View style={styles.inputContainer}>
+          <Text style={globalStyles.inputHeaderText}>Gender</Text>
+          <TextInput
+            style={globalStyles.input}
+            placeholder={gender}
+            placeholderTextColor={"#000"}
+            value={gender}
+            onChangeText={setGender}
+            editable={isEdit}
+          />
+        </View>
 
-          <View style={styles.inputContainer}>
-            <Text style={globalStyles.inputHeaderText}>Allergies</Text>
-            <TextInput
-              style={globalStyles.input}
-              placeholder={allergies}
-              placeholderTextColor={"#000"}
-              value={allergies}
-              onChangeText={setAllergies}
-              editable={isEdit}
-            />
-          </View>
+        <View style={styles.inputContainer}>
+          <Text style={globalStyles.inputHeaderText}>Allergies</Text>
+          <TextInput
+            style={globalStyles.input}
+            placeholder={allergies}
+            placeholderTextColor={"#000"}
+            value={allergies}
+            onChangeText={setAllergies}
+            editable={isEdit}
+          />
+        </View>
 
-          <View style={styles.inputContainer}>
-            <Text style={globalStyles.inputHeaderText}>Concerns</Text>
-            <TextInput
-              style={globalStyles.input}
-              placeholder={concerns}
-              placeholderTextColor={"#000"}
-              value={concerns}
-              onChangeText={setConcerns}
-              editable={isEdit}
-            />
-          </View>
+        <View style={styles.inputContainer}>
+          <Text style={globalStyles.inputHeaderText}>Concerns</Text>
+          <TextInput
+            style={globalStyles.input}
+            placeholder={concerns}
+            placeholderTextColor={"#000"}
+            value={concerns}
+            onChangeText={setConcerns}
+            editable={isEdit}
+          />
+        </View>
 
         <TouchableOpacity
           style={[globalStyles.button, { marginBottom: 15 }]}

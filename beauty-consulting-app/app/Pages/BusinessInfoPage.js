@@ -1,10 +1,9 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
-import { UserContext, userContextProvider } from '../contexts/userContext';
-import globalStyles from '../assets/GlobalStyles';
-import ProfileImage from '../assets/components/ProfileImage';
-import axios from 'axios';
-
+import React, { useContext, useEffect, useState } from "react";
+import { View, Text, StyleSheet, ScrollView } from "react-native";
+import { UserContext, userContextProvider } from "../contexts/userContext";
+import globalStyles from "../assets/GlobalStyles";
+import ProfileImage from "../assets/components/ProfileImage";
+import axios from "axios";
 
 const BusinessInfoPage = () => {
   // Access the user context
@@ -19,28 +18,25 @@ const BusinessInfoPage = () => {
   const populateStylistData = async (username) => {
     try {
       const apiURL =
-          process.env.EXPO_PUBLIC_API_URL +
-          ":5050/stylist/" +
-          username;
-        if (!apiURL) {
-          console.error("apiURL not defined");
-          return;
-        }
+        process.env.EXPO_PUBLIC_API_URL + ":5050/stylist/" + username;
+      if (!apiURL) {
+        console.error("apiURL not defined");
+        return;
+      }
 
       const res = await axios.get(apiURL);
       setStylistData(res.data);
-      
     } catch (error) {
-      console.error("There was an error retrieving user data: ", error)
+      console.error("There was an error retrieving user data: ", error);
     }
-  }
+  };
 
   if (!stylistData) {
     return (
       <View style={globalStyles.box}>
         <Text style={globalStyles.promptText}>Loading...</Text>
       </View>
-    )
+    );
   }
 
   return (
@@ -94,27 +90,25 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
   },
   header: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 20,
-    textAlign: 'center',
+    textAlign: "center",
   },
   infoContainer: {
     marginBottom: 15,
   },
   label: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   value: {
     fontSize: 16,
-    color: '#555',
+    color: "#555",
   },
 });
 
 export default BusinessInfoPage;
-
-
