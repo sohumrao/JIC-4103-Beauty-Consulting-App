@@ -21,3 +21,45 @@ class NotImplementedError extends Error {
 	// request type not supported, i.e. sending a POST request to a GET route
 	statusCode = 501;
 }
+
+const notImplementedHandler = (req, res, next) => {
+	const route = app._router.stack
+		.filter((r) => r.route && r.route.path === req.path)
+		.pop();
+
+	if (route) {
+		const supportedMethods = Object.keys(route.route.methods)
+			.filter((method) => route.route.methods[method])
+			.map((method) => method.toUpperCase());
+
+		if (!supportedMethods.includes(req.method)) {
+			next(
+				NotImplementedError(
+					`${req.method} is not supported for this route.`
+				)
+			);
+		}
+	}
+};
+
+// There are three different situations where you may throw an error
+// Middleware: call "return next(error)""
+// Middleware that returns a promise: you can omit "next" and just return the error
+// Non-middleware function: throw an exception and make sure the calling function can handle it
+const errorHandler = (err, req, res, next) => {
+	console.error(err.stack);
+	const statusCode = err.statusCode || 500;
+	res.status(statusCode);
+	res.json({
+		message: err.message,
+	});
+};
+
+export {
+	MalformedRequestError,
+	UnauthorizedError,
+	ConflictError,
+	BadGatewayError,
+	NotImplementedError,
+	errorHandler,
+};
