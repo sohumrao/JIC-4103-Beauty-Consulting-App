@@ -35,7 +35,7 @@ function ClientDetailsComplete() {
             console.log('User created: ', res.data);
             
             userContext.updateUserContext({
-                ...userContext,
+                username: userContext.username,
                 role: 'client'
             });
                 navigation.reset({

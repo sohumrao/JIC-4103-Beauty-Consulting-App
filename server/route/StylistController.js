@@ -48,7 +48,7 @@ router.post("/", async (req, res) => {
 					phoneNumber: req.body.phoneNumber,
 					//NOTE: current code forclient HTTP request does not send zipcode
 				},
-				business: req.body.stylistDetails,
+				business: req.body.business,
 				/* -------------------------------------------------------------------------- */
 				//needed to cast User into Stylist, can be removed after refactoring one-step account creation
 				__t: "Stylist",

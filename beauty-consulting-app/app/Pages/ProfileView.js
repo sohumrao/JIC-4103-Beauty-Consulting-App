@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -16,6 +16,7 @@ const ProfileView = () => {
   const navigation = useNavigation();
 
   var userContext = useContext(UserContext);
+  var [clientData, setClientData] = useState(null);
   var [name, setName] = useState("");
   var [age, setAge] = useState("");
   var [gender, setGender] = useState("");
@@ -24,24 +25,50 @@ const ProfileView = () => {
   var [concerns, setConcerns] = useState("");
   var [isEdit, setIsEdit] = useState(false);
 
+  useEffect(() => {
+    populateClientData(userContext.username);
+  }, [userContext.username]);
+
+  const populateClientData = async (username) => {
+    try {
+      const apiURL =
+          process.env.EXPO_PUBLIC_API_URL +
+          ":5050/client/" +
+          username;
+        if (!apiURL) {
+          console.error("apiURL not defined");
+          return;
+        }
+
+      const res = await axios.get(apiURL);
+      setClientData(res.data);
+      setGender(res.data.info.gender);
+      setName(res.data.info.name);
+      setAllergies(res.data.allergies);
+      setConcerns(res.data.additionalConcerns);
+      
+    } catch (error) {
+      console.error("There was an error retrieving user data: ", error)
+    }
+  }
+
   const handleEdit = async () => {
 
-    name = name != '' ? name : userContext.name;
-    gender = gender != '' ? gender : userContext.gender;
-    allergies = allergies != '' ? allergies : userContext.allergies;
-    concerns = concerns != '' ? concerns : userContext.concerns;
+    name = name != '' ? name : clientData.info.name;
+    gender = gender != '' ? gender : clientData.info.gender;
+    allergies = allergies != '' ? allergies : clientData.allergies;
+    concerns = concerns != '' ? concerns : clientData.additionalConcerns;
 
     if (isEdit) {
       req = {
-        username: userContext.username,
-        name: name,
-        age: userContext.age,
-        gender: gender,
-        phoneNumber: userContext.phoneNumber,
-        email: userContext.email,
-        hairDetails: userContext.hairDetails,
+        ...clientData,
+        info: {
+          ...clientData.info,
+          name: name,
+          gender: gender
+        },
         allergies: allergies,
-        concerns: concerns,
+        additionalConcerns: concerns
       };
       try {
         const apiURL =
@@ -57,19 +84,6 @@ const ProfileView = () => {
       } catch (error) {
         console.error("Error with request: ", error);
       }
-
-      // update user context for rest of session
-      userContext = userContext.updateUserContext({username: userContext.username,
-        name: name,
-        age: age,
-        gender: gender,
-        phoneNumber: userContext.phoneNumber,
-        email: userContext.email,
-        hairDetails: userContext.hairDetails,
-        allergies: allergies,
-        concerns: concerns,
-        updateUserContext: userContext.updateUserContext
-    });
     }
     setIsEdit(!isEdit);
   };
@@ -101,6 +115,14 @@ const ProfileView = () => {
     },
   });
 
+  if (!clientData) {
+    return (
+      <View style={globalStyles.box}>
+        <Text style={globalStyles.promptText}>Loading...</Text>
+      </View>
+    )
+  }
+
   return (
     <SignupBackground>
       <View style={globalStyles.box}>
@@ -108,7 +130,7 @@ const ProfileView = () => {
             <Text style={globalStyles.inputHeaderText}>Name</Text>
             <TextInput
               style={globalStyles.input}
-              placeholder={userContext.name}
+              placeholder={name}
               placeholderTextColor={"#000"}
               value={name}
               onChangeText={setName}
@@ -120,7 +142,7 @@ const ProfileView = () => {
             <Text style={globalStyles.inputHeaderText}>Gender</Text>
             <TextInput
               style={globalStyles.input}
-              placeholder={userContext.gender}
+              placeholder={gender}
               placeholderTextColor={"#000"}
               value={gender}
               onChangeText={setGender}
@@ -132,7 +154,7 @@ const ProfileView = () => {
             <Text style={globalStyles.inputHeaderText}>Allergies</Text>
             <TextInput
               style={globalStyles.input}
-              placeholder={userContext.allergies}
+              placeholder={allergies}
               placeholderTextColor={"#000"}
               value={allergies}
               onChangeText={setAllergies}
@@ -144,7 +166,7 @@ const ProfileView = () => {
             <Text style={globalStyles.inputHeaderText}>Concerns</Text>
             <TextInput
               style={globalStyles.input}
-              placeholder={userContext.concerns}
+              placeholder={concerns}
               placeholderTextColor={"#000"}
               value={concerns}
               onChangeText={setConcerns}

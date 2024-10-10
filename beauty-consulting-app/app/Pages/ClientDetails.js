@@ -8,7 +8,7 @@ import { ScrollView } from 'react-native';
 import { useState, useContext } from 'react';
 import { RadioButton } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
-import { UserContext } from '../contexts/userContext';
+import { UserContext, UserContextProvider } from '../contexts/userContext';
 
 import ContinueButton from '../assets/components/ContinueButton';
 
@@ -37,8 +37,7 @@ const ClientDetails = () => {
       hairDetails:
       userContext.hairDetails,
       allergies: userContext.allergies,
-      concerns: userContext.concerns,
-      updateUserContext: userContext.updateUserContext
+      concerns: userContext.concerns
     });
     navigation.navigate('ClientDetails2');
   };

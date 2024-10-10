@@ -26,10 +26,25 @@ const UserContextProvider = ({ children }) => {
     },
     allergies: '',
     concerns: '',
-    stylistDetails: {
+    business: {
       experience: '',
       specialty: '',
       additionalInfo: '',
+      address: '',
+      name: '',
+      hairWorkedWithDetails: {
+        Natural: false,
+        Relaxed: false,
+        Straight: false,
+        Wavy: false,
+        Curly: false,
+        DeepWave: false,
+        LooseCurl: false,
+        TightlyCoiled: false,
+        Fine: false,
+        Medium: false,
+        Thick: false
+      }
     }
   });
 
