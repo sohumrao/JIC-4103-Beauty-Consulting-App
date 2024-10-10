@@ -40,7 +40,7 @@ const PhotoUpload = () => {
 					headers: {
 						"Content-Type": "multipart/form-data",
 					},
-				},
+				}
 			);
 			Alert.alert("Success", "Photo uploaded successfully!");
 		} catch (error) {

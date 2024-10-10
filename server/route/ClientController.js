@@ -61,7 +61,7 @@ router.post("/", async (req, res) => {
 				//needed to cast User into Stylist, can be removed after refactoring one-step account creation
 				__t: "Client",
 			},
-			{ overwriteDiscriminatorKey: true, new: true },
+			{ overwriteDiscriminatorKey: true, new: true }
 			/* -------------------------------------------------------------------------- */
 		);
 		// TODO: don't return user data, should just send 201 ok
@@ -173,7 +173,7 @@ router.put("/:username", async (req, res) => {
 			{ username: req.params.username },
 			//FIXME: req.body should be formatted to Client Schema
 			{ $set: req.body }, // Update the user with the new data from the request body
-			{ new: true }, // Return the updated document
+			{ new: true } // Return the updated document
 		);
 
 		if (!updatedUser) {

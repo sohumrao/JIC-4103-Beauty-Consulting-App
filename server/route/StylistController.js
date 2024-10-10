@@ -53,7 +53,7 @@ router.post("/", async (req, res) => {
 				//needed to cast User into Stylist, can be removed after refactoring one-step account creation
 				__t: "Stylist",
 			},
-			{ overwriteDiscriminatorKey: true, new: true },
+			{ overwriteDiscriminatorKey: true, new: true }
 			/* -------------------------------------------------------------------------- */
 		);
 		// TODO: don't return user data, should just send 201 ok

@@ -41,7 +41,7 @@ const SignInPage = () => {
 
 		try {
 			const clientRes = await axios.get(
-				apiUrl + ":5050/client/" + username,
+				apiUrl + ":5050/client/" + username
 			);
 			userProfileDataExists = true;
 			userContext.updateUserContext({
@@ -60,7 +60,7 @@ const SignInPage = () => {
 		if (!userProfileDataExists) {
 			try {
 				const stylistRes = await axios.get(
-					apiUrl + ":5050/stylist/" + username,
+					apiUrl + ":5050/stylist/" + username
 				);
 				userProfileDataExists = true;
 				userContext.updateUserContext({

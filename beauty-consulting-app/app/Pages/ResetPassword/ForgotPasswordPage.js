@@ -21,7 +21,7 @@ const ForgotPasswordPage = () => {
 			}
 			const res = await axios.post(
 				apiUrl + ":5050/account/emailResetPasswordCode",
-				req,
+				req
 			);
 			setErrorMessage("");
 			navigation.navigate("Reset Password");

@@ -12,19 +12,19 @@ const StylistDetails2 = () => {
 
 	// State for stylist-specific inputs, initialized with context values if available
 	const [experience, setExperience] = useState(
-		userContext.business.experience || "",
+		userContext.business.experience || ""
 	);
 	const [specialty, setSpecialty] = useState(
-		userContext.business.specialty || "",
+		userContext.business.specialty || ""
 	);
 	const [additionalInfo, setAdditionalInfo] = useState(
-		userContext.business.additionalInfo || "",
+		userContext.business.additionalInfo || ""
 	);
 	const [businessName, setBusinessName] = useState(
-		userContext.business.name || "",
+		userContext.business.name || ""
 	);
 	const [businessAddress, setBusinessAddress] = useState(
-		userContext.business.address || "",
+		userContext.business.address || ""
 	);
 
 	const handleContinue = () => {

@@ -37,7 +37,7 @@ const ResetPasswordPage = () => {
 				`${API_URL}:5050/account/verifyResetPasswordCode`,
 				{
 					code: formData.code,
-				},
+				}
 			);
 			setValidCode(true);
 			setErrorMessage(""); // Clear error on success
@@ -47,7 +47,7 @@ const ResetPasswordPage = () => {
 			} else {
 				console.error("Error with Verify Code:", error);
 				setErrorMessage(
-					"An unexpected error occurred. Please try again later.",
+					"An unexpected error occurred. Please try again later."
 				);
 			}
 		}
@@ -76,7 +76,7 @@ const ResetPasswordPage = () => {
 			} else {
 				console.error("Error with Reset Password:", error);
 				setErrorMessage(
-					"An unexpected error occurred. Please try again later.",
+					"An unexpected error occurred. Please try again later."
 				);
 			}
 		}
@@ -142,7 +142,7 @@ const ResetPasswordPage = () => {
 									onChangeText={(value) =>
 										handleInputChange(
 											"passwordConfirm",
-											value,
+											value
 										)
 									}
 									secureTextEntry

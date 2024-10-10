@@ -57,7 +57,7 @@ router.post(
 				message: "Error creating account. Please try again.",
 			});
 		}
-	},
+	}
 );
 
 router.post(
@@ -75,12 +75,12 @@ router.post(
 			return res
 				.status(401)
 				.send(
-					"Account with that username and password does not exist.",
+					"Account with that username and password does not exist."
 				);
 		}
 
 		res.status(200).send("Signed in successfully!");
-	},
+	}
 );
 
 router.post(
@@ -119,7 +119,7 @@ router.post(
 		await ResetPassword.findOneAndUpdate(
 			{ email: user.email, username: user.username },
 			{ code: resetCode },
-			{ upsert: true },
+			{ upsert: true }
 		);
 
 		//TODO: create a centralized place for dev/production environment logic
@@ -152,7 +152,7 @@ router.post(
 			}
 			res.status(201).json({ message: "Password reset email sent" });
 		});
-	},
+	}
 );
 
 router.post(
@@ -177,7 +177,7 @@ router.post(
 		if (!reset) return res.status(409).send("Invalid reset code.");
 
 		return res.status(201).send("Valid reset code.");
-	},
+	}
 );
 
 router.post(
@@ -219,7 +219,7 @@ router.post(
 			const savedAccount = await account.save({ session });
 
 			await ResetPassword.deleteOne({ code: reset.code }).session(
-				session,
+				session
 			);
 			await session.commitTransaction();
 			res.status(201).send("Password reset successfully.");
@@ -233,7 +233,7 @@ router.post(
 				await session.endSession();
 			}
 		}
-	},
+	}
 );
 
 export default router;

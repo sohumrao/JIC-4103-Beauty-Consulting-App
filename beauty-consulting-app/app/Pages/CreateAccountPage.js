@@ -28,7 +28,7 @@ const CreateAccountPage = () => {
 			}
 			const res = await axios.post(
 				apiUrl + ":5050/account/createAccount",
-				req,
+				req
 			);
 			console.log("Account created: ", res.data);
 		} catch (error) {
