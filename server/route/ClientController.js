@@ -3,6 +3,7 @@ import { Client } from "../model/client.js";
 import { Account } from "../model/account.js";
 import { Photo } from "../model/photo.js";
 import multer from "multer";
+import { ConflictError, MalformedRequestError } from "../errors.js";
 
 /**
  * This router handles user creation, updating, deletion, and photo upload services for the application.
@@ -35,7 +36,7 @@ import multer from "multer";
 const router = express.Router();
 
 // Create new user
-router.post("/", async (req, res) => {
+router.post("/", async (req, res, next) => {
 	try {
 		// Check if name and email are provided in the request body
 		if (!req.body || !req.body.name || !req.body.email) {
@@ -74,13 +75,15 @@ router.post("/", async (req, res) => {
 		});
 	}
 });
-router.get("/:username", async (req, res) => {
+router.get("/:username", async (req, res, next) => {
 	try {
 		// Check for username param
 		if (!req.params || !req.params.username) {
-			return res.status(400).send({
-				message: "More information is required to retrieve user data.",
-			});
+			return next(
+				new MalformedRequestError(
+					"More information is required to retrieve user data."
+				)
+			);
 		}
 
 		// Find user data for username
@@ -88,9 +91,7 @@ router.get("/:username", async (req, res) => {
 
 		// Check if user exists
 		if (!user) {
-			return res
-				.status(404)
-				.send({ message: "User has no profile data." });
+			return next(new ConflictError("User has no profile data."));
 		}
 
 		// Return user data
@@ -109,7 +110,7 @@ const storage = multer.memoryStorage(); // Store files in memory
 const upload = multer({ storage });
 
 // POST route to handle photo upload and save data in MongoDB
-router.post("/photo", upload.single("photo"), async (req, res) => {
+router.post("/photo", upload.single("photo"), async (req, res, next) => {
 	try {
 		// Check if the file and username are provided
 		if (!req.file || !req.body.username) {
@@ -140,7 +141,7 @@ router.post("/photo", upload.single("photo"), async (req, res) => {
 });
 
 // Route to retrieve photo by username and serve it as an image
-router.get("/:username/photo", async (req, res) => {
+router.get("/:username/photo", async (req, res, next) => {
 	try {
 		// Fetch the photo from the database by username
 		const photo = await Photo.findOne({ username: req.params.username });
@@ -166,7 +167,7 @@ router.get("/:username/photo", async (req, res) => {
 });
 
 // Update user
-router.put("/:username", async (req, res) => {
+router.put("/:username", async (req, res, next) => {
 	try {
 		// Find the user by username and update their info
 		const updatedUser = await Client.findOneAndUpdate(
@@ -177,7 +178,7 @@ router.put("/:username", async (req, res) => {
 		);
 
 		if (!updatedUser) {
-			return res.status(404).send({ message: "User not found." });
+			return next(new ConflictError("User not found."));
 		}
 
 		// FIXME: should not send password/any other extra information
@@ -191,7 +192,7 @@ router.put("/:username", async (req, res) => {
 });
 
 // Delete user
-router.delete("/:username", async (req, res) => {
+router.delete("/:username", async (req, res, next) => {
 	try {
 		console.log(req.params.username);
 		// Find the user by username and delete them
@@ -203,7 +204,7 @@ router.delete("/:username", async (req, res) => {
 		console.log(deletedUser);
 
 		if (!deletedUser) {
-			return res.status(404).send({ message: "User not found." });
+			return next(new ConflictError("User not found."));
 		}
 
 		res.send({ message: "User deleted successfully." });
