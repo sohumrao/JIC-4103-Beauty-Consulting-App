@@ -6,6 +6,7 @@ import { UserContext } from "../contexts/userContext";
 import SignupBackground from "../assets/components/SignupBackground";
 import globalStyles from "../assets/GlobalStyles";
 import ErrorMessage from "../components/ErrorMessage";
+import handleHTTPError from "../errorHandling";
 
 const CreateAccountPage = () => {
 	const [username, setUsername] = useState("");
@@ -32,7 +33,7 @@ const CreateAccountPage = () => {
 			);
 			console.log("Account created: ", res.data);
 		} catch (error) {
-			setErrorMessage(error.response.data);
+			handleHTTPError(error, setErrorMessage);
 			return;
 		}
 		userContext.updateUserContext({

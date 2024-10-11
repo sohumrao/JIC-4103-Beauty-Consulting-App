@@ -7,6 +7,7 @@ import SignupBackground from "../assets/components/SignupBackground";
 import globalStyles from "../assets/GlobalStyles";
 import ErrorMessage from "../components/ErrorMessage";
 import KeyboardMove from "../assets/components/KeyboardMove";
+import handleHTTPError from "../errorHandling";
 
 const SignInPage = () => {
 	const [username, setUsername] = useState("");
@@ -33,7 +34,7 @@ const SignInPage = () => {
 			setErrorMessage("");
 			console.log("Sign in successful: " + res.data);
 		} catch (error) {
-			setErrorMessage(error.response.data);
+			handleHTTPError(error, setErrorMessage);
 			return;
 		}
 
@@ -51,10 +52,7 @@ const SignInPage = () => {
 			navigation.replace("Main");
 			return;
 		} catch (error) {
-			if (error.response.status !== 404) {
-				setErrorMessage(error.response.data);
-				return;
-			}
+			handleHTTPError(error, setErrorMessage);
 		}
 
 		if (!userProfileDataExists) {
@@ -71,10 +69,8 @@ const SignInPage = () => {
 				navigation.replace("Main");
 				return;
 			} catch (error) {
-				if (error.response.status !== 404) {
-					setErrorMessage(error.response.data);
-					return;
-				}
+				handleHTTPError(error, setErrorMessage);
+				return;
 			}
 		}
 		if (!userProfileDataExists) {

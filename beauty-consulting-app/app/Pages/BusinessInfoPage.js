@@ -4,6 +4,7 @@ import { UserContext, userContextProvider } from "../contexts/userContext";
 import globalStyles from "../assets/GlobalStyles";
 import ProfileImage from "../assets/components/ProfileImage";
 import axios from "axios";
+import handleHTTPError from "../errorHandling";
 
 const BusinessInfoPage = () => {
 	// Access the user context
@@ -27,7 +28,7 @@ const BusinessInfoPage = () => {
 			const res = await axios.get(apiURL);
 			setStylistData(res.data);
 		} catch (error) {
-			console.error("There was an error retrieving user data: ", error);
+			handleHTTPError(error);
 		}
 	};
 
