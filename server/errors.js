@@ -52,10 +52,7 @@ const notImplementedHandler = (req, res, next) => {
 const errorHandler = (err, req, res, next) => {
 	const statusCode = err.statusCode || 500;
 	if (statusCode >= 500) console.error(err.stack);
-	res.status(statusCode);
-	res.json({
-		message: err.message,
-	});
+	res.status(statusCode).send(err.message);
 };
 
 export {
