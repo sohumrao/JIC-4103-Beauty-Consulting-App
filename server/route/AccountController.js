@@ -1,6 +1,5 @@
 import express from "express";
 import { Account, ResetPassword } from "../model/account.js";
-import crypto from "crypto";
 import nodemailer from "nodemailer";
 import { body, validationResult } from "express-validator";
 import { Client } from "../model/client.js";
@@ -11,6 +10,7 @@ import {
 	MalformedRequestError,
 	UnauthorizedError,
 } from "../errors.js";
+import asyncHandler from "express-async-handler";
 /**
  * This router handles...
  *
@@ -37,7 +37,7 @@ router.post(
 			.withMessage("Password cannot be empty"),
 		// .isLength({ min: 8 }).withMessage('Password must be at least 8 characters long'),
 	],
-	async (req, res, next) => {
+	asyncHandler(async (req, res, next) => {
 		const errors = validationResult(req);
 		if (!errors.isEmpty())
 			return next(new MalformedRequestError(errors.array()[0].msg));
@@ -48,20 +48,12 @@ router.post(
 			return next(new ConflictError("Username already exists"));
 		}
 
-		try {
-			const newAccount = new Account({ username });
-			newAccount.createHashedPassword(password);
-			const savedAccount = await newAccount.save();
+		const newAccount = new Account({ username });
+		newAccount.createHashedPassword(password);
+		const savedAccount = await newAccount.save();
 
-			res.status(201).json(newAccount);
-		} catch (error) {
-			console.error("Error creating account:", error);
-			//TODO: throw this to error catch-all middleware
-			res.status(500).json({
-				message: "Error creating account. Please try again.",
-			});
-		}
-	}
+		res.status(201).json(newAccount);
+	})
 );
 
 router.post(
@@ -70,7 +62,7 @@ router.post(
 		body("username").not().isEmpty().trim().escape(),
 		body("password").not().isEmpty().trim().escape(),
 	],
-	async (req, res, next) => {
+	asyncHandler(async (req, res, next) => {
 		const { username, password } = req.body;
 
 		const account = await Account.findOne({ username });
@@ -84,7 +76,7 @@ router.post(
 		}
 
 		res.status(200).send("Signed in successfully!");
-	}
+	})
 );
 
 router.post(
@@ -100,7 +92,7 @@ router.post(
 			.isEmail()
 			.withMessage("Email is not valid"),
 	],
-	async (req, res, next) => {
+	asyncHandler(async (req, res, next) => {
 		const errors = validationResult(req);
 		if (!errors.isEmpty())
 			return next(new MalformedRequestError(errors.array()[0].msg));
@@ -154,7 +146,7 @@ router.post(
 			}
 			res.status(201).json({ message: "Password reset email sent" });
 		});
-	}
+	})
 );
 
 router.post(
@@ -168,7 +160,7 @@ router.post(
 			.notEmpty()
 			.withMessage("Code cannot be empty"),
 	],
-	async (req, res, next) => {
+	asyncHandler(async (req, res, next) => {
 		const errors = validationResult(req);
 		if (!errors.isEmpty())
 			return next(new MalformedRequestError(errors.array()[0].msg));
@@ -178,7 +170,7 @@ router.post(
 		if (!reset) return next(new ConflictError("Invalid reset code."));
 
 		return res.status(201).send("Valid reset code.");
-	}
+	})
 );
 
 router.post(
@@ -198,7 +190,7 @@ router.post(
 			.notEmpty()
 			.withMessage("Password cannot be empty"),
 	],
-	async (req, res, next) => {
+	asyncHandler(async (req, res, next) => {
 		const errors = validationResult(req);
 		if (!errors.isEmpty())
 			return next(new MalformedRequestError(errors.array()[0].msg));
@@ -233,7 +225,7 @@ router.post(
 				await session.endSession();
 			}
 		}
-	}
+	})
 );
 
 export default router;

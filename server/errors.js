@@ -44,8 +44,11 @@ const notImplementedHandler = (req, res, next) => {
 
 // There are three different situations where you may throw an error
 // Middleware: call "return next(error)""
+// - synchronous: Express will automatically catch the error
+// - asynchronous: wrap the function with asyncHandler
 // Middleware that returns a promise: you can omit "next" and just return the error
 // Non-middleware function: throw an exception and make sure the calling function can handle it
+// For more details, see the Github Wiki
 const errorHandler = (err, req, res, next) => {
 	console.error(err.stack);
 	const statusCode = err.statusCode || 500;

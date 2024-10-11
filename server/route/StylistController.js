@@ -4,7 +4,7 @@ import { Stylist } from "../model/stylist.js";
 import { Photo } from "../model/photo.js";
 import multer from "multer";
 import { ConflictError, MalformedRequestError } from "../errors.js";
-
+import asyncHandler from "express-async-handler";
 /**
  * This router handles user creation and photo upload services for the application.
  *
@@ -29,8 +29,9 @@ import { ConflictError, MalformedRequestError } from "../errors.js";
 const router = express.Router();
 
 // Create new user
-router.post("/", async (req, res, next) => {
-	try {
+router.post(
+	"/",
+	asyncHandler(async (req, res, next) => {
 		// Check if name and email are provided in the request body
 		if (!req.body || !req.body.name || !req.body.email) {
 			next(new MalformedRequestError("Name and email are required"));
@@ -56,19 +57,16 @@ router.post("/", async (req, res, next) => {
 			/* -------------------------------------------------------------------------- */
 		);
 		// TODO: don't return user data, should just send 201 ok
-		const newUser = await Stylist.findOne({ username: req.body.username });
-		res.send(newUser);
-	} catch (err) {
-		//TODO: try to see if try catch can be avoided
-		res.status(500).send({
-			message:
-				err.message || "Some error occurred while creating a user.",
+		const newUser = await Stylist.findOne({
+			username: req.body.username,
 		});
-	}
-});
+		res.send(newUser);
+	})
+);
 
-router.get("/:username", async (req, res, next) => {
-	try {
+router.get(
+	"/:username",
+	asyncHandler(async (req, res, next) => {
 		// Check for username param
 		if (!req.params || !req.params.username) {
 			return next(
@@ -79,7 +77,9 @@ router.get("/:username", async (req, res, next) => {
 		}
 
 		// Find user data for username
-		const user = await Stylist.findOne({ username: req.params.username });
+		const user = await Stylist.findOne({
+			username: req.params.username,
+		});
 
 		// Check if user exists
 		if (!user) {
@@ -88,22 +88,18 @@ router.get("/:username", async (req, res, next) => {
 
 		// Return user data
 		res.send(user);
-	} catch (err) {
-		res.status(500).send({
-			message:
-				err.message ||
-				"Some error occurred while retrieving user data.",
-		});
-	}
-});
+	})
+);
 
 // Configure Multer to handle file uploads in memory
 const storage = multer.memoryStorage(); // Store files in memory
 const upload = multer({ storage });
 
 // POST route to handle photo upload and save data in MongoDB
-router.post("/photo", upload.single("photo"), async (req, res, next) => {
-	try {
+router.post(
+	"/photo",
+	upload.single("photo"),
+	asyncHandler(async (req, res, next) => {
 		// Check if the file and username are provided
 		if (!req.file || !req.body.username) {
 			return next(
@@ -124,24 +120,22 @@ router.post("/photo", upload.single("photo"), async (req, res, next) => {
 			message: "Photo uploaded and saved in MongoDB successfully!",
 			data: savedPhoto,
 		});
-	} catch (err) {
-		res.status(500).send({
-			message:
-				err.message || "Some error occurred while uploading the photo.",
-		});
-	}
-});
+	})
+);
 
 // Route to retrieve photo by username and serve it as an image
-router.get("/:username/photo", async (req, res, next) => {
-	try {
+router.get(
+	"/:username/photo",
+	asyncHandler(async (req, res, next) => {
 		// Fetch the photo from the database by username
-		const photo = await Photo.findOne({ username: req.params.username });
+		const photo = await Photo.findOne({
+			username: req.params.username,
+		});
 
 		if (!photo) {
-			return res
-				.status(404)
-				.send({ message: "No photo found for the given username." });
+			return res.status(404).send({
+				message: "No photo found for the given username.",
+			});
 		}
 
 		// Set the content type of the response to the photo's MIME type
@@ -149,13 +143,7 @@ router.get("/:username/photo", async (req, res, next) => {
 
 		// Send the photo binary data as the response
 		res.send(photo.photoData);
-	} catch (err) {
-		res.status(500).send({
-			message:
-				err.message ||
-				"Some error occurred while retrieving the photo.",
-		});
-	}
-});
+	})
+);
 
 export default router;

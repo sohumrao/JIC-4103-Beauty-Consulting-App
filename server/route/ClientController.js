@@ -4,7 +4,7 @@ import { Account } from "../model/account.js";
 import { Photo } from "../model/photo.js";
 import multer from "multer";
 import { ConflictError, MalformedRequestError } from "../errors.js";
-
+import asyncHandler from "express-async-handler";
 /**
  * This router handles user creation, updating, deletion, and photo upload services for the application.
  *
@@ -36,8 +36,9 @@ import { ConflictError, MalformedRequestError } from "../errors.js";
 const router = express.Router();
 
 // Create new user
-router.post("/", async (req, res, next) => {
-	try {
+router.post(
+	"/",
+	asyncHandler(async (req, res, next) => {
 		// Check if name and email are provided in the request body
 		if (!req.body || !req.body.name || !req.body.email) {
 			return res.status(400).send({
@@ -66,17 +67,16 @@ router.post("/", async (req, res, next) => {
 			/* -------------------------------------------------------------------------- */
 		);
 		// TODO: don't return user data, should just send 201 ok
-		const newUser = await Client.findOne({ username: req.body.username });
-		res.send(newUser);
-	} catch (err) {
-		res.status(500).send({
-			message:
-				err.message || "Some error occurred while creating a user.",
+		const newUser = await Client.findOne({
+			username: req.body.username,
 		});
-	}
-});
-router.get("/:username", async (req, res, next) => {
-	try {
+		res.send(newUser);
+	})
+);
+
+router.get(
+	"/:username",
+	asyncHandler(async (req, res, next) => {
 		// Check for username param
 		if (!req.params || !req.params.username) {
 			return next(
@@ -86,8 +86,10 @@ router.get("/:username", async (req, res, next) => {
 			);
 		}
 
-		// Find user data for username
-		const user = await Client.findOne({ username: req.params.username });
+		// Find user data for usernameg
+		const user = await Client.findOne({
+			username: req.params.username,
+		});
 
 		// Check if user exists
 		if (!user) {
@@ -96,22 +98,18 @@ router.get("/:username", async (req, res, next) => {
 
 		// Return user data
 		res.send(user);
-	} catch (err) {
-		res.status(500).send({
-			message:
-				err.message ||
-				"Some error occurred while retrieving user data.",
-		});
-	}
-});
+	})
+);
 
 // Configure Multer to handle file uploads in memory
 const storage = multer.memoryStorage(); // Store files in memory
 const upload = multer({ storage });
 
 // POST route to handle photo upload and save data in MongoDB
-router.post("/photo", upload.single("photo"), async (req, res, next) => {
-	try {
+router.post(
+	"/photo",
+	upload.single("photo"),
+	asyncHandler(async (req, res, next) => {
 		// Check if the file and username are provided
 		if (!req.file || !req.body.username) {
 			return res
@@ -132,24 +130,22 @@ router.post("/photo", upload.single("photo"), async (req, res, next) => {
 			message: "Photo uploaded and saved in MongoDB successfully!",
 			data: savedPhoto,
 		});
-	} catch (err) {
-		res.status(500).send({
-			message:
-				err.message || "Some error occurred while uploading the photo.",
-		});
-	}
-});
+	})
+);
 
 // Route to retrieve photo by username and serve it as an image
-router.get("/:username/photo", async (req, res, next) => {
-	try {
+router.get(
+	"/:username/photo",
+	asyncHandler(async (req, res, next) => {
 		// Fetch the photo from the database by username
-		const photo = await Photo.findOne({ username: req.params.username });
+		const photo = await Photo.findOne({
+			username: req.params.username,
+		});
 
 		if (!photo) {
-			return res
-				.status(404)
-				.send({ message: "No photo found for the given username." });
+			return res.status(404).send({
+				message: "No photo found for the given username.",
+			});
 		}
 
 		// Set the content type of the response to the photo's MIME type
@@ -157,18 +153,13 @@ router.get("/:username/photo", async (req, res, next) => {
 
 		// Send the photo binary data as the response
 		res.send(photo.photoData);
-	} catch (err) {
-		res.status(500).send({
-			message:
-				err.message ||
-				"Some error occurred while retrieving the photo.",
-		});
-	}
-});
+	})
+);
 
 // Update user
-router.put("/:username", async (req, res, next) => {
-	try {
+router.put(
+	"/:username",
+	asyncHandler(async (req, res, next) => {
 		// Find the user by username and update their info
 		const updatedUser = await Client.findOneAndUpdate(
 			{ username: req.params.username },
@@ -183,17 +174,13 @@ router.put("/:username", async (req, res, next) => {
 
 		// FIXME: should not send password/any other extra information
 		res.send(updatedUser); // Send the updated user data back as a response
-	} catch (err) {
-		res.status(500).send({
-			message:
-				err.message || "Some error occurred while updating the user.",
-		});
-	}
-});
+	})
+);
 
 // Delete user
-router.delete("/:username", async (req, res, next) => {
-	try {
+router.delete(
+	"/:username",
+	asyncHandler(async (req, res, next) => {
 		console.log(req.params.username);
 		// Find the user by username and delete them
 		const deletedUser = await Client.findOneAndDelete({
@@ -208,12 +195,7 @@ router.delete("/:username", async (req, res, next) => {
 		}
 
 		res.send({ message: "User deleted successfully." });
-	} catch (err) {
-		res.status(500).send({
-			message:
-				err.message || "Some error occurred while deleting the user.",
-		});
-	}
-});
+	})
+);
 
 export default router;
