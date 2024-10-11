@@ -50,8 +50,8 @@ const notImplementedHandler = (req, res, next) => {
 // Non-middleware function: throw an exception and make sure the calling function can handle it
 // For more details, see the Github Wiki
 const errorHandler = (err, req, res, next) => {
-	console.error(err.stack);
 	const statusCode = err.statusCode || 500;
+	if (statusCode >= 500) console.error(err.stack);
 	res.status(statusCode);
 	res.json({
 		message: err.message,
