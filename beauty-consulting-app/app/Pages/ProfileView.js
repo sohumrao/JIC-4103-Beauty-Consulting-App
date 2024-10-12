@@ -5,10 +5,13 @@ import {
 	View,
 	TextInput,
 	TouchableOpacity,
+	Modal,
+	Touchable,
 } from "react-native";
 import { Link, useNavigation } from "@react-navigation/native";
 import { UserContext } from "../contexts/userContext";
 import SignupBackground from "../assets/components/SignupBackground";
+import ErrorMessage from "../components/ErrorMessage";
 import globalStyles from "../assets/GlobalStyles";
 import axios from "axios";
 
@@ -18,12 +21,13 @@ const ProfileView = () => {
 	var userContext = useContext(UserContext);
 	var [clientData, setClientData] = useState(null);
 	var [name, setName] = useState("");
-	var [age, setAge] = useState("");
 	var [gender, setGender] = useState("");
-	var [phoneNumber, setPhoneNumber] = useState("");
 	var [allergies, setAllergies] = useState("");
 	var [concerns, setConcerns] = useState("");
 	var [isEdit, setIsEdit] = useState(false);
+	const [modalVisible, setModalVisible] = useState(false);
+	var [password, setPassword] = useState("");
+	const [errorMessage, setErrorMessage] = useState("");
 
 	useEffect(() => {
 		populateClientData(userContext.username);
@@ -85,29 +89,54 @@ const ProfileView = () => {
 	};
 
 	const deleteAccount = async () => {
-		// TODO: update with a separate flow for password validation after backend rework
-
+		// confirm password
 		try {
 			console.log(userContext);
-			const apiURL =
+			const apiURLConfirmPassword =
+				process.env.EXPO_PUBLIC_API_URL + ":5050/account/signIn";
+			const req = {
+				username: userContext.username,
+				password: password,
+			};
+			if (!apiURLConfirmPassword) {
+				console.error("apiURL not defined");
+			}
+			const res = await axios.post(apiURLConfirmPassword, req);
+		} catch (error) {
+			if (error.response.status == 401) {
+				setErrorMessage("Incorrect Password");
+			} else {
+				setErrorMessage(error.response.data);
+			}
+			return;
+		}
+		// delete if no problems
+		try {
+			const apiURLDelete =
 				process.env.EXPO_PUBLIC_API_URL +
 				":5050/client/" +
 				userContext.username;
-			if (!apiURL) {
+			if (!apiURLDelete) {
 				console.error("apiURL not defined");
 			}
-			const res = axios.delete(apiURL);
+			const res = axios.delete(apiURLDelete);
 			console.log(res.message);
 		} catch (error) {
 			console.error("Error with request: ", error);
 			return;
 		}
+		setModalVisible(false);
 		navigation.navigate("Sign In");
 	};
 
 	const styles = StyleSheet.create({
 		inputContainer: {
 			marginBottom: 10,
+		},
+		modalCentering: {
+			flex: 1,
+			justifyContent: "center",
+			alignItems: "center",
 		},
 	});
 
@@ -170,6 +199,50 @@ const ProfileView = () => {
 					/>
 				</View>
 
+				<Modal
+					animationType="slide"
+					visible={modalVisible}
+					transparent={true}
+				>
+					<SignupBackground>
+						<View style={globalStyles.box}>
+							<Text style={globalStyles.title}>
+								{" "}
+								Enter your Password to Confirm{" "}
+							</Text>
+							<TextInput
+								style={globalStyles.input}
+								value={password}
+								onChangeText={setPassword}
+							/>
+							<ErrorMessage message={errorMessage} />
+							<TouchableOpacity
+								style={[
+									globalStyles.button,
+									{ marginBottom: 10 },
+								]}
+								onPress={deleteAccount}
+							>
+								<Text style={globalStyles.buttonText}>
+									Delete
+								</Text>
+							</TouchableOpacity>
+							<TouchableOpacity
+								style={globalStyles.button}
+								onPress={() => {
+									setModalVisible(!modalVisible);
+									setPassword("");
+									setErrorMessage("");
+								}}
+							>
+								<Text style={globalStyles.buttonText}>
+									Cancel
+								</Text>
+							</TouchableOpacity>
+						</View>
+					</SignupBackground>
+				</Modal>
+
 				<TouchableOpacity
 					style={[globalStyles.button, { marginBottom: 15 }]}
 					onPress={handleEdit}
@@ -181,7 +254,9 @@ const ProfileView = () => {
 
 				<TouchableOpacity
 					style={globalStyles.button}
-					onPress={deleteAccount}
+					onPress={() => {
+						setModalVisible(!modalVisible);
+					}}
 				>
 					<Text style={globalStyles.buttonText}>Delete Account</Text>
 				</TouchableOpacity>
