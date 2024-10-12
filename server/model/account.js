@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 
 const AccountSchema = new Schema({
 	username: { type: String, required: true, unique: true },
-	email: { type: String, unique: true },
+	email: { type: String },
 	//TODO: refactor password to be required
 	password: {
 		hash: String,
