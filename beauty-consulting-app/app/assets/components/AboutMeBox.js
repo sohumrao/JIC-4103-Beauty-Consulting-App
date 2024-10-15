@@ -4,11 +4,15 @@ import PhoneIcon from '../images/phone-call.svg';
 import AgeIcon from '../images/birthday-cake.svg';
 import EmailIcon from '../images/email.svg';
 import GenderIcon from '../images/genders.svg';
+import EditImage from '../images/pen.svg';
 
 const AboutMeBox = ({ age, phoneNumber, gender, email }) => {
   return (
     <View>
-      <Text style={styles.title}>About Me</Text>
+      <View style={styles.headerRow}>
+        <Text style={styles.title}>About Me</Text>
+        <EditImage width={24} height={24} style={styles.editIcon} />
+      </View>
       <View style={styles.container}>
         <View style={styles.infoRow}>
           <AgeIcon width={20} height={20} style={styles.icon} />
@@ -42,6 +46,12 @@ const AboutMeBox = ({ age, phoneNumber, gender, email }) => {
 };
 
 const styles = StyleSheet.create({
+  headerRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
   container: {
     padding: 5,
     backgroundColor: '#fff',
@@ -53,7 +63,6 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    marginBottom: 10,
   },
   infoRow: {
     flexDirection: 'row',
@@ -75,7 +84,10 @@ const styles = StyleSheet.create({
   },
   icon: {
     marginRight: 10,
-  }
+  },
+  editIcon: {
+    marginLeft: 10,
+  },
 });
 
 export default AboutMeBox;

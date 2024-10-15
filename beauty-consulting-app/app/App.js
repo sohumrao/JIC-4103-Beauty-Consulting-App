@@ -21,6 +21,7 @@ import {
   BusinessInfoPage,
 } from './Pages';
 import { UserContext, UserContextProvider } from "./contexts/userContext";
+import { StatusBar } from 'react-native';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -52,7 +53,7 @@ function MainTabNavigator() {
   return (
     <Tab.Navigator screenOptions={{ headerShown: false }}>
       {role === 'client' ? (
-        <Tab.Screen name="My Profile" component={ProfileView} />
+        <Tab.Screen name="My Profile" component={ProfileView}  />
       ) : (
         <Tab.Screen name="BusinessInfoPage" component={BusinessInfoPage} />
       )}
@@ -64,6 +65,7 @@ function App() {
   return (
     <UserContextProvider>
       <NavigationContainer>
+      <StatusBar barStyle="dark-content" />
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         <Stack.Screen name="Sign In" component={SignInPage} />
         <Stack.Screen name="Create Account" component={CreateAccountPage} />

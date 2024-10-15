@@ -182,9 +182,6 @@ const ProfileView = () => {
             <View style={{flexDirection: 'row', alignItems: 'flex-start', marginTop: 100, marginLeft: 20,}}>
                 <ProfilePicture picture={profilePicture}/>
             </View>
-            <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-                <Text>{userContext.name}</Text>
-            </View>
             <View style={{marginTop: 180}}>
                 <AboutMeBox
                 age={userContext.age}
