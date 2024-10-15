@@ -5,6 +5,7 @@ import {
   View,
   TextInput,
   TouchableOpacity,
+  ScrollView,
 } from "react-native";
 import { Link, useNavigation } from "@react-navigation/native";
 import { UserContext } from "../contexts/userContext";
@@ -12,6 +13,7 @@ import SignupBackground from "../assets/components/SignupBackground";
 import globalStyles from "../assets/GlobalStyles";
 import axios from "axios";
 import AboutMeBox from "../assets/components/AboutMeBox";
+import AboutHairBox from "../assets/components/AboutHairBox"
 import ProfilePicture from "../assets/components/ProfilePicture";
 import EditImage from '../assets/images/pen.svg';
 
@@ -175,13 +177,13 @@ const ProfileView = () => {
 
   return (
       <SignupBackground>
+        <ScrollView>
           <View style={{flex: 1}}>
             <View style={{flexDirection: 'row', alignItems: 'flex-start', marginTop: 100, marginLeft: 20,}}>
                 <ProfilePicture picture={profilePicture}/>
             </View>
             <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
                 <Text>{userContext.name}</Text>
-                <EditImage/>
             </View>
             <View style={{marginTop: 180}}>
                 <AboutMeBox
@@ -191,7 +193,14 @@ const ProfileView = () => {
                 email={userContext.email}
                 />
                 </View>
+                <View>
+                  <AboutHairBox
+                  hairDetails={userContext.hairDetails}
+                  allergies={userContext.allergies}
+                  concerns={userContext.concerns}/>
+                </View>
             </View>
+          </ScrollView>
       </SignupBackground>
   );
 };
