@@ -6,24 +6,24 @@ import {
 	TextInput,
 	TouchableOpacity,
 } from "react-native";
-import { Link, useNavigation } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import { UserContext } from "../contexts/userContext";
 import SignupBackground from "../assets/components/SignupBackground";
 import globalStyles from "../assets/GlobalStyles";
 import axios from "axios";
+import ProfileImage from "../assets/components/ProfileImage";
 
 const ProfileView = () => {
 	const navigation = useNavigation();
-
-	var userContext = useContext(UserContext);
-	var [clientData, setClientData] = useState(null);
-	var [name, setName] = useState("");
-	var [age, setAge] = useState("");
-	var [gender, setGender] = useState("");
-	var [phoneNumber, setPhoneNumber] = useState("");
-	var [allergies, setAllergies] = useState("");
-	var [concerns, setConcerns] = useState("");
-	var [isEdit, setIsEdit] = useState(false);
+	const userContext = useContext(UserContext);
+	const [clientData, setClientData] = useState(null);
+	const [name, setName] = useState("");
+	const [age, setAge] = useState("");
+	const [gender, setGender] = useState("");
+	const [phoneNumber, setPhoneNumber] = useState("");
+	const [allergies, setAllergies] = useState("");
+	const [concerns, setConcerns] = useState("");
+	const [isEdit, setIsEdit] = useState(false);
 
 	useEffect(() => {
 		populateClientData(userContext.username);
@@ -50,33 +50,31 @@ const ProfileView = () => {
 	};
 
 	const handleEdit = async () => {
-		name = name != "" ? name : clientData.info.name;
-		gender = gender != "" ? gender : clientData.info.gender;
-		allergies = allergies != "" ? allergies : clientData.allergies;
-		concerns = concerns != "" ? concerns : clientData.additionalConcerns;
+		const updatedName = name !== "" ? name : clientData.info.name;
+		const updatedGender = gender !== "" ? gender : clientData.info.gender;
+		const updatedAllergies = allergies !== "" ? allergies : clientData.allergies;
+		const updatedConcerns = concerns !== "" ? concerns : clientData.additionalConcerns;
 
 		if (isEdit) {
-			req = {
+			const req = {
 				...clientData,
 				info: {
 					...clientData.info,
-					name: name,
-					gender: gender,
+					name: updatedName,
+					gender: updatedGender,
 				},
-				allergies: allergies,
-				additionalConcerns: concerns,
+				allergies: updatedAllergies,
+				additionalConcerns: updatedConcerns,
 			};
 			try {
 				const apiURL =
-					process.env.EXPO_PUBLIC_API_URL +
-					":5050/client/" +
-					userContext.username;
+					process.env.EXPO_PUBLIC_API_URL + ":5050/client/" + userContext.username;
 				if (!apiURL) {
 					console.error("apiURL not defined");
 					return;
 				}
 				const res = await axios.put(apiURL, req);
-				console.log("update successful: ", res.data);
+				console.log("Update successful: ", res.data);
 			} catch (error) {
 				console.error("Error with request: ", error);
 			}
@@ -85,24 +83,19 @@ const ProfileView = () => {
 	};
 
 	const deleteAccount = async () => {
-		// TODO: update with a separate flow for password validation after backend rework
-
 		try {
-			console.log(userContext);
 			const apiURL =
-				process.env.EXPO_PUBLIC_API_URL +
-				":5050/client/" +
-				userContext.username;
+				process.env.EXPO_PUBLIC_API_URL + ":5050/client/" + userContext.username;
 			if (!apiURL) {
 				console.error("apiURL not defined");
 			}
-			const res = axios.delete(apiURL);
-			console.log(res.message);
+			await axios.delete(apiURL);
+			console.log("Account deleted successfully");
+			navigation.navigate("Sign In");
 		} catch (error) {
 			console.error("Error with request: ", error);
 			return;
 		}
-		navigation.navigate("Sign In");
 	};
 
 	const styles = StyleSheet.create({
@@ -122,6 +115,7 @@ const ProfileView = () => {
 	return (
 		<SignupBackground>
 			<View style={globalStyles.box}>
+				<ProfileImage username={userContext.username} />
 				<View style={styles.inputContainer}>
 					<Text style={globalStyles.inputHeaderText}>Name</Text>
 					<TextInput
