@@ -1,6 +1,6 @@
 import express from "express";
 import { Client } from "../model/client.js";
-import { Account } from "../model/account.js";
+import { Account, City} from "../model/account.js";
 import { Photo } from "../model/photo.js";
 import multer from "multer";
 
@@ -51,6 +51,7 @@ router.post("/", async (req, res) => {
 				info: {
 					name: req.body.name,
 					age: req.body.age,
+					// city: req.body.city,
 					gender: req.body.gender,
 					phoneNumber: req.body.phoneNumber,
 					//NOTE: current code forclient HTTP request does not send zipcode
@@ -74,6 +75,7 @@ router.post("/", async (req, res) => {
 		});
 	}
 });
+
 router.get("/:username", async (req, res) => {
 	try {
 		// Check for username param
@@ -214,5 +216,75 @@ router.delete("/:username", async (req, res) => {
 		});
 	}
 });
+
+// Match stylists
+router.get("/matchStylists/:username", async (req, res) => {
+    try {
+        const { username } = req.params;
+
+        const client = await Client.findOne({ username });
+
+        if (!client) {
+            return res.status(404).send({ message: "Client not found." });
+        }
+
+        const clientCity = client.info.city; // STILL NEED TO ADD
+        const clientHairDetails = client.hairDetails;
+
+        if (!clientCity) {
+            return res.status(400).send({ message: "Client's city is not specified." });
+        }
+
+		// OPTION 1
+		// Get Stylists in the same city as the client
+        const stylistsInCity = await Stylist.find({ city: clientCity });
+
+		// OPTION 2
+		/* OR:
+		const stylistsInCity = await Stylist.find({ business.city: clientCity });
+		*/
+
+		// OPTION 3: If city is stored in City collection
+		/* OR:
+        const cityEntry = await City.findOne({ name: clientCity });
+
+        if (!cityEntry || cityEntry.users.length === 0) {
+            return res.status(404).send({ message: "No stylists found in the specified city." });
+        }
+
+        // Fetch stylist details based on usernames stored in the City collection
+        const stylistUsernames = cityEntry.users;
+        const stylistsInCity = await Stylist.find({ username: { $in: stylistUsernames } });
+		*/
+
+        // Calculate similarity score based on hair types
+        const stylistsWithScores = stylistsInCity.map(stylist => {
+            let matchScore = 0;
+
+            // Compare each hair type between client and stylist
+            Object.keys(clientHairDetails).forEach(key => {
+                if (clientHairDetails[key] && stylist.business.workedWithHairTypes[key]) {
+                    matchScore++;
+                }
+            });
+
+            return { stylist, matchScore };
+			// return a field with the hair details that match with the client
+			// leave as is - return all the stylists
+			
+        });
+
+        // Sort by similarity score in descending order
+        const sortedStylists = stylistsWithScores
+            .sort((a, b) => b.matchScore - a.matchScore)
+            .map(item => item.stylist);
+
+        // Return sorted list of stylists
+        res.send(sortedStylists);
+    } catch (err) {
+        res.status(500).send({ message: err.message || "Error matching stylists." });
+    }
+});
+
 
 export default router;
