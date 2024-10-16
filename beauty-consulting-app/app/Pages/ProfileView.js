@@ -15,7 +15,6 @@ import axios from "axios";
 import AboutMeBox from "../assets/components/AboutMeBox";
 import AboutHairBox from "../assets/components/AboutHairBox"
 import ProfilePicture from "../assets/components/ProfilePicture";
-import EditImage from '../assets/images/pen.svg';
 
 const ProfileView = () => {
   const navigation = useNavigation();
@@ -183,12 +182,11 @@ const ProfileView = () => {
                 <ProfilePicture picture={profilePicture}/>
             </View>
             <View style={{marginTop: 180}}>
-                <AboutMeBox
-                age={userContext.age}
-                phoneNumber={userContext.phoneNumber}
-                gender={userContext.gender}
-                email={userContext.email}
-                />
+            <AboutMeBox 
+  userContext={userContext} 
+  onUpdateUser={(updatedUser) => 
+    userContext.updateUserContext(updatedUser)} 
+/>
                 </View>
                 <View>
                   <AboutHairBox
