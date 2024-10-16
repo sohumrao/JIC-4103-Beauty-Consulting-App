@@ -14,6 +14,7 @@ import SignupBackground from "../assets/components/SignupBackground";
 import ErrorMessage from "../components/ErrorMessage";
 import globalStyles from "../assets/GlobalStyles";
 import axios from "axios";
+import handleHTTPError from "../errorHandling";
 
 const ProfileView = () => {
 	const navigation = useNavigation();
@@ -49,7 +50,7 @@ const ProfileView = () => {
 			setAllergies(res.data.allergies);
 			setConcerns(res.data.additionalConcerns);
 		} catch (error) {
-			console.error("There was an error retrieving user data: ", error);
+			handleHTTPError(error);
 		}
 	};
 
@@ -82,7 +83,7 @@ const ProfileView = () => {
 				const res = await axios.put(apiURL, req);
 				console.log("update successful: ", res.data);
 			} catch (error) {
-				console.error("Error with request: ", error);
+				handleHTTPError(error);
 			}
 		}
 		setIsEdit(!isEdit);
@@ -122,7 +123,7 @@ const ProfileView = () => {
 			const res = axios.delete(apiURLDelete);
 			console.log(res.message);
 		} catch (error) {
-			console.error("Error with request: ", error);
+			handleHTTPError(error);
 			return;
 		}
 		setModalVisible(false);

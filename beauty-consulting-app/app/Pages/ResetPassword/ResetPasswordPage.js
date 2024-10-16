@@ -5,6 +5,7 @@ import { useNavigation } from "@react-navigation/native";
 import SignupBackground from "../../assets/components/SignupBackground";
 import globalStyles from "../../assets/GlobalStyles";
 import ErrorMessage from "../../components/ErrorMessage";
+import handleHTTPError from "../../errorHandling";
 
 const API_URL = process.env.EXPO_PUBLIC_API_URL;
 
@@ -42,14 +43,7 @@ const ResetPasswordPage = () => {
 			setValidCode(true);
 			setErrorMessage(""); // Clear error on success
 		} catch (error) {
-			if (error.response?.status === 400) {
-				setErrorMessage("Invalid code. Please try again.");
-			} else {
-				console.error("Error with Verify Code:", error);
-				setErrorMessage(
-					"An unexpected error occurred. Please try again later."
-				);
-			}
+			handleHTTPError(error, setErrorMessage);
 		}
 	};
 
@@ -71,14 +65,7 @@ const ResetPasswordPage = () => {
 			});
 			setSuccess(true);
 		} catch (error) {
-			if (error.response?.status === 400) {
-				setErrorMessage("Invalid code. Please try again.");
-			} else {
-				console.error("Error with Reset Password:", error);
-				setErrorMessage(
-					"An unexpected error occurred. Please try again later."
-				);
-			}
+			handleHTTPError(error, setErrorMessage);
 		}
 	};
 

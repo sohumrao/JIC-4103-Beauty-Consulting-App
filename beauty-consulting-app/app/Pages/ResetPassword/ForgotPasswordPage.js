@@ -5,6 +5,7 @@ import ErrorMessage from "../../components/ErrorMessage";
 import globalStyles from "../../assets/GlobalStyles";
 import axios from "axios";
 import { useNavigation } from "@react-navigation/native";
+import handleHTTPError from "../../errorHandling";
 
 const ForgotPasswordPage = () => {
 	const [email, setEmail] = useState("");
@@ -26,15 +27,7 @@ const ForgotPasswordPage = () => {
 			setErrorMessage("");
 			navigation.navigate("Reset Password");
 		} catch (error) {
-			//TODO: standardize how API error format
-			if (
-				error.response &&
-				error.response.status &&
-				error.response.data
-			) {
-				setErrorMessage(error.response.data);
-			}
-			console.error(error);
+			handleHTTPError(error, setErrorMessage);
 		}
 	};
 	return (

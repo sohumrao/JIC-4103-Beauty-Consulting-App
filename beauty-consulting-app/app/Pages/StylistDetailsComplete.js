@@ -6,6 +6,7 @@ import axios from "axios";
 import ContinueButton from "../assets/components/ContinueButton";
 import { UserContext } from "../contexts/userContext";
 import globalStyles from "../assets/GlobalStyles";
+import handleHTTPError from "../errorHandling";
 
 function StylistDetailsComplete() {
 	const navigation = useNavigation();
@@ -32,7 +33,8 @@ function StylistDetailsComplete() {
 			const res = await axios.post(apiUrl + ":5050/stylist/", req);
 			console.log("Stylist created: ", res.data);
 		} catch (error) {
-			console.error("Error with API: ", error);
+			handleHTTPError(error);
+			return;
 		}
 		userContext.updateUserContext({
 			username: userContext.username,
