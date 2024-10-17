@@ -7,6 +7,7 @@ import axios from "axios";
 import ContinueButton from "../assets/components/ContinueButton";
 import { UserContext } from "../contexts/userContext";
 import globalStyles from "../assets/GlobalStyles";
+import handleHTTPError from "../errorHandling";
 
 function ClientDetailsComplete() {
 	const navigation = useNavigation();
@@ -43,7 +44,7 @@ function ClientDetailsComplete() {
 				routes: [{ name: "Main" }],
 			});
 		} catch (error) {
-			console.error("Error with API: ", error);
+			handleHTTPError(error);
 		}
 	};
 

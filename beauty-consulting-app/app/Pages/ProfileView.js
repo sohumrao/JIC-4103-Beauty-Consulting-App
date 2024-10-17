@@ -5,25 +5,30 @@ import {
 	View,
 	TextInput,
 	TouchableOpacity,
+	Modal,
+	Touchable,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { UserContext } from "../contexts/userContext";
 import SignupBackground from "../assets/components/SignupBackground";
+import ErrorMessage from "../components/ErrorMessage";
 import globalStyles from "../assets/GlobalStyles";
 import axios from "axios";
 import ProfileImage from "../assets/components/ProfileImage";
+import handleHTTPError from "../errorHandling";
 
 const ProfileView = () => {
 	const navigation = useNavigation();
-	const userContext = useContext(UserContext);
-	const [clientData, setClientData] = useState(null);
-	const [name, setName] = useState("");
-	const [age, setAge] = useState("");
-	const [gender, setGender] = useState("");
-	const [phoneNumber, setPhoneNumber] = useState("");
-	const [allergies, setAllergies] = useState("");
-	const [concerns, setConcerns] = useState("");
-	const [isEdit, setIsEdit] = useState(false);
+	var userContext = useContext(UserContext);
+	var [clientData, setClientData] = useState(null);
+	var [name, setName] = useState("");
+	var [gender, setGender] = useState("");
+	var [allergies, setAllergies] = useState("");
+	var [concerns, setConcerns] = useState("");
+	var [isEdit, setIsEdit] = useState(false);
+	const [modalVisible, setModalVisible] = useState(false);
+	var [password, setPassword] = useState("");
+	const [errorMessage, setErrorMessage] = useState("");
 
 	useEffect(() => {
 		populateClientData(userContext.username);
@@ -45,7 +50,7 @@ const ProfileView = () => {
 			setAllergies(res.data.allergies);
 			setConcerns(res.data.additionalConcerns);
 		} catch (error) {
-			console.error("There was an error retrieving user data: ", error);
+			handleHTTPError(error);
 		}
 	};
 
@@ -80,33 +85,61 @@ const ProfileView = () => {
 				const res = await axios.put(apiURL, req);
 				console.log("Update successful: ", res.data);
 			} catch (error) {
-				console.error("Error with request: ", error);
+				handleHTTPError(error);
 			}
 		}
 		setIsEdit(!isEdit);
 	};
 
 	const deleteAccount = async () => {
+		// confirm password
 		try {
-			const apiURL =
+			console.log(userContext);
+			const apiURLConfirmPassword =
+				process.env.EXPO_PUBLIC_API_URL + ":5050/account/signIn";
+			const req = {
+				username: userContext.username,
+				password: password,
+			};
+			if (!apiURLConfirmPassword) {
+				console.error("apiURL not defined");
+			}
+			const res = await axios.post(apiURLConfirmPassword, req);
+		} catch (error) {
+			if (error.response.status == 401) {
+				setErrorMessage("Incorrect Password");
+			} else {
+				setErrorMessage(error.response.data);
+			}
+			return;
+		}
+		// delete if no problems
+		try {
+			const apiURLDelete =
 				process.env.EXPO_PUBLIC_API_URL +
 				":5050/client/" +
 				userContext.username;
-			if (!apiURL) {
+			if (!apiURLDelete) {
 				console.error("apiURL not defined");
 			}
-			await axios.delete(apiURL);
-			console.log("Account deleted successfully");
-			navigation.navigate("Sign In");
+			const res = axios.delete(apiURLDelete);
+			console.log(res.message);
 		} catch (error) {
-			console.error("Error with request: ", error);
+			handleHTTPError(error);
 			return;
 		}
+		setModalVisible(false);
+		navigation.navigate("Sign In");
 	};
 
 	const styles = StyleSheet.create({
 		inputContainer: {
 			marginBottom: 10,
+		},
+		modalCentering: {
+			flex: 1,
+			justifyContent: "center",
+			alignItems: "center",
 		},
 	});
 
@@ -170,6 +203,50 @@ const ProfileView = () => {
 					/>
 				</View>
 
+				<Modal
+					animationType="slide"
+					visible={modalVisible}
+					transparent={true}
+				>
+					<SignupBackground>
+						<View style={globalStyles.box}>
+							<Text style={globalStyles.title}>
+								{" "}
+								Enter your Password to Confirm{" "}
+							</Text>
+							<TextInput
+								style={globalStyles.input}
+								value={password}
+								onChangeText={setPassword}
+							/>
+							<ErrorMessage message={errorMessage} />
+							<TouchableOpacity
+								style={[
+									globalStyles.button,
+									{ marginBottom: 10 },
+								]}
+								onPress={deleteAccount}
+							>
+								<Text style={globalStyles.buttonText}>
+									Delete
+								</Text>
+							</TouchableOpacity>
+							<TouchableOpacity
+								style={globalStyles.button}
+								onPress={() => {
+									setModalVisible(!modalVisible);
+									setPassword("");
+									setErrorMessage("");
+								}}
+							>
+								<Text style={globalStyles.buttonText}>
+									Cancel
+								</Text>
+							</TouchableOpacity>
+						</View>
+					</SignupBackground>
+				</Modal>
+
 				<TouchableOpacity
 					style={[globalStyles.button, { marginBottom: 15 }]}
 					onPress={handleEdit}
@@ -181,7 +258,9 @@ const ProfileView = () => {
 
 				<TouchableOpacity
 					style={globalStyles.button}
-					onPress={deleteAccount}
+					onPress={() => {
+						setModalVisible(!modalVisible);
+					}}
 				>
 					<Text style={globalStyles.buttonText}>Delete Account</Text>
 				</TouchableOpacity>

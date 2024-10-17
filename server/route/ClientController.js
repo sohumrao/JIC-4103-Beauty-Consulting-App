@@ -5,6 +5,8 @@ import { Photo } from "../model/photo.js";
 import multer from "multer";
 import sharp from "sharp";
 import heicConvert from "heic-convert";
+import { ConflictError, MalformedRequestError } from "../errors.js";
+import asyncHandler from "express-async-handler";
 
 /**
  * This router handles user creation, updating, deletion, and photo upload services for the application.
@@ -37,8 +39,9 @@ import heicConvert from "heic-convert";
 const router = express.Router();
 
 // Create new user
-router.post("/", async (req, res) => {
-	try {
+router.post(
+	"/",
+	asyncHandler(async (req, res, next) => {
 		// Check if name and email are provided in the request body
 		if (!req.body || !req.body.name || !req.body.email) {
 			return res.status(400).send({
@@ -68,45 +71,39 @@ router.post("/", async (req, res) => {
 			/* -------------------------------------------------------------------------- */
 		);
 		// TODO: don't return user data, should just send 201 ok
-		const newUser = await Client.findOne({ username: req.body.username });
-		res.send(newUser);
-	} catch (err) {
-		res.status(500).send({
-			message:
-				err.message || "Some error occurred while creating a user.",
+		const newUser = await Client.findOne({
+			username: req.body.username,
 		});
-	}
-});
+		res.send(newUser);
+	})
+);
 
-router.get("/:username", async (req, res) => {
-	try {
+router.get(
+	"/:username",
+	asyncHandler(async (req, res, next) => {
 		// Check for username param
 		if (!req.params || !req.params.username) {
-			return res.status(400).send({
-				message: "More information is required to retrieve user data.",
-			});
+			return next(
+				new MalformedRequestError(
+					"More information is required to retrieve user data."
+				)
+			);
 		}
 
-		// Find user data for username
-		const user = await Client.findOne({ username: req.params.username });
+		// Find user data for usernameg
+		const user = await Client.findOne({
+			username: req.params.username,
+		});
 
 		// Check if user exists
 		if (!user) {
-			return res
-				.status(404)
-				.send({ message: "User has no profile data." });
+			return next(new ConflictError("User has no profile data."));
 		}
 
 		// Return user data
 		res.send(user);
-	} catch (err) {
-		res.status(500).send({
-			message:
-				err.message ||
-				"Some error occurred while retrieving user data.",
-		});
-	}
-});
+	})
+);
 
 // Configure Multer to handle file uploads in memory
 const storage = multer.memoryStorage(); // Store files in memory
@@ -208,8 +205,9 @@ router.get("/:username/photo", async (req, res) => {
 });
 
 // Update user
-router.put("/:username", async (req, res) => {
-	try {
+router.put(
+	"/:username",
+	asyncHandler(async (req, res, next) => {
 		// Find the user by username and update their info
 		const updatedUser = await Client.findOneAndUpdate(
 			{ username: req.params.username },
@@ -219,22 +217,18 @@ router.put("/:username", async (req, res) => {
 		);
 
 		if (!updatedUser) {
-			return res.status(404).send({ message: "User not found." });
+			return next(new ConflictError("User not found."));
 		}
 
 		// FIXME: should not send password/any other extra information
 		res.send(updatedUser); // Send the updated user data back as a response
-	} catch (err) {
-		res.status(500).send({
-			message:
-				err.message || "Some error occurred while updating the user.",
-		});
-	}
-});
+	})
+);
 
 // Delete user
-router.delete("/:username", async (req, res) => {
-	try {
+router.delete(
+	"/:username",
+	asyncHandler(async (req, res, next) => {
 		console.log(req.params.username);
 		// Find the user by username and delete them
 		const deletedUser = await Client.findOneAndDelete({
@@ -245,16 +239,11 @@ router.delete("/:username", async (req, res) => {
 		console.log(deletedUser);
 
 		if (!deletedUser) {
-			return res.status(404).send({ message: "User not found." });
+			return next(new ConflictError("User not found."));
 		}
 
 		res.send({ message: "User deleted successfully." });
-	} catch (err) {
-		res.status(500).send({
-			message:
-				err.message || "Some error occurred while deleting the user.",
-		});
-	}
-});
+	})
+);
 
 export default router;
