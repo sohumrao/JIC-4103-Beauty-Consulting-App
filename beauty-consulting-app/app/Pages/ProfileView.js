@@ -8,17 +8,17 @@ import {
 	Modal,
 	Touchable,
 } from "react-native";
-import { Link, useNavigation } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import { UserContext } from "../contexts/userContext";
 import SignupBackground from "../assets/components/SignupBackground";
 import ErrorMessage from "../components/ErrorMessage";
 import globalStyles from "../assets/GlobalStyles";
 import axios from "axios";
+import ProfileImage from "../assets/components/ProfileImage";
 import handleHTTPError from "../errorHandling";
 
 const ProfileView = () => {
 	const navigation = useNavigation();
-
 	var userContext = useContext(UserContext);
 	var [clientData, setClientData] = useState(null);
 	var [name, setName] = useState("");
@@ -55,21 +55,23 @@ const ProfileView = () => {
 	};
 
 	const handleEdit = async () => {
-		name = name != "" ? name : clientData.info.name;
-		gender = gender != "" ? gender : clientData.info.gender;
-		allergies = allergies != "" ? allergies : clientData.allergies;
-		concerns = concerns != "" ? concerns : clientData.additionalConcerns;
+		const updatedName = name !== "" ? name : clientData.info.name;
+		const updatedGender = gender !== "" ? gender : clientData.info.gender;
+		const updatedAllergies =
+			allergies !== "" ? allergies : clientData.allergies;
+		const updatedConcerns =
+			concerns !== "" ? concerns : clientData.additionalConcerns;
 
 		if (isEdit) {
-			req = {
+			const req = {
 				...clientData,
 				info: {
 					...clientData.info,
-					name: name,
-					gender: gender,
+					name: updatedName,
+					gender: updatedGender,
 				},
-				allergies: allergies,
-				additionalConcerns: concerns,
+				allergies: updatedAllergies,
+				additionalConcerns: updatedConcerns,
 			};
 			try {
 				const apiURL =
@@ -81,7 +83,7 @@ const ProfileView = () => {
 					return;
 				}
 				const res = await axios.put(apiURL, req);
-				console.log("update successful: ", res.data);
+				console.log("Update successful: ", res.data);
 			} catch (error) {
 				handleHTTPError(error);
 			}
@@ -152,6 +154,7 @@ const ProfileView = () => {
 	return (
 		<SignupBackground>
 			<View style={globalStyles.box}>
+				<ProfileImage username={userContext.username} />
 				<View style={styles.inputContainer}>
 					<Text style={globalStyles.inputHeaderText}>Name</Text>
 					<TextInput

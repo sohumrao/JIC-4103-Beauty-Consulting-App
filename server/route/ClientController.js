@@ -3,8 +3,11 @@ import { Client } from "../model/client.js";
 import { Account } from "../model/account.js";
 import { Photo } from "../model/photo.js";
 import multer from "multer";
+import sharp from "sharp";
+import heicConvert from "heic-convert";
 import { ConflictError, MalformedRequestError } from "../errors.js";
 import asyncHandler from "express-async-handler";
+
 /**
  * This router handles user creation, updating, deletion, and photo upload services for the application.
  *
@@ -53,6 +56,7 @@ router.post(
 				info: {
 					name: req.body.name,
 					age: req.body.age,
+					// city: req.body.city,
 					gender: req.body.gender,
 					phoneNumber: req.body.phoneNumber,
 					//NOTE: current code forclient HTTP request does not send zipcode
@@ -105,56 +109,100 @@ router.get(
 const storage = multer.memoryStorage(); // Store files in memory
 const upload = multer({ storage });
 
-// POST route to handle photo upload and save data in MongoDB
-router.post(
-	"/photo",
-	upload.single("photo"),
-	asyncHandler(async (req, res, next) => {
-		// Check if the file and username are provided
+// POST route to handle photo upload and save data in Account's profilePhoto
+router.post("/photo", upload.single("photo"), async (req, res) => {
+	try {
 		if (!req.file || !req.body.username) {
 			return res
 				.status(400)
 				.send({ message: "Photo and username are required!" });
 		}
 
-		// Create a new photo object with binary data and MIME type
-		const newPhoto = new Photo({
-			username: req.body.username,
-			photoData: req.file.buffer, // Store the binary data
-			photoContentType: req.file.mimetype, // Store the file's MIME type
-		});
+		let imageBuffer = req.file.buffer;
 
-		// Save the photo in the database
-		const savedPhoto = await newPhoto.save();
+		// Check if the image is in HEIC format
+		if (
+			req.file.mimetype === "image/heic" ||
+			req.file.mimetype === "image/heif"
+		) {
+			// Convert HEIC to JPEG
+			const jpegBuffer = await heicConvert({
+				buffer: imageBuffer,
+				format: "JPEG",
+				quality: 0.5,
+			});
+
+			imageBuffer = jpegBuffer;
+		}
+
+		// Compress the image using sharp
+		const compressedPhoto = await sharp(imageBuffer)
+			.resize({ width: 400 }) // Example: resize to 800px wide
+			.jpeg({ quality: 50 }) // Adjust compression level
+			.toBuffer();
+
+		// Update the profilePhoto field in the Account schema
+		const updatedAccount = await Account.findOneAndUpdate(
+			{ username: req.body.username },
+			{
+				profilePhoto: {
+					photoData: compressedPhoto,
+					photoContentType: "image/jpeg",
+					uploadedAt: new Date(),
+				},
+			},
+			{ new: true }
+		);
+
+		if (!updatedAccount) {
+			return res.status(404).send({ message: "User not found." });
+		}
+
 		res.send({
-			message: "Photo uploaded and saved in MongoDB successfully!",
-			data: savedPhoto,
+			message:
+				"Profile photo uploaded and updated in the Account successfully!",
+			data: updatedAccount,
 		});
-	})
-);
+	} catch (err) {
+		res.status(500).send({
+			message:
+				err.message ||
+				"Some error occurred while uploading the profile photo.",
+		});
+	}
+});
 
-// Route to retrieve photo by username and serve it as an image
-router.get(
-	"/:username/photo",
-	asyncHandler(async (req, res, next) => {
-		// Fetch the photo from the database by username
-		const photo = await Photo.findOne({
+// Route to retrieve profile photo by username and serve it as an image
+router.get("/:username/photo", async (req, res) => {
+	try {
+		// Fetch the account from the database by username
+		const account = await Account.findOne({
 			username: req.params.username,
 		});
 
-		if (!photo) {
+		if (
+			!account ||
+			!account.profilePhoto ||
+			!account.profilePhoto.photoData
+		) {
 			return res.status(404).send({
-				message: "No photo found for the given username.",
+				message: "No profile photo found for the given username.",
 			});
 		}
 
 		// Set the content type of the response to the photo's MIME type
-		res.set("Content-Type", photo.photoContentType);
+		res.set("Content-Type", account.profilePhoto.photoContentType);
 
 		// Send the photo binary data as the response
-		res.send(photo.photoData);
-	})
-);
+		res.send(account.profilePhoto.photoData);
+	} catch (err) {
+		res.status(500).send({
+			message:
+				err.message ||
+				"Some error occurred while retrieving the profile photo.",
+		});
+	}
+});
 
 // Update user
 router.put(
