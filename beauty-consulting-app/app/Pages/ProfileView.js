@@ -52,8 +52,10 @@ const ProfileView = () => {
 	const handleEdit = async () => {
 		const updatedName = name !== "" ? name : clientData.info.name;
 		const updatedGender = gender !== "" ? gender : clientData.info.gender;
-		const updatedAllergies = allergies !== "" ? allergies : clientData.allergies;
-		const updatedConcerns = concerns !== "" ? concerns : clientData.additionalConcerns;
+		const updatedAllergies =
+			allergies !== "" ? allergies : clientData.allergies;
+		const updatedConcerns =
+			concerns !== "" ? concerns : clientData.additionalConcerns;
 
 		if (isEdit) {
 			const req = {
@@ -68,7 +70,9 @@ const ProfileView = () => {
 			};
 			try {
 				const apiURL =
-					process.env.EXPO_PUBLIC_API_URL + ":5050/client/" + userContext.username;
+					process.env.EXPO_PUBLIC_API_URL +
+					":5050/client/" +
+					userContext.username;
 				if (!apiURL) {
 					console.error("apiURL not defined");
 					return;
@@ -85,7 +89,9 @@ const ProfileView = () => {
 	const deleteAccount = async () => {
 		try {
 			const apiURL =
-				process.env.EXPO_PUBLIC_API_URL + ":5050/client/" + userContext.username;
+				process.env.EXPO_PUBLIC_API_URL +
+				":5050/client/" +
+				userContext.username;
 			if (!apiURL) {
 				console.error("apiURL not defined");
 			}

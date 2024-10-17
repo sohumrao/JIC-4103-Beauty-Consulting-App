@@ -7,34 +7,33 @@ const AccountSchema = new Schema({
 	email: { type: String },
 	//TODO: refactor password to be required
 	password: {
-	  hash: String,
-	  salt: String,
+		hash: String,
+		salt: String,
 	},
 	info: {
-	  name: String,
-	  age: Number,
-	  gender: String,
-	  zipcode: String,
-	  phoneNumber: String,
+		name: String,
+		age: Number,
+		gender: String,
+		zipcode: String,
+		phoneNumber: String,
 	},
 	profilePhoto: {
-	  photoData: {
-		type: Buffer, // Storing the image data directly in MongoDB as a binary buffer
-		required: true,
-	  },
-	  photoContentType: {
-		type: String, // Storing the file's MIME type
-		required: true,
-	  },
-	  uploadedAt: {
-		type: Date,
-		default: Date.now,
-	  },
+		photoData: {
+			type: Buffer, // Storing the image data directly in MongoDB as a binary buffer
+			required: true,
+		},
+		photoContentType: {
+			type: String, // Storing the file's MIME type
+			required: true,
+		},
+		uploadedAt: {
+			type: Date,
+			default: Date.now,
+		},
 	},
 	// authToken: JWT token
 	// resetToken: JWT token
-  });
-  
+});
 
 AccountSchema.methods.createHashedPassword = function (password) {
 	// Creating a unique salt for a particular user
@@ -78,4 +77,4 @@ const ResetPasswordSchema = new mongoose.Schema({
 const Account = mongoose.model("Account", AccountSchema);
 const ResetPassword = mongoose.model("resetpassword", ResetPasswordSchema);
 
-export { Account, ResetPassword};
+export { Account, ResetPassword };
