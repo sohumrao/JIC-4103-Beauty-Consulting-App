@@ -1,8 +1,10 @@
 import express from "express";
 import { Client } from "../model/client.js";
-import { Account, City} from "../model/account.js";
+import { Account} from "../model/account.js";
 import { Photo } from "../model/photo.js";
 import multer from "multer";
+import sharp from 'sharp';
+import heicConvert from 'heic-convert';
 
 /**
  * This router handles user creation, updating, deletion, and photo upload services for the application.
@@ -113,33 +115,47 @@ const upload = multer({ storage });
 // POST route to handle photo upload and save data in MongoDB
 router.post("/photo", upload.single("photo"), async (req, res) => {
 	try {
-		// Check if the file and username are provided
-		if (!req.file || !req.body.username) {
-			return res
-				.status(400)
-				.send({ message: "Photo and username are required!" });
-		}
-
-		// Create a new photo object with binary data and MIME type
-		const newPhoto = new Photo({
-			username: req.body.username,
-			photoData: req.file.buffer, // Store the binary data
-			photoContentType: req.file.mimetype, // Store the file's MIME type
+	  if (!req.file || !req.body.username) {
+		return res.status(400).send({ message: "Photo and username are required!" });
+	  }
+  
+	  let imageBuffer = req.file.buffer;
+  
+	  // Check if the image is in HEIC format
+	  if (req.file.mimetype === 'image/heic' || req.file.mimetype === 'image/heif') {
+		// Convert HEIC to JPEG
+		const jpegBuffer = await heicConvert({
+		  buffer: imageBuffer, 
+		  format: 'JPEG',
+		  quality: 0.8 // Adjust quality as needed
 		});
-
-		// Save the photo in the database
-		const savedPhoto = await newPhoto.save();
-		res.send({
-			message: "Photo uploaded and saved in MongoDB successfully!",
-			data: savedPhoto,
-		});
+  
+		imageBuffer = jpegBuffer;
+	  }
+  
+	  // Compress the image using sharp
+	  const compressedPhoto = await sharp(imageBuffer)
+		.resize({ width: 800 }) // Example: resize to 800px wide
+		.jpeg({ quality: 70 }) // Adjust compression level
+		.toBuffer();
+  
+	  const newPhoto = new Photo({
+		username: req.body.username,
+		photoData: compressedPhoto,
+		photoContentType: 'image/jpeg',
+	  });
+  
+	  const savedPhoto = await newPhoto.save();
+	  res.send({
+		message: "Photo uploaded and saved in MongoDB successfully!",
+		data: savedPhoto,
+	  });
 	} catch (err) {
-		res.status(500).send({
-			message:
-				err.message || "Some error occurred while uploading the photo.",
-		});
+	  res.status(500).send({
+		message: err.message || "Some error occurred while uploading the photo.",
+	  });
 	}
-});
+  });
 
 // Route to retrieve photo by username and serve it as an image
 router.get("/:username/photo", async (req, res) => {
