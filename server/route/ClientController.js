@@ -112,7 +112,7 @@ router.get("/:username", async (req, res) => {
 const storage = multer.memoryStorage(); // Store files in memory
 const upload = multer({ storage });
 
-// POST route to handle photo upload and save data in MongoDB
+// POST route to handle photo upload and save data in Account's profilePhoto
 router.post("/photo", upload.single("photo"), async (req, res) => {
 	try {
 	  if (!req.file || !req.body.username) {
@@ -125,9 +125,9 @@ router.post("/photo", upload.single("photo"), async (req, res) => {
 	  if (req.file.mimetype === 'image/heic' || req.file.mimetype === 'image/heif') {
 		// Convert HEIC to JPEG
 		const jpegBuffer = await heicConvert({
-		  buffer: imageBuffer, 
+		  buffer: imageBuffer,
 		  format: 'JPEG',
-		  quality: 0.8 // Adjust quality as needed
+		  quality: 0.5
 		});
   
 		imageBuffer = jpegBuffer;
@@ -135,53 +135,63 @@ router.post("/photo", upload.single("photo"), async (req, res) => {
   
 	  // Compress the image using sharp
 	  const compressedPhoto = await sharp(imageBuffer)
-		.resize({ width: 800 }) // Example: resize to 800px wide
-		.jpeg({ quality: 70 }) // Adjust compression level
+		.resize({ width: 400 }) // Example: resize to 800px wide
+		.jpeg({ quality: 50 }) // Adjust compression level
 		.toBuffer();
   
-	  const newPhoto = new Photo({
-		username: req.body.username,
-		photoData: compressedPhoto,
-		photoContentType: 'image/jpeg',
-	  });
+	  // Update the profilePhoto field in the Account schema
+	  const updatedAccount = await Account.findOneAndUpdate(
+		{ username: req.body.username },
+		{
+		  profilePhoto: {
+			photoData: compressedPhoto,
+			photoContentType: 'image/jpeg',
+			uploadedAt: new Date(),
+		  }
+		},
+		{ new: true }
+	  );
   
-	  const savedPhoto = await newPhoto.save();
+	  if (!updatedAccount) {
+		return res.status(404).send({ message: "User not found." });
+	  }
+  
 	  res.send({
-		message: "Photo uploaded and saved in MongoDB successfully!",
-		data: savedPhoto,
+		message: "Profile photo uploaded and updated in the Account successfully!",
+		data: updatedAccount,
 	  });
 	} catch (err) {
 	  res.status(500).send({
-		message: err.message || "Some error occurred while uploading the photo.",
+		message: err.message || "Some error occurred while uploading the profile photo.",
 	  });
 	}
   });
+  
 
-// Route to retrieve photo by username and serve it as an image
+// Route to retrieve profile photo by username and serve it as an image
 router.get("/:username/photo", async (req, res) => {
 	try {
-		// Fetch the photo from the database by username
-		const photo = await Photo.findOne({ username: req.params.username });
-
-		if (!photo) {
-			return res
-				.status(404)
-				.send({ message: "No photo found for the given username." });
-		}
-
-		// Set the content type of the response to the photo's MIME type
-		res.set("Content-Type", photo.photoContentType);
-
-		// Send the photo binary data as the response
-		res.send(photo.photoData);
+	  // Fetch the account from the database by username
+	  const account = await Account.findOne({ username: req.params.username });
+  
+	  if (!account || !account.profilePhoto || !account.profilePhoto.photoData) {
+		return res
+		  .status(404)
+		  .send({ message: "No profile photo found for the given username." });
+	  }
+  
+	  // Set the content type of the response to the photo's MIME type
+	  res.set("Content-Type", account.profilePhoto.photoContentType);
+  
+	  // Send the photo binary data as the response
+	  res.send(account.profilePhoto.photoData);
 	} catch (err) {
-		res.status(500).send({
-			message:
-				err.message ||
-				"Some error occurred while retrieving the photo.",
-		});
+	  res.status(500).send({
+		message: err.message || "Some error occurred while retrieving the profile photo.",
+	  });
 	}
-});
+  });
+  
 
 // Update user
 router.put("/:username", async (req, res) => {
@@ -233,74 +243,6 @@ router.delete("/:username", async (req, res) => {
 	}
 });
 
-// Match stylists
-router.get("/matchStylists/:username", async (req, res) => {
-    try {
-        const { username } = req.params;
-
-        const client = await Client.findOne({ username });
-
-        if (!client) {
-            return res.status(404).send({ message: "Client not found." });
-        }
-
-        const clientCity = client.info.city; // STILL NEED TO ADD
-        const clientHairDetails = client.hairDetails;
-
-        if (!clientCity) {
-            return res.status(400).send({ message: "Client's city is not specified." });
-        }
-
-		// OPTION 1
-		// Get Stylists in the same city as the client
-        const stylistsInCity = await Stylist.find({ city: clientCity });
-
-		// OPTION 2
-		/* OR:
-		const stylistsInCity = await Stylist.find({ business.city: clientCity });
-		*/
-
-		// OPTION 3: If city is stored in City collection
-		/* OR:
-        const cityEntry = await City.findOne({ name: clientCity });
-
-        if (!cityEntry || cityEntry.users.length === 0) {
-            return res.status(404).send({ message: "No stylists found in the specified city." });
-        }
-
-        // Fetch stylist details based on usernames stored in the City collection
-        const stylistUsernames = cityEntry.users;
-        const stylistsInCity = await Stylist.find({ username: { $in: stylistUsernames } });
-		*/
-
-        // Calculate similarity score based on hair types
-        const stylistsWithScores = stylistsInCity.map(stylist => {
-            let matchScore = 0;
-
-            // Compare each hair type between client and stylist
-            Object.keys(clientHairDetails).forEach(key => {
-                if (clientHairDetails[key] && stylist.business.workedWithHairTypes[key]) {
-                    matchScore++;
-                }
-            });
-
-            return { stylist, matchScore };
-			// return a field with the hair details that match with the client
-			// leave as is - return all the stylists
-			
-        });
-
-        // Sort by similarity score in descending order
-        const sortedStylists = stylistsWithScores
-            .sort((a, b) => b.matchScore - a.matchScore)
-            .map(item => item.stylist);
-
-        // Return sorted list of stylists
-        res.send(sortedStylists);
-    } catch (err) {
-        res.status(500).send({ message: err.message || "Error matching stylists." });
-    }
-});
 
 
 export default router;
