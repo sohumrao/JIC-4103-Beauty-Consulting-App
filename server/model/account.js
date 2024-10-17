@@ -16,6 +16,7 @@ const AccountSchema = new Schema({
 		gender: String,
 		zipcode: String,
 		phoneNumber: String,
+		city: String,
 	},
 	// profilePhoto: { type: Schema.Types.ObjectId, ref: "Photo" },
 	// authToken: JWT token

@@ -6,6 +6,8 @@ import connectDB from "./db/connection.js";
 import stylistController from "./route/StylistController.js";
 import accountController from "./route/AccountController.js";
 import clientController from "./route/ClientController.js";
+import createDataController from "./route/GenerateDataController.js";
+
 import { errorHandler } from "./errors.js";
 
 const PORT = process.env.PORT || 5050;
@@ -27,6 +29,7 @@ app.use(express.json());
 app.use("/client", clientController);
 app.use("/stylist", stylistController);
 app.use("/account", accountController);
+app.use("/create-data", createDataController);
 
 // Throw 404 if no routes were visited
 // Any forwarded errors won't visit this function this function only has 3 arguments
