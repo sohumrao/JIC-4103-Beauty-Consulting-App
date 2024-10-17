@@ -1,5 +1,6 @@
 import express from "express";
 import { Client } from "../model/client.js";
+import { Stylist } from "../model/stylist.js";
 import { Account } from "../model/account.js";
 import { Photo } from "../model/photo.js";
 import multer from "multer";
@@ -55,6 +56,7 @@ router.post(
 					age: req.body.age,
 					gender: req.body.gender,
 					phoneNumber: req.body.phoneNumber,
+					city: req.body.city,
 					//NOTE: current code forclient HTTP request does not send zipcode
 				},
 				hairDetails: req.body.hairDetails,
@@ -197,5 +199,146 @@ router.delete(
 		res.send({ message: "User deleted successfully." });
 	})
 );
+
+// Matching stylists based on client's hair details 
+// First filtering based on city provided in header
+// If not provided, then using city from client's profile
+
+router.get("/matchStylists/:username", async (req, res) => {
+    try {
+        const { username } = req.params;
+        
+        // Step 1: Retrieve client details based on username
+        const client = await Client.findOne({ username });
+
+        if (!client) {
+            return res.status(404).send({ message: "Client not found." });
+        }
+
+        // Step 2: Extract client's hair details
+        const clientHairDetails = client.hairDetails;
+
+        // Step 3: Determine city based on header or client info
+        const headerCity = req.headers['city'];
+        const cityToUse = headerCity && headerCity.trim() ? headerCity : client.info.city;
+
+        if (!cityToUse) {
+            return res.status(400).send({ message: "City is not specified in the header or client profile." });
+        }
+
+        // Step 4: Retrieve stylists from the determined city
+        const stylistsInCity = await Stylist.find({ "info.city": cityToUse });
+
+        // Check if there are no stylists in the specified city
+        if (!stylistsInCity || stylistsInCity.length === 0) {
+            return res.status(404).send({ message: `No stylists found in ${cityToUse}.` });
+        }
+
+        // Step 5: Calculate similarity score based on hair types
+        const stylistsWithScores = stylistsInCity.map(stylist => {
+            let matchScore = 0;
+
+            // Compare each hair type between client and stylist
+            Object.keys(clientHairDetails).forEach(key => {
+                if (clientHairDetails[key] && stylist.business.workedWithHairTypes[key]) {
+                    matchScore++;
+                }
+            });
+
+            return { stylist, matchScore };
+        });
+
+        // Step 6: Sort by similarity score in descending order
+        const sortedStylists = stylistsWithScores
+            .sort((a, b) => b.matchScore - a.matchScore)
+            .map(item => item.stylist);
+
+        // Send sorted stylists as response
+        res.send(sortedStylists);
+    } catch (err) {
+        res.status(500).send({ message: err.message || "Error matching stylists." });
+    }
+});
+
+router.get("/matchStylists2/:username", async (req, res) => {
+    try {
+        const { username } = req.params;
+        
+        // Step 1: Retrieve client details based on username
+        const client = await Client.findOne({ username });
+
+        if (!client) {
+            return res.status(404).send({ message: "Client not found." });
+        }
+
+        // Step 2: Extract client's hair details
+        const clientHairDetails = client.hairDetails;
+
+        // Step 3: Determine city based on header or client info
+        const headerCity = req.headers['city'];
+        const cityToUse = headerCity && headerCity.trim() ? headerCity : client.info.city;
+
+        if (!cityToUse) {
+            return res.status(400).send({ message: "City is not specified in the header or client profile." });
+        }
+
+        // Step 4: Retrieve stylists from the determined city
+        const stylistsInCity = await Stylist.find({ "info.city": cityToUse });
+
+        // Check if there are no stylists in the specified city
+        if (!stylistsInCity || stylistsInCity.length === 0) {
+            return res.status(404).send({ message: `No stylists found in ${cityToUse}.` });
+        }
+
+        // Step 5: Calculate similarity score based on hair types and prepare response
+        const stylistsWithDetails = stylistsInCity.map(stylist => {
+            let matchScore = 0;
+            let matchingHairDetails = {};
+
+            // Compare each hair type between client and stylist
+            Object.keys(clientHairDetails).forEach(key => {
+                if (clientHairDetails[key] && stylist.business.workedWithHairTypes[key]) {
+                    matchScore++;
+                    matchingHairDetails[key] = true;
+                }
+            });
+
+            // Filter to only include hair details that are true
+            const filteredHairDetails = Object.keys(matchingHairDetails)
+                .filter(key => matchingHairDetails[key])
+                .reduce((obj, key) => {
+                    obj[key] = true;
+                    return obj;
+                }, {});
+
+            // Find the profile picture if available
+            const profilePicture = stylist.info.profilePhoto ? stylist.info.profilePhoto : null;
+
+            return {
+                username: stylist.username,
+                mostSimilarHairDetails: filteredHairDetails,
+                profilePicture: profilePicture,
+                matchScore: matchScore
+            };
+        });
+
+        // Step 6: Sort by similarity score in descending order
+        const sortedStylists = stylistsWithDetails
+            .sort((a, b) => b.matchScore - a.matchScore)
+            .map(item => ({
+                username: item.username,
+                mostSimilarHairDetails: item.mostSimilarHairDetails,
+                profilePicture: item.profilePicture
+            }));
+
+        // Send formatted stylists as response
+        res.send(sortedStylists);
+    } catch (err) {
+        res.status(500).send({ message: err.message || "Error matching stylists." });
+    }
+});
+
+
+
 
 export default router;
