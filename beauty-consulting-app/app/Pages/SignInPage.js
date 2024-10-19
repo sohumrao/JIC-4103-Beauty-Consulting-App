@@ -10,19 +10,17 @@ import KeyboardMove from "../assets/components/KeyboardMove";
 import handleHTTPError from "../errorHandling";
 
 const SignInPage = () => {
-	const [username, setUsername] = useState("");
-	const [password, setPassword] = useState("");
-	const [errorMessage, setErrorMessage] = useState("");
 	const navigation = useNavigation();
-
 	const userContext = useContext(UserContext);
 
-	const handleSignIn = async () => {
-		const req = {
-			username: username,
-			password: password,
-		};
+	const [formData, setFormData] = useState({
+		username: "",
+		password: "",
+	});
+	const [error, setError] = useState("");
 
+	const handleSignIn = async () => {
+		//NOTE: I think it's ok to not do any frontend validation for sign in
 		const apiUrl = process.env.EXPO_PUBLIC_API_URL;
 		if (!apiUrl) {
 			console.error("API URL not defined");
@@ -30,46 +28,49 @@ const SignInPage = () => {
 		}
 
 		try {
-			const res = await axios.post(apiUrl + ":5050/account/signIn", req);
-			setErrorMessage("");
+			const res = await axios.post(
+				apiUrl + ":5050/account/signIn",
+				formData
+			);
+			setError("");
 			console.log("Sign in successful: " + res.data);
 		} catch (error) {
-			handleHTTPError(error, setErrorMessage);
+			handleHTTPError(error, setError);
 			return;
 		}
-
+		//TODO: refactor signIn to return the userID so this call can be refactored out
 		let userProfileDataExists = false;
 
 		try {
 			const clientRes = await axios.get(
-				apiUrl + ":5050/client/" + username
+				apiUrl + ":5050/client/" + formData.username
 			);
 			userProfileDataExists = true;
 			userContext.updateUserContext({
-				username: username,
+				username: formData.username,
 				role: "client",
 			});
 			navigation.replace("Main");
 			return;
 		} catch (error) {
-			handleHTTPError(error, setErrorMessage);
+			handleHTTPError(error, setError);
 		}
 
 		if (!userProfileDataExists) {
 			try {
 				const stylistRes = await axios.get(
-					apiUrl + ":5050/stylist/" + username
+					apiUrl + ":5050/stylist/" + formData.username
 				);
 				userProfileDataExists = true;
 				userContext.updateUserContext({
-					username: username,
+					username: formData.username,
 					role: "stylist",
 				});
 
 				navigation.replace("Main");
 				return;
 			} catch (error) {
-				handleHTTPError(error, setErrorMessage);
+				handleHTTPError(error, setError);
 				return;
 			}
 		}
@@ -87,22 +88,26 @@ const SignInPage = () => {
 					<TextInput
 						style={globalStyles.input}
 						placeholder="Username"
-						value={username}
-						onChangeText={setUsername}
-						keyboardType="email-address"
+						value={formData.username}
+						onChangeText={(text) =>
+							setFormData({ ...formData, username: text })
+						}
+						keyboardType="default"
 						autoCapitalize="none"
 						autoCorrect={false}
 					/>
 					<TextInput
 						style={globalStyles.input}
 						placeholder="Password"
-						value={password}
-						onChangeText={setPassword}
+						value={formData.password}
+						onChangeText={(text) =>
+							setFormData({ ...formData, password: text })
+						}
 						secureTextEntry
 						autoCapitalize="none"
 						autoCorrect={false}
 					/>
-					<ErrorMessage message={errorMessage} />
+					<ErrorMessage message={error} />
 					<TouchableOpacity
 						style={globalStyles.button}
 						onPress={handleSignIn}
