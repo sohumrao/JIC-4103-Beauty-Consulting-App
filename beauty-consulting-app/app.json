@@ -3,7 +3,10 @@
 		"name": "beauty-consulting-app",
 		"slug": "beauty-consulting-app",
 		"version": "1.0.0",
-		"assetBundlePatterns": ["**/*"]
+		"assetBundlePatterns": ["**/*"],
+		"packagerOpts": {
+			"config": "metro.config.js"
+		}
 	},
 	"name": "beauty-consulting-app"
 }
