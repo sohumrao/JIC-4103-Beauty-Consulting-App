@@ -201,90 +201,91 @@ router.delete(
 );
 
 // Route to match stylists based on client's hair details and city
-router.get("/matchStylists/:username", async (req, res) => {
-    try {
-        const { username } = req.params;
-        
-        // Step 1: Retrieve client details based on username
-        const client = await Client.findOne({ username });
-
-        if (!client) {
-            return res.status(404).send({ message: "Client not found." });
-        }
-
-        // Step 2: Extract client's hair details
-        const clientHairDetails = client.hairDetails;
-
-        // Step 3: Determine city based on header or client info
-        const headerCity = req.headers['city'];
-        const cityToUse = headerCity && headerCity.trim() ? headerCity : client.info.city;
-
-        if (!cityToUse) {
-            return res.status(400).send({ message: "City is not specified in the header or client profile." });
-        }
-
-        // Step 4: Retrieve stylists from the determined city
-        const stylistsInCity = await Stylist.find({ "info.city": cityToUse });
-
-        // Check if there are no stylists in the specified city
-        if (!stylistsInCity || stylistsInCity.length === 0) {
-            return res.status(404).send({ message: `No stylists found in ${cityToUse}.` });
-        }
-
-        // Step 5: Calculate similarity score based on hair types and prepare response
-        const stylistsWithDetails = stylistsInCity.map(stylist => {
-            let matchScore = 0;
-            let matchingHairDetails = {};
-
-            // Compare each hair type between client and stylist
-            Object.keys(clientHairDetails).forEach(key => {
-                if (clientHairDetails[key] && stylist.business.workedWithHairTypes[key]) {
-                    matchScore++;
-                    matchingHairDetails[key] = true;
-                }
-            });
-
-            // Filter to only include hair details that are true
-            const filteredHairDetails = Object.keys(matchingHairDetails)
-                .filter(key => matchingHairDetails[key])
-                .reduce((obj, key) => {
-                    obj[key] = true;
-                    return obj;
-                }, {});
-
-            // Find the profile picture if available
-            const profilePicture = stylist.info.profilePhoto ? stylist.info.profilePhoto : null;
-
-            // Return stylist information including name, business name, and address
-            return {
-                username: stylist.username,
-                name: stylist.info.name, // Stylist's name
-                businessName: stylist.business.name, // Business name
-                businessAddress: stylist.business.address, // Business address
-                mostSimilarHairDetails: filteredHairDetails,
-                profilePicture: profilePicture,
-                matchScore: matchScore
-            };
-        });
-
-        // Step 6: Sort by similarity score in descending order
-        const sortedStylists = stylistsWithDetails
-            .sort((a, b) => b.matchScore - a.matchScore)
-            .map(item => ({
-                username: item.username,
-                name: item.name,
-                businessName: item.businessName,
-                businessAddress: item.businessAddress,
-                mostSimilarHairDetails: item.mostSimilarHairDetails,
-                profilePicture: item.profilePicture
-            }));
-
-        // Send formatted stylists as response
-        res.send(sortedStylists);
-    } catch (err) {
-        res.status(500).send({ message: err.message || "Error matching stylists." });
-    }
-});
-
+router.get(
+	"/matchStylists/:username",
+	asyncHandler(async (req, res, next) => {
+	  const { username } = req.params;
+  
+	  // Step 1: Retrieve client details based on username
+	  const client = await Client.findOne({ username });
+  
+	  if (!client) {
+		return next(new ConflictError("Client not found."));
+	  }
+  
+	  // Step 2: Extract client's hair details
+	  const clientHairDetails = client.hairDetails;
+  
+	  // Step 3: Determine city based on request body or client info
+	  const bodyCity = req.body.city;
+	  const cityToUse = bodyCity && bodyCity.trim() ? bodyCity : client.info.city;
+  
+	  if (!cityToUse) {
+		return next(
+		  new MalformedRequestError("City is not specified in the request body or client profile.")
+		);
+	  }
+  
+	  // Step 4: Retrieve stylists from the determined city
+	  const stylistsInCity = await Stylist.find({ "info.city": cityToUse });
+  
+	  // Check if there are no stylists in the specified city
+	  if (!stylistsInCity || stylistsInCity.length === 0) {
+		return next(new ConflictError(`No stylists found in ${cityToUse}.`));
+	  }
+  
+	  // Step 5: Calculate similarity score based on hair types and prepare response
+	  const stylistsWithDetails = stylistsInCity.map((stylist) => {
+		let matchScore = 0;
+		let matchingHairDetails = {};
+  
+		// Compare each hair type between client and stylist
+		Object.keys(clientHairDetails).forEach((key) => {
+		  if (clientHairDetails[key] && stylist.business.workedWithHairTypes[key]) {
+			matchScore++;
+			matchingHairDetails[key] = true;
+		  }
+		});
+  
+		// Filter to only include hair details that are true
+		const filteredHairDetails = Object.keys(matchingHairDetails)
+		  .filter((key) => matchingHairDetails[key])
+		  .reduce((obj, key) => {
+			obj[key] = true;
+			return obj;
+		  }, {});
+  
+		// Find the profile picture if available
+		const profilePicture = stylist.info.profilePhoto ? stylist.info.profilePhoto : null;
+  
+		// Return stylist information including name, business name, and address
+		return {
+		  username: stylist.username,
+		  name: stylist.info.name, // Stylist's name
+		  businessName: stylist.business.name, // Business name
+		  businessAddress: stylist.business.address, // Business address
+		  mostSimilarHairDetails: filteredHairDetails,
+		  profilePicture: profilePicture,
+		  matchScore: matchScore,
+		};
+	  });
+  
+	  // Step 6: Sort by similarity score in descending order
+	  const sortedStylists = stylistsWithDetails
+		.sort((a, b) => b.matchScore - a.matchScore)
+		.map((item) => ({
+		  username: item.username,
+		  name: item.name,
+		  businessName: item.businessName,
+		  businessAddress: item.businessAddress,
+		  mostSimilarHairDetails: item.mostSimilarHairDetails,
+		  profilePicture: item.profilePicture,
+		}));
+  
+	  // Send formatted stylists as response
+	  res.send(sortedStylists);
+	})
+  );
+  
 
 export default router;
