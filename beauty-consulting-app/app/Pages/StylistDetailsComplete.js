@@ -7,6 +7,7 @@ import ContinueButton from "../assets/components/ContinueButton";
 import { UserContext } from "../contexts/userContext";
 import globalStyles from "../assets/GlobalStyles";
 import handleHTTPError from "../errorHandling";
+import getCityfromZIP from "../geocoding";
 
 function StylistDetailsComplete() {
 	const navigation = useNavigation();

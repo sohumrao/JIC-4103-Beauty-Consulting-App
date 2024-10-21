@@ -3,6 +3,7 @@ import { View, Text, TextInput, ScrollView, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { UserContext } from "../contexts/userContext";
 import ContinueButton from "../assets/components/ContinueButton";
+import { getCityFromZIP, getCityfromZIP } from "../geocoding";
 
 const StylistDetails2 = () => {
 	const navigation = useNavigation();
@@ -26,6 +27,14 @@ const StylistDetails2 = () => {
 	const [businessAddress, setBusinessAddress] = useState(
 		userContext.business.address || ""
 	);
+
+	const testGeocoding = async () => {
+		console.log(businessAddress);
+		if (businessAddress.length != 5) {
+			console.error("ZIP Code: " + businessAddress + " invalid");
+		}
+		getCityFromZIP(businessAddress);
+	};
 
 	const handleContinue = () => {
 		// Update context with stylist details
@@ -117,12 +126,14 @@ const StylistDetails2 = () => {
 				placeholder="Enter your business name"
 			/>
 
-			<Text style={styles.label}>Address of Business</Text>
+			<Text style={styles.label}>ZIP Code of Business</Text>
 			<TextInput
 				style={styles.input}
 				value={businessAddress}
+				keyboardType="numeric"
 				onChangeText={setBusinessAddress}
-				placeholder="Enter your business address"
+				onEndEditing={testGeocoding}
+				placeholder="Enter your business' ZIP code"
 			/>
 
 			<View style={styles.form}>
