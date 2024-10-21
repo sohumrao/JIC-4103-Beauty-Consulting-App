@@ -1,6 +1,8 @@
 import express from "express";
 import { Account } from "../model/account.js";
 import { Stylist } from "../model/stylist.js";
+import { ConflictError, MalformedRequestError } from "../errors.js";
+import asyncHandler from "express-async-handler";
 
 /**
  * This router handles user creation and photo upload services for the application.
@@ -26,13 +28,12 @@ import { Stylist } from "../model/stylist.js";
 const router = express.Router();
 
 // Create new user
-router.post("/", async (req, res) => {
-	try {
+router.post(
+	"/",
+	asyncHandler(async (req, res, next) => {
 		// Check if name and email are provided in the request body
 		if (!req.body || !req.body.name || !req.body.email) {
-			return res.status(400).send({
-				message: "More information is required to make a new user",
-			});
+			next(new MalformedRequestError("Name and email are required"));
 		}
 
 		const oldUser = await Account.findOneAndUpdate(
@@ -55,44 +56,38 @@ router.post("/", async (req, res) => {
 			/* -------------------------------------------------------------------------- */
 		);
 		// TODO: don't return user data, should just send 201 ok
-		const newUser = await Stylist.findOne({ username: req.body.username });
-		res.send(newUser);
-	} catch (err) {
-		res.status(500).send({
-			message:
-				err.message || "Some error occurred while creating a user.",
+		const newUser = await Stylist.findOne({
+			username: req.body.username,
 		});
-	}
-});
+		res.send(newUser);
+	})
+);
 
-router.get("/:username", async (req, res) => {
-	try {
+router.get(
+	"/:username",
+	asyncHandler(async (req, res, next) => {
 		// Check for username param
 		if (!req.params || !req.params.username) {
-			return res.status(400).send({
-				message: "More information is required to retrieve user data.",
-			});
+			return next(
+				new MalformedRequestError(
+					"More information is required to retrieve user data."
+				)
+			);
 		}
 
 		// Find user data for username
-		const user = await Stylist.findOne({ username: req.params.username });
+		const user = await Stylist.findOne({
+			username: req.params.username,
+		});
 
 		// Check if user exists
 		if (!user) {
-			return res
-				.status(404)
-				.send({ message: "User has no profile data." });
+			return next(new ConflictError("User has no profile data."));
 		}
 
 		// Return user data
 		res.send(user);
-	} catch (err) {
-		res.status(500).send({
-			message:
-				err.message ||
-				"Some error occurred while retrieving user data.",
-		});
-	}
-});
+	})
+);
 
 export default router;
