@@ -3,11 +3,6 @@ import { View, Text, TextInput, ScrollView, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { UserContext } from "../contexts/userContext";
 import ContinueButton from "../assets/components/ContinueButton";
-import React, { useContext, useState } from "react";
-import { View, Text, TextInput, ScrollView, StyleSheet } from "react-native";
-import { useNavigation } from "@react-navigation/native";
-import { UserContext } from "../contexts/userContext";
-import ContinueButton from "../assets/components/ContinueButton";
 
 const StylistDetails2 = () => {
 	const navigation = useNavigation();
