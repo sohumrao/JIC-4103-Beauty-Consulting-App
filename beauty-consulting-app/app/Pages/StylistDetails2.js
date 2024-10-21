@@ -3,12 +3,17 @@ import { View, Text, TextInput, ScrollView, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { UserContext } from "../contexts/userContext";
 import ContinueButton from "../assets/components/ContinueButton";
+import React, { useContext, useState } from "react";
+import { View, Text, TextInput, ScrollView, StyleSheet } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import { UserContext } from "../contexts/userContext";
+import ContinueButton from "../assets/components/ContinueButton";
 
 const StylistDetails2 = () => {
-  const navigation = useNavigation();
+	const navigation = useNavigation();
 
-  // Access the user context
-  const userContext = useContext(UserContext);
+	// Access the user context
+	const userContext = useContext(UserContext);
 
   // State for stylist-specific inputs, initialized with empty strings as default
   const [experience, setExperience] = useState("");
@@ -88,9 +93,9 @@ const StylistDetails2 = () => {
     },
   });
 
-  return (
-    <ScrollView style={styles.container}>
-      <Text style={styles.header}>Stylist Details</Text>
+	return (
+		<ScrollView style={styles.container}>
+			<Text style={styles.header}>Stylist Details</Text>
 
       <View style={styles.stepIndicator}>
         <View style={[styles.step, styles.stepCompleted]}></View>
@@ -142,9 +147,9 @@ const StylistDetails2 = () => {
         />
       </View>
 
-      <ContinueButton onPress={handleContinue} />
-    </ScrollView>
-  );
+			<ContinueButton onPress={handleContinue} />
+		</ScrollView>
+	);
 };
 
 export default StylistDetails2;

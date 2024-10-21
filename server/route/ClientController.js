@@ -1,8 +1,9 @@
 import express from "express";
 import { Client } from "../model/client.js";
+import { Stylist } from "../model/stylist.js";
 import { Account } from "../model/account.js";
-import { Photo } from "../model/photo.js";
-import multer from "multer";
+import { ConflictError, MalformedRequestError } from "../errors.js";
+import asyncHandler from "express-async-handler";
 
 /**
  * This router handles user creation, updating, deletion, and photo upload services for the application.
@@ -35,13 +36,14 @@ import multer from "multer";
 const router = express.Router();
 
 // Create new user
-router.post("/", async (req, res) => {
-	try {
+router.post(
+	"/",
+	asyncHandler(async (req, res, next) => {
 		// Check if name and email are provided in the request body
 		if (!req.body || !req.body.name || !req.body.email) {
-			return res
-				.status(400)
-				.send({ message: "More information is required to make a new user" });
+			return res.status(400).send({
+				message: "More information is required to make a new user",
+			});
 		}
 
 		const oldUser = await Account.findOneAndUpdate(
@@ -51,8 +53,10 @@ router.post("/", async (req, res) => {
 				info: {
 					name: req.body.name,
 					age: req.body.age,
+					// city: req.body.city,
 					gender: req.body.gender,
 					phoneNumber: req.body.phoneNumber,
+					city: req.body.city,
 					//NOTE: current code forclient HTTP request does not send zipcode
 				},
 				hairDetails: req.body.hairDetails,
@@ -65,101 +69,44 @@ router.post("/", async (req, res) => {
 			/* -------------------------------------------------------------------------- */
 		);
 		// TODO: don't return user data, should just send 201 ok
-		const newUser = await Client.findOne({ username: req.body.username });
-		res.send(newUser);
-	} catch (err) {
-		res.status(500).send({
-			message: err.message || "Some error occurred while creating a user.",
+		const newUser = await Client.findOne({
+			username: req.body.username,
 		});
-	}
-});
-router.get("/:username", async (req, res) => {
-	try {
+		res.send(newUser);
+	})
+);
+
+router.get(
+	"/:username",
+	asyncHandler(async (req, res, next) => {
 		// Check for username param
 		if (!req.params || !req.params.username) {
-			return res.status(400).send({
-				message: "More information is required to retrieve user data.",
-			});
+			return next(
+				new MalformedRequestError(
+					"More information is required to retrieve user data."
+				)
+			);
 		}
 
-		// Find user data for username
-		const user = await Client.findOne({ username: req.params.username });
+		// Find user data for usernameg
+		const user = await Client.findOne({
+			username: req.params.username,
+		});
 
 		// Check if user exists
 		if (!user) {
-			return res.status(404).send({ message: "User has no profile data." });
+			return next(new ConflictError("User has no profile data."));
 		}
 
 		// Return user data
 		res.send(user);
-	} catch (err) {
-		res.status(500).send({
-			message: err.message || "Some error occurred while retrieving user data.",
-		});
-	}
-});
-
-// Configure Multer to handle file uploads in memory
-const storage = multer.memoryStorage(); // Store files in memory
-const upload = multer({ storage });
-
-// POST route to handle photo upload and save data in MongoDB
-router.post("/photo", upload.single("photo"), async (req, res) => {
-	try {
-		// Check if the file and username are provided
-		if (!req.file || !req.body.username) {
-			return res
-				.status(400)
-				.send({ message: "Photo and username are required!" });
-		}
-
-		// Create a new photo object with binary data and MIME type
-		const newPhoto = new Photo({
-			username: req.body.username,
-			photoData: req.file.buffer, // Store the binary data
-			photoContentType: req.file.mimetype, // Store the file's MIME type
-		});
-
-		// Save the photo in the database
-		const savedPhoto = await newPhoto.save();
-		res.send({
-			message: "Photo uploaded and saved in MongoDB successfully!",
-			data: savedPhoto,
-		});
-	} catch (err) {
-		res.status(500).send({
-			message: err.message || "Some error occurred while uploading the photo.",
-		});
-	}
-});
-
-// Route to retrieve photo by username and serve it as an image
-router.get("/:username/photo", async (req, res) => {
-	try {
-		// Fetch the photo from the database by username
-		const photo = await Photo.findOne({ username: req.params.username });
-
-		if (!photo) {
-			return res
-				.status(404)
-				.send({ message: "No photo found for the given username." });
-		}
-
-		// Set the content type of the response to the photo's MIME type
-		res.set("Content-Type", photo.photoContentType);
-
-		// Send the photo binary data as the response
-		res.send(photo.photoData);
-	} catch (err) {
-		res.status(500).send({
-			message: err.message || "Some error occurred while retrieving the photo.",
-		});
-	}
-});
+	})
+);
 
 // Update user
-router.put("/:username", async (req, res) => {
-	try {
+router.put(
+	"/:username",
+	asyncHandler(async (req, res, next) => {
 		// Find the user by username and update their info
 		const updatedUser = await Client.findOneAndUpdate(
 			{ username: req.params.username },
@@ -169,21 +116,18 @@ router.put("/:username", async (req, res) => {
 		);
 
 		if (!updatedUser) {
-			return res.status(404).send({ message: "User not found." });
+			return next(new ConflictError("User not found."));
 		}
 
 		// FIXME: should not send password/any other extra information
 		res.send(updatedUser); // Send the updated user data back as a response
-	} catch (err) {
-		res.status(500).send({
-			message: err.message || "Some error occurred while updating the user.",
-		});
-	}
-});
+	})
+);
 
 // Delete user
-router.delete("/:username", async (req, res) => {
-	try {
+router.delete(
+	"/:username",
+	asyncHandler(async (req, res, next) => {
 		console.log(req.params.username);
 		// Find the user by username and delete them
 		const deletedUser = await Client.findOneAndDelete({
@@ -194,15 +138,108 @@ router.delete("/:username", async (req, res) => {
 		console.log(deletedUser);
 
 		if (!deletedUser) {
-			return res.status(404).send({ message: "User not found." });
+			return next(new ConflictError("User not found."));
 		}
 
 		res.send({ message: "User deleted successfully." });
-	} catch (err) {
-		res.status(500).send({
-			message: err.message || "Some error occurred while deleting the user.",
+	})
+);
+
+// Route to match stylists based on client's hair details and city
+router.get(
+	"/matchStylists/:username",
+	asyncHandler(async (req, res, next) => {
+		const { username } = req.params;
+
+		// Step 1: Retrieve client details based on username
+		const client = await Client.findOne({ username });
+
+		if (!client) {
+			return next(new ConflictError("Client not found."));
+		}
+
+		// Step 2: Extract client's hair details
+		const clientHairDetails = client.hairDetails;
+
+		// Step 3: Determine city based on request body or client info
+		const bodyCity = req.body.city;
+		const cityToUse =
+			bodyCity && bodyCity.trim() ? bodyCity : client.info.city;
+
+		if (!cityToUse) {
+			return next(
+				new MalformedRequestError(
+					"City is not specified in the request body or client profile."
+				)
+			);
+		}
+
+		// Step 4: Retrieve stylists from the determined city
+		const stylistsInCity = await Stylist.find({ "info.city": cityToUse });
+
+		// Check if there are no stylists in the specified city
+		if (!stylistsInCity || stylistsInCity.length === 0) {
+			return next(
+				new ConflictError(`No stylists found in ${cityToUse}.`)
+			);
+		}
+
+		// Step 5: Calculate similarity score based on hair types and prepare response
+		const stylistsWithDetails = stylistsInCity.map((stylist) => {
+			let matchScore = 0;
+			let matchingHairDetails = {};
+
+			// Compare each hair type between client and stylist
+			Object.keys(clientHairDetails).forEach((key) => {
+				if (
+					clientHairDetails[key] &&
+					stylist.business.workedWithHairTypes[key]
+				) {
+					matchScore++;
+					matchingHairDetails[key] = true;
+				}
+			});
+
+			// Filter to only include hair details that are true
+			const filteredHairDetails = Object.keys(matchingHairDetails)
+				.filter((key) => matchingHairDetails[key])
+				.reduce((obj, key) => {
+					obj[key] = true;
+					return obj;
+				}, {});
+
+			// Find the profile picture if available
+			const profilePicture = stylist.info.profilePhoto
+				? stylist.info.profilePhoto
+				: null;
+
+			// Return stylist information including name, business name, and address
+			return {
+				username: stylist.username,
+				name: stylist.info.name, // Stylist's name
+				businessName: stylist.business.name, // Business name
+				businessAddress: stylist.business.address, // Business address
+				mostSimilarHairDetails: filteredHairDetails,
+				profilePicture: profilePicture,
+				matchScore: matchScore,
+			};
 		});
-	}
-});
+
+		// Step 6: Sort by similarity score in descending order
+		const sortedStylists = stylistsWithDetails
+			.sort((a, b) => b.matchScore - a.matchScore)
+			.map((item) => ({
+				username: item.username,
+				name: item.name,
+				businessName: item.businessName,
+				businessAddress: item.businessAddress,
+				mostSimilarHairDetails: item.mostSimilarHairDetails,
+				profilePicture: item.profilePicture,
+			}));
+
+		// Send formatted stylists as response
+		res.send(sortedStylists);
+	})
+);
 
 export default router;

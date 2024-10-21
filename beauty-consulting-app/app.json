@@ -1,11 +1,9 @@
 {
-  "expo": {
-    "name": "beauty-consulting-app",
-    "slug": "beauty-consulting-app",
-    "version": "1.0.0",
-    "assetBundlePatterns": [
-      "**/*"
-    ]
-  },
-  "name": "beauty-consulting-app"
+	"expo": {
+		"name": "beauty-consulting-app",
+		"slug": "beauty-consulting-app",
+		"version": "1.0.0",
+		"assetBundlePatterns": ["**/*"]
+	},
+	"name": "beauty-consulting-app"
 }

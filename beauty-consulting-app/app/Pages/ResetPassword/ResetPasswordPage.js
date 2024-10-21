@@ -5,6 +5,7 @@ import { useNavigation } from "@react-navigation/native";
 import SignupBackground from "../../assets/components/SignupBackground";
 import globalStyles from "../../assets/GlobalStyles";
 import ErrorMessage from "../../components/ErrorMessage";
+import handleHTTPError from "../../errorHandling";
 
 const API_URL = process.env.EXPO_PUBLIC_API_URL;
 
@@ -33,20 +34,16 @@ const ResetPasswordPage = () => {
 		}
 
 		try {
-			await axios.post(`${API_URL}:5050/account/verifyResetPasswordCode`, {
-				code: formData.code,
-			});
+			await axios.post(
+				`${API_URL}:5050/account/verifyResetPasswordCode`,
+				{
+					code: formData.code,
+				}
+			);
 			setValidCode(true);
 			setErrorMessage(""); // Clear error on success
 		} catch (error) {
-			if (error.response?.status === 400) {
-				setErrorMessage("Invalid code. Please try again.");
-			} else {
-				console.error("Error with Verify Code:", error);
-				setErrorMessage(
-					"An unexpected error occurred. Please try again later."
-				);
-			}
+			handleHTTPError(error, setErrorMessage);
 		}
 	};
 
@@ -68,14 +65,7 @@ const ResetPasswordPage = () => {
 			});
 			setSuccess(true);
 		} catch (error) {
-			if (error.response?.status === 400) {
-				setErrorMessage("Invalid code. Please try again.");
-			} else {
-				console.error("Error with Reset Password:", error);
-				setErrorMessage(
-					"An unexpected error occurred. Please try again later."
-				);
-			}
+			handleHTTPError(error, setErrorMessage);
 		}
 	};
 
@@ -84,12 +74,16 @@ const ResetPasswordPage = () => {
 			<View style={globalStyles.box}>
 				{success ? (
 					<>
-						<Text style={globalStyles.title}>Password Reset Successful.</Text>
+						<Text style={globalStyles.title}>
+							Password Reset Successful.
+						</Text>
 						<TouchableOpacity
 							style={globalStyles.button}
 							onPress={() => navigation.navigate("Sign In")}
 						>
-							<Text style={globalStyles.buttonText}>Return to Sign In</Text>
+							<Text style={globalStyles.buttonText}>
+								Return to Sign In
+							</Text>
 						</TouchableOpacity>
 					</>
 				) : (
@@ -101,14 +95,18 @@ const ResetPasswordPage = () => {
 							style={globalStyles.input}
 							placeholder="Code"
 							value={formData.code}
-							onChangeText={(value) => handleInputChange("code", value)}
+							onChangeText={(value) =>
+								handleInputChange("code", value)
+							}
 							autoCapitalize="none"
 						/>
 						<TouchableOpacity
 							style={globalStyles.button}
 							onPress={handleVerifyCode}
 						>
-							<Text style={globalStyles.buttonText}>Verify Code</Text>
+							<Text style={globalStyles.buttonText}>
+								Verify Code
+							</Text>
 						</TouchableOpacity>
 						<ErrorMessage message={errorMessage} />
 						{validCode && (
@@ -117,7 +115,9 @@ const ResetPasswordPage = () => {
 									style={globalStyles.input}
 									placeholder="New Password"
 									value={formData.password}
-									onChangeText={(value) => handleInputChange("password", value)}
+									onChangeText={(value) =>
+										handleInputChange("password", value)
+									}
 									secureTextEntry
 									autoCapitalize="none"
 									autoCorrect={false}
@@ -127,7 +127,10 @@ const ResetPasswordPage = () => {
 									placeholder="Confirm New Password"
 									value={formData.passwordConfirm}
 									onChangeText={(value) =>
-										handleInputChange("passwordConfirm", value)
+										handleInputChange(
+											"passwordConfirm",
+											value
+										)
 									}
 									secureTextEntry
 									autoCapitalize="none"
@@ -137,7 +140,9 @@ const ResetPasswordPage = () => {
 									style={globalStyles.button}
 									onPress={handleResetPassword}
 								>
-									<Text style={globalStyles.buttonText}>Reset Password</Text>
+									<Text style={globalStyles.buttonText}>
+										Reset Password
+									</Text>
 								</TouchableOpacity>
 							</>
 						)}
