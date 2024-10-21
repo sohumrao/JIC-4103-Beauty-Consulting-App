@@ -18,7 +18,20 @@ const AccountSchema = new Schema({
 		phoneNumber: String,
 		city: String,
 	},
-	// profilePhoto: { type: Schema.Types.ObjectId, ref: "Photo" },
+	profilePhoto: {
+		photoData: {
+			type: Buffer, // Storing the image data directly in MongoDB as a binary buffer
+			required: true,
+		},
+		photoContentType: {
+			type: String, // Storing the file's MIME type
+			required: true,
+		},
+		uploadedAt: {
+			type: Date,
+			default: Date.now,
+		},
+	},
 	// authToken: JWT token
 	// resetToken: JWT token
 });

@@ -5,6 +5,10 @@ import { body, validationResult } from "express-validator";
 import { Client } from "../model/client.js";
 import { Stylist } from "../model/stylist.js";
 import mongoose from "mongoose";
+import sharp from "sharp";
+import heicConvert from "heic-convert";
+import multer from "multer";
+
 import {
 	ConflictError,
 	MalformedRequestError,
@@ -225,6 +229,96 @@ router.post(
 				await session.endSession();
 			}
 		}
+	})
+);
+
+// Configure Multer to handle file uploads in memory
+const storage = multer.memoryStorage(); // Store files in memory
+const upload = multer({ storage });
+
+// POST route to handle photo upload and save data in Account's profilePhoto
+router.post(
+	"/photo",
+	upload.single("photo"),
+	asyncHandler(async (req, res, next) => {
+		if (!req.file || !req.body.username) {
+			return next(
+				new MalformedRequestError("Photo and username are required!")
+			);
+		}
+
+		let imageBuffer = req.file.buffer;
+
+		// Check if the image is in HEIC format
+		if (
+			req.file.mimetype === "image/heic" ||
+			req.file.mimetype === "image/heif"
+		) {
+			// Convert HEIC to JPEG
+			const jpegBuffer = await heicConvert({
+				buffer: imageBuffer,
+				format: "JPEG",
+				quality: 0.5,
+			});
+			imageBuffer = jpegBuffer;
+		}
+
+		// Compress the image using sharp
+		const compressedPhoto = await sharp(imageBuffer)
+			.resize({ width: 400 }) // Example: resize to 400px wide
+			.jpeg({ quality: 50 }) // Adjust compression level
+			.toBuffer();
+
+		// Update the profilePhoto field in the Account schema
+		const updatedAccount = await Account.findOneAndUpdate(
+			{ username: req.body.username },
+			{
+				profilePhoto: {
+					photoData: compressedPhoto,
+					photoContentType: "image/jpeg",
+					uploadedAt: new Date(),
+				},
+			},
+			{ new: true }
+		);
+
+		if (!updatedAccount) {
+			return next(new ConflictError("User not found."));
+		}
+
+		res.send({
+			message: "Profile photo uploaded and updated successfully!",
+			data: updatedAccount,
+		});
+	})
+);
+
+// Route to retrieve profile photo by username and serve it as an image
+router.get(
+	"/:username/photo",
+	asyncHandler(async (req, res, next) => {
+		// Fetch the account from the database by username
+		const account = await Account.findOne({
+			username: req.params.username,
+		});
+
+		if (
+			!account ||
+			!account.profilePhoto ||
+			!account.profilePhoto.photoData
+		) {
+			return next(
+				new ConflictError(
+					"No profile photo found for the given username."
+				)
+			);
+		}
+
+		// Set the content type of the response to the photo's MIME type
+		res.set("Content-Type", account.profilePhoto.photoContentType);
+
+		// Send the photo binary data as the response
+		res.send(account.profilePhoto.photoData);
 	})
 );
 
