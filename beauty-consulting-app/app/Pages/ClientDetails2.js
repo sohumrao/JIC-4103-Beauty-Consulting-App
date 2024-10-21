@@ -1,11 +1,10 @@
 import { StatusBar } from "expo-status-bar";
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { KeyboardAvoidingView } from "react-native";
 import { TextInput } from "react-native";
 import { TouchableOpacity } from "react-native";
 import { ScrollView } from "react-native";
-import { useState } from "react";
 import { RadioButton } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 import { UserContext } from "../contexts/userContext";
@@ -18,7 +17,7 @@ function ClientDetails2() {
 
 	const userContext = useContext(UserContext);
 
-	const [selections, setSelections] = useState({
+	const [formData, setFormData] = useState({
 		Natural: false,
 		Relaxed: false,
 		Straight: false,
@@ -33,7 +32,7 @@ function ClientDetails2() {
 	});
 
 	const handleSelectionChange = (option) => {
-		setSelections((prev) => ({ ...prev, [option]: !prev[option] }));
+		setFormData((prev) => ({ ...prev, [option]: !prev[option] }));
 	};
 
 	const handleContinue = () => {
@@ -44,7 +43,7 @@ function ClientDetails2() {
 			gender: userContext.gender,
 			phoneNumber: userContext.phoneNumber,
 			email: userContext.email,
-			hairDetails: selections,
+			hairDetails: formData,
 			allergies: userContext.allergies,
 			concerns: userContext.concerns,
 		});
@@ -120,38 +119,46 @@ function ClientDetails2() {
 						<OptionsButton
 							title="Natural"
 							onPress={() => handleSelectionChange("Natural")}
+							selected={formData.Natural}
 						/>
 						<OptionsButton
 							title="Relaxed"
 							onPress={() => handleSelectionChange("Relaxed")}
+							selected={formData.Relaxed}
 						/>
 						<OptionsButton
 							title="Straight"
 							onPress={() => handleSelectionChange("Straight")}
+							selected={formData.Straight}
 						/>
 						<OptionsButton
 							title="Wavy"
 							onPress={() => handleSelectionChange("Wavy")}
+							selected={formData.Wavy}
 						/>
 					</View>
 					<View style={styles.optionsContainer}>
 						<OptionsButton
 							title="Curly"
 							onPress={() => handleSelectionChange("Curly")}
+							selected={formData.Curly}
 						/>
 						<OptionsButton
 							title="Deep Wave"
 							onPress={() => handleSelectionChange("DeepWave")}
+							selected={formData.DeepWave}
 						/>
 						<OptionsButton
 							title="Loose Curl"
 							onPress={() => handleSelectionChange("LooseCurl")}
+							selected={formData.LooseCurl}
 						/>
 						<OptionsButton
 							title="Tightly Coiled"
 							onPress={() =>
 								handleSelectionChange("TightlyCoiled")
 							}
+							selected={formData.TightlyCoiled}
 						/>
 					</View>
 				</View>
@@ -169,18 +176,21 @@ function ClientDetails2() {
 						<OptionsButton
 							title="Fine"
 							onPress={() => handleSelectionChange("Fine")}
+							selected={formData.Fine}
 						/>
 					</View>
 					<View style={[styles.optionsContainer]}>
 						<OptionsButton
 							title="Medium"
 							onPress={() => handleSelectionChange("Medium")}
+							selected={formData.Medium}
 						/>
 					</View>
 					<View style={[styles.optionsContainer]}>
 						<OptionsButton
 							title="Thick"
 							onPress={() => handleSelectionChange("Thick")}
+							selected={formData.Thick}
 						/>
 					</View>
 				</View>

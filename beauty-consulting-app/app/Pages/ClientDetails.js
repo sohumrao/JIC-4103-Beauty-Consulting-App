@@ -1,42 +1,43 @@
 import { StatusBar } from "expo-status-bar";
-import React from "react";
+import React, { useState, useContext } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { KeyboardAvoidingView } from "react-native";
 import { TextInput } from "react-native";
 import { TouchableOpacity } from "react-native";
 import { ScrollView } from "react-native";
-import { useState, useContext } from "react";
 import { RadioButton } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
-import { UserContext, UserContextProvider } from "../contexts/userContext";
+import { UserContext } from "../contexts/userContext";
 
 import ContinueButton from "../assets/components/ContinueButton";
 
 const ClientDetails = () => {
-	// State variables for text fields
 	const navigation = useNavigation();
-	const [gender, setGender] = useState("male");
-	const [name, setName] = useState("");
-	const [age, setAge] = useState("");
-	const [phoneNumber, setPhoneNumber] = useState("");
-	const [email, setEmail] = useState("");
+	const [formData, setFormData] = useState({
+		name: "",
+		age: "",
+		gender: "male",
+		phoneNumber: "",
+		email: "",
+	});
+	const [error, setError] = useState("");
 
 	const userContext = useContext(UserContext);
 
 	// Updating context values when continue button is hit
-	const handleContinue = () => {
-		userContext.updateUserContext({
-			username: userContext.username,
-			name: name,
-			age: age,
-			gender: gender,
-			phoneNumber: phoneNumber,
-			email: email,
-			hairDetails: userContext.hairDetails,
-			allergies: userContext.allergies,
-			concerns: userContext.concerns,
-		});
-		navigation.navigate("ClientDetails2");
+	const handleContinue = async () => {
+		try {
+			userContext.updateUserContext({
+				username: userContext.username,
+				...formData,
+				hairDetails: userContext.hairDetails,
+				allergies: userContext.allergies,
+				concerns: userContext.concerns,
+			});
+			navigation.navigate("ClientDetails2");
+		} catch (error) {
+			console.log(error);
+		}
 	};
 
 	const styles = StyleSheet.create({
@@ -128,8 +129,10 @@ const ClientDetails = () => {
 				<Text style={styles.label}>Name</Text>
 				<TextInput
 					style={styles.input}
-					value={name}
-					onChangeText={(text) => setName(text)}
+					value={formData.name}
+					onChangeText={(text) =>
+						setFormData({ ...formData, name: text })
+					}
 				/>
 
 				<Text style={styles.label}>Age</Text>
@@ -137,8 +140,11 @@ const ClientDetails = () => {
 				<View style={styles.ageInputContainer}>
 					<TextInput
 						style={styles.ageInput}
-						value={age}
-						onChangeText={(text) => setAge(text)}
+						value={formData.age}
+						onChangeText={(text) =>
+							setFormData({ ...formData, age: text })
+						}
+						keyboardType="number-pad"
 					/>
 					{/* <TextInput style={styles.ageInput} />
           <TextInput style={styles.ageInput} /> */}
@@ -149,20 +155,36 @@ const ClientDetails = () => {
 				<View style={styles.radioContainer}>
 					<RadioButton
 						value="male"
-						status={gender === "male" ? "checked" : "unchecked"}
-						onPress={() => setGender("male")}
+						status={
+							formData.gender === "male" ? "checked" : "unchecked"
+						}
+						onPress={() =>
+							setFormData({ ...formData, gender: "male" })
+						}
 					/>
 					<Text>Male</Text>
 					<RadioButton
 						value="female"
-						status={gender === "female" ? "checked" : "unchecked"}
-						onPress={() => setGender("female")}
+						status={
+							formData.gender === "female"
+								? "checked"
+								: "unchecked"
+						}
+						onPress={() =>
+							setFormData({ ...formData, gender: "female" })
+						}
 					/>
 					<Text>Female</Text>
 					<RadioButton
 						value="other"
-						status={gender === "other" ? "checked" : "unchecked"}
-						onPress={() => setGender("other")}
+						status={
+							formData.gender === "other"
+								? "checked"
+								: "unchecked"
+						}
+						onPress={() =>
+							setFormData({ ...formData, gender: "other" })
+						}
 					/>
 					<Text>Other</Text>
 				</View>
@@ -171,19 +193,22 @@ const ClientDetails = () => {
 				<TextInput
 					style={styles.input}
 					keyboardType="phone-pad"
-					value={phoneNumber}
-					onChangeText={(text) => setPhoneNumber(text)}
+					value={formData.phoneNumber}
+					onChangeText={(text) =>
+						setFormData({ ...formData, phoneNumber: text })
+					}
 				/>
 
 				<Text style={styles.label}>Email</Text>
 				<TextInput
 					style={styles.input}
 					keyboardType="email-address"
-					value={email}
-					onChangeText={(text) => setEmail(text)}
+					value={formData.email}
+					onChangeText={(text) =>
+						setFormData({ ...formData, email: text })
+					}
 				/>
 			</View>
-
 			<ContinueButton onPress={() => handleContinue()} />
 		</ScrollView>
 	);

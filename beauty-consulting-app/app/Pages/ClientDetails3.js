@@ -1,11 +1,10 @@
 import { StatusBar } from "expo-status-bar";
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { KeyboardAvoidingView } from "react-native";
 import { TextInput } from "react-native";
 import { TouchableOpacity } from "react-native";
 import { ScrollView } from "react-native";
-import { useState } from "react";
 import { RadioButton } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 import { UserContext } from "../contexts/userContext";
@@ -16,6 +15,15 @@ import ContinueButton from "../assets/components/ContinueButton";
 function ClientDetails3() {
 	const navigation = useNavigation();
 
+	const [formData, setFormData] = useState({
+		allergies: "",
+		chemicals: {
+			colors: "",
+			relaxers: "",
+			timeAgo: "",
+		},
+		otherConcerns: "",
+	});
 	const [showChemicalSection, setShowChemicalSection] = useState(false);
 	const [allergies, setAllergies] = useState("");
 
@@ -32,6 +40,12 @@ function ClientDetails3() {
 			phoneNumber: userContext.phoneNumber,
 			email: userContext.email,
 			hairDetails: userContext.hairDetails,
+			allergies: formData.allergies,
+			concerns: {
+				...userContext.concerns,
+				chemicals: formData.chemicals,
+				otherConcerns: formData.otherConcerns,
+			},
 			allergies: allergies,
 			concerns: userContext.concerns,
 		});
@@ -115,7 +129,9 @@ function ClientDetails3() {
 				</Text>
 				<TextInput
 					style={styles.input}
-					onChangeText={(text) => setAllergies(text)}
+					onChangeText={(text) =>
+						setFormData({ ...formData, allergies: text })
+					}
 				/>
 				<Text style={styles.textBoxHeader}>Any other concerns?</Text>
 				<View style={styles.allOptionsContainer}>
@@ -149,6 +165,11 @@ function ClientDetails3() {
 							style={styles.input}
 							placeholder="Colors?"
 							placeholderTextColor="#000"
+							onChangeText={(text) =>
+								setFormData({
+									...formData,
+								})
+							}
 						/>
 						<TextInput
 							style={styles.input}

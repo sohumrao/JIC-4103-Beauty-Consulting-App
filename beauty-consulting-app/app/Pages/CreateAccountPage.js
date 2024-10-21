@@ -9,18 +9,15 @@ import ErrorMessage from "../components/ErrorMessage";
 import handleHTTPError from "../errorHandling";
 
 const CreateAccountPage = () => {
-	const [username, setUsername] = useState("");
-	const [password, setPassword] = useState("");
-	const [errorMessage, setErrorMessage] = useState("");
+	const [formData, setFormData] = useState({
+		username: "",
+		password: "",
+	});
+	const [error, setError] = useState("");
 	const navigation = useNavigation();
 
 	const userContext = useContext(UserContext);
 	const handleCreateAccount = async () => {
-		const req = {
-			username: username,
-			password: password,
-		};
-		console.log(req.body);
 		try {
 			const apiUrl = process.env.EXPO_PUBLIC_API_URL;
 			if (!apiUrl) {
@@ -29,24 +26,16 @@ const CreateAccountPage = () => {
 			}
 			const res = await axios.post(
 				apiUrl + ":5050/account/createAccount",
-				req
+				formData
 			);
 			console.log("Account created: ", res.data);
 		} catch (error) {
-			handleHTTPError(error, setErrorMessage);
+			handleHTTPError(error, setError);
 			return;
 		}
 		userContext.updateUserContext({
-			username: username,
-			name: userContext.name,
-			age: userContext.age,
-			gender: userContext.gender,
-			phoneNumber: userContext.phoneNumber,
-			email: userContext.email,
-			hairDetails: userContext.hairDetails,
-			allergies: userContext.allergies,
-			concerns: userContext.concerns,
-			stylistDetails: userContext.stylistDetails,
+			...userContext,
+			username: formData.username,
 		});
 		navigation.navigate("LandingPage");
 	};
@@ -59,8 +48,10 @@ const CreateAccountPage = () => {
 				<TextInput
 					style={globalStyles.input}
 					placeholder="Username"
-					value={username}
-					onChangeText={setUsername}
+					value={formData.username}
+					onChangeText={(text) =>
+						setFormData({ ...formData, username: text })
+					}
 					keyboardType="email-address"
 					autoCapitalize="none"
 				/>
@@ -68,12 +59,14 @@ const CreateAccountPage = () => {
 				<TextInput
 					style={globalStyles.input}
 					placeholder="Password"
-					value={password}
-					onChangeText={setPassword}
+					value={formData.password}
+					onChangeText={(text) =>
+						setFormData({ ...formData, password: text })
+					}
 					secureTextEntry
 					autoCapitalize="none"
 				/>
-				<ErrorMessage message={errorMessage} />
+				<ErrorMessage message={error} />
 				<TouchableOpacity
 					style={globalStyles.button}
 					onPress={handleCreateAccount}
