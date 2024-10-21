@@ -5,19 +5,16 @@ import { body, validationResult } from "express-validator";
 import { Client } from "../model/client.js";
 import { Stylist } from "../model/stylist.js";
 import mongoose from "mongoose";
-<<<<<<< HEAD
 import sharp from "sharp";
 import heicConvert from "heic-convert";
 import multer from "multer";
 
-=======
 import {
 	ConflictError,
 	MalformedRequestError,
 	UnauthorizedError,
 } from "../errors.js";
 import asyncHandler from "express-async-handler";
->>>>>>> 1c20199d119547f37aabe5d5b087f4258d7dc561
 /**
  * This router handles...
  *

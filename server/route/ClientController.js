@@ -102,7 +102,6 @@ router.get(
 	})
 );
 
-
 // Update user
 router.put(
 	"/:username",
