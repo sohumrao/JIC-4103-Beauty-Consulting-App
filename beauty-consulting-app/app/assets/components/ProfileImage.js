@@ -38,7 +38,7 @@ const ProfileImage = ({ username }) => {
 			});
 
 			const apiURL =
-				process.env.EXPO_PUBLIC_API_URL + ":5050/client/photo";
+				process.env.EXPO_PUBLIC_API_URL + ":5050/account/photo";
 			if (!apiURL) {
 				console.error("apiURL not defined");
 				return;
