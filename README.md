@@ -1,5 +1,5 @@
 # Beauty Consulting App
-This product is a mobile app for beauty consultations.The current product includes account creation, client and stylist profile creation, and a directory for finding stylists in a client’s city based on their preferences and needs. From the beginning, the goal of this project has been to bridge the gap between beauty client and stylist; allowing users to upload details to be seen by stylists will alleviate concerns on both ends and make the consultation process easier overall. 
+This product is a mobile app for beauty consultations. The current product includes account creation, client and stylist profile creation, and a directory for finding stylists in a client’s city based on their preferences and needs. From the beginning, the goal of this project has been to bridge the gap between beauty client and stylist; allowing users to upload details to be seen by stylists will alleviate concerns on both ends and make the consultation process easier overall. 
 
 # Release Notes
 
