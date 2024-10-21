@@ -5,7 +5,7 @@ import {
 	View,
 	TextInput,
 	TouchableOpacity,
-    ScrollView,
+	ScrollView,
 	Modal,
 	Touchable,
 } from "react-native";
@@ -16,7 +16,7 @@ import ErrorMessage from "../components/ErrorMessage";
 import globalStyles from "../assets/GlobalStyles";
 import axios from "axios";
 import AboutMeBox from "../assets/components/AboutMeBox";
-import AboutHairBox from "../assets/components/AboutHairBox"
+import AboutHairBox from "../assets/components/AboutHairBox";
 import ProfilePicture from "../assets/components/ProfilePicture";
 import ProfileImage from "../assets/components/ProfileImage";
 import handleHTTPError from "../errorHandling";
@@ -58,7 +58,7 @@ const ProfileView = () => {
 		}
 	};
 
-  const { profilePicture } = useContext(UserContext);
+	const { profilePicture } = useContext(UserContext);
 
 	const handleEdit = async () => {
 		const updatedName = name !== "" ? name : clientData.info.name;
@@ -157,7 +157,7 @@ const ProfileView = () => {
 		);
 	}
 
- /* return (
+	/* return (
     <SignupBackground>
     <View style={globalStyles.box}>
           <View style={styles.inputContainer}>
@@ -268,30 +268,39 @@ const ProfileView = () => {
     </SignupBackground>
   ); */
 
-  return (
-      <SignupBackground>
-        <ScrollView>
-          <View style={{flex: 1}}>
-            <View style={{flexDirection: 'row', alignItems: 'flex-start', marginTop: 100, marginLeft: 20,}}>
-                <ProfilePicture picture={profilePicture}/>
-            </View>
-            <View style={{marginTop: 180}}>
-            <AboutMeBox 
-  userContext={userContext} 
-  onUpdateUser={(updatedUser) => 
-    userContext.updateUserContext(updatedUser)} 
-/>
-                </View>
-                <View>
-                  <AboutHairBox
-                  hairDetails={userContext.hairDetails}
-                  allergies={userContext.allergies}
-                  concerns={userContext.concerns}/>
-                </View>
-            </View>
-          </ScrollView>
-      </SignupBackground>
-  );
+	return (
+		<SignupBackground>
+			<ScrollView>
+				<View style={{ flex: 1 }}>
+					<View
+						style={{
+							flexDirection: "row",
+							alignItems: "flex-start",
+							marginTop: 100,
+							marginLeft: 20,
+						}}
+					>
+						<ProfilePicture picture={profilePicture} />
+					</View>
+					<View style={{ marginTop: 180 }}>
+						<AboutMeBox
+							userContext={userContext}
+							onUpdateUser={(updatedUser) =>
+								userContext.updateUserContext(updatedUser)
+							}
+						/>
+					</View>
+					<View>
+						<AboutHairBox
+							hairDetails={userContext.hairDetails}
+							allergies={userContext.allergies}
+							concerns={userContext.concerns}
+						/>
+					</View>
+				</View>
+			</ScrollView>
+		</SignupBackground>
+	);
 };
 
 export default ProfileView;

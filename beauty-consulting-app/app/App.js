@@ -74,7 +74,6 @@ function MainTabNavigator() {
 	);
 }
 
-
 function App() {
 	return (
 		<UserContextProvider>

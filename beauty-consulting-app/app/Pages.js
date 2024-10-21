@@ -15,7 +15,6 @@ import StylistDetails3 from "./Pages/StylistDetails3";
 import StylistDetailsComplete from "./Pages/StylistDetailsComplete";
 import BusinessInfoPage from "./Pages/BusinessInfoPage";
 
-
 export {
 	LandingPage,
 	ClientDetails,
