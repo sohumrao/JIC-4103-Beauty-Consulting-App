@@ -9,6 +9,7 @@ import clientController from "./route/ClientController.js";
 import createDataController from "./route/GenerateDataController.js";
 
 import { errorHandler } from "./errors.js";
+import { errorHandler } from "./errors.js";
 
 const PORT = process.env.PORT || 5050;
 const app = express();
