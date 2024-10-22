@@ -4,6 +4,8 @@ import { useNavigation } from "@react-navigation/native";
 import { UserContext } from "../contexts/userContext";
 import ContinueButton from "../assets/components/ContinueButton";
 
+import { getCityFromZIP, validateAddress } from "../geocoding";
+
 const StylistDetails2 = () => {
 	const navigation = useNavigation();
 
@@ -16,6 +18,11 @@ const StylistDetails2 = () => {
 	const [additionalInfo, setAdditionalInfo] = useState("");
 	const [businessName, setBusinessName] = useState("");
 	const [businessAddress, setBusinessAddress] = useState("");
+
+	const [streetOne, setStreetOne] = useState("");
+	const [city, setCity] = useState("");
+	const [stateCode, setStateCode] = useState("");
+	const [zip, setZip] = useState("");
 
 	const handleContinue = () => {
 		// Update context with stylist details
@@ -31,6 +38,8 @@ const StylistDetails2 = () => {
 		});
 		navigation.navigate("StylistDetails3");
 	};
+
+	const parseAndValidate = async () => {};
 
 	const styles = StyleSheet.create({
 		container: {
@@ -74,6 +83,28 @@ const StylistDetails2 = () => {
 			padding: 10,
 			marginBottom: 20,
 		},
+		addressInput: {
+			fontSize: 16,
+			borderWidth: 1,
+			borderColor: "#ccc",
+			borderRadius: 5,
+			padding: 10,
+			marginBottom: 5,
+		},
+		stateAndZipContainer: {
+			flexDirection: "row",
+			justifyContent: "space-evenly",
+			alignSelf: "stretch",
+		},
+		stateAndZipInput: {
+			fontSize: 16,
+			borderWidth: 1,
+			padding: 10,
+			borderRadius: 5,
+			marginBottom: 20,
+			borderColor: "#ccc",
+			flex: 1,
+		},
 		continueButton: {
 			backgroundColor: "red",
 			padding: 15,
@@ -108,11 +139,44 @@ const StylistDetails2 = () => {
 
 			<Text style={styles.label}>Address of Business (Optional)</Text>
 			<TextInput
-				style={styles.input}
-				value={businessAddress}
-				onChangeText={setBusinessAddress}
-				placeholder="Enter your business address"
+				style={styles.addressInput}
+				value={streetOne}
+				onChangeText={setStreetOne}
+				placeholder="Street Address 1"
+				placeholderTextColor="#707070"
 			/>
+
+			<TextInput
+				style={styles.addressInput}
+				value={city}
+				onChangeText={setCity}
+				placeholder="City"
+				placeholderTextColor="#707070"
+			/>
+
+			<View style={styles.stateAndZipContainer}>
+				<TextInput
+					style={styles.stateAndZipInput}
+					value={stateCode}
+					onChangeText={setStateCode}
+					placeholder="State Postal Code"
+					placeholderTextColor="#707070"
+					inputMode="text"
+					autoCapitalize="characters"
+					autoCorrect="false"
+					maxLength={2}
+				/>
+
+				<TextInput
+					style={styles.stateAndZipInput}
+					value={zip}
+					onChangeText={setZip}
+					placeholder="ZIP Code"
+					maxLength={5}
+					inputMode="numeric"
+					placeholderTextColor="#707070"
+				/>
+			</View>
 
 			<View style={styles.form}>
 				<Text style={styles.label}>Years of Experience (Optional)</Text>
