@@ -3,6 +3,7 @@ import { View, Text, TextInput, ScrollView, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { UserContext } from "../contexts/userContext";
 import ContinueButton from "../assets/components/ContinueButton";
+import ErrorMessage from "../components/ErrorMessage";
 
 import { getCityFromZIP, validateAddress } from "../geocoding";
 
@@ -19,27 +20,72 @@ const StylistDetails2 = () => {
 	const [businessName, setBusinessName] = useState("");
 	const [businessAddress, setBusinessAddress] = useState("");
 
+	const [message, setMessage] = useState("");
+
 	const [streetOne, setStreetOne] = useState("");
 	const [city, setCity] = useState("");
 	const [stateCode, setStateCode] = useState("");
 	const [zip, setZip] = useState("");
 
-	const handleContinue = () => {
-		// Update context with stylist details
-		userContext.updateUserContext({
-			...userContext, // Keep existing fields in the context (name, age, gender, etc.)
-			business: {
-				experience: experience || "", // Optional fields can be left empty
-				specialty: specialty || "",
-				additionalInfo: additionalInfo || "",
-				name: businessName || "",
-				address: businessAddress || "",
-			},
-		});
-		navigation.navigate("StylistDetails3");
+	const handleContinue = async () => {
+		const valid = await parseAndValidate();
+		if (valid) {
+			// Update context with stylist details
+			userContext.updateUserContext({
+				...userContext, // Keep existing fields in the context (name, age, gender, etc.)
+				business: {
+					experience: experience || "", // Optional fields can be left empty
+					specialty: specialty || "",
+					additionalInfo: additionalInfo || "",
+					name: businessName || "",
+					address: businessAddress || "",
+				},
+			});
+			navigation.navigate("StylistDetails3");
+		}
 	};
 
-	const parseAndValidate = async () => {};
+	/*
+	 * handles address validation
+	 * crux of the issue is that we NEED a zip code to work with
+	 * we also need the city, so it will also make sure we have city
+	 */
+	const parseAndValidate = async () => {
+		if (!zip) {
+			setMessage("Input a ZIP Code to Continue");
+			return false;
+		} else if (zip.length != 5 || stateCode.length == 1) {
+			// user can get away with only passing ZIP code
+			setMessage("Invalid Address Format");
+			return false;
+		} else {
+			setStreetOne(streetOne.trim());
+			setCity(city.trim());
+
+			streetOnePassed = streetOne != "";
+			cityPassed = city != "";
+
+			if (streetOnePassed != cityPassed) {
+				setMessage("Complete Address to Coninue");
+				return false;
+			}
+			let address;
+			if (streetOnePassed) {
+				address =
+					streetOne + ", " + city + " " + stateCode + ", " + zip;
+			} else {
+				address = zip;
+			}
+			const result = await validateAddress(address, streetOnePassed);
+			if (!result[0]) {
+				setMessage("Error Locating Business, Try Again");
+			} else {
+				setMessage(null);
+				setBusinessAddress(result[1]);
+			}
+			return result[0];
+		}
+	};
 
 	const styles = StyleSheet.create({
 		container: {
@@ -137,7 +183,7 @@ const StylistDetails2 = () => {
 				placeholder="Enter your business name"
 			/>
 
-			<Text style={styles.label}>Address of Business (Optional)</Text>
+			<Text style={styles.label}>Address of Business (ZIP Required)</Text>
 			<TextInput
 				style={styles.addressInput}
 				value={streetOne}
@@ -208,6 +254,7 @@ const StylistDetails2 = () => {
 				/>
 			</View>
 
+			<ErrorMessage message={message} />
 			<ContinueButton onPress={handleContinue} />
 		</ScrollView>
 	);

@@ -6,7 +6,6 @@ import handleHTTPError from "./errorHandling";
  * Technically our API doesn't allow us to store results, so this is the compromise.
  */
 
-// this is for lookups
 const geocodingAPI_LOOKUP_URL =
 	"https://www.mapquestapi.com/geocoding/v1/address?";
 
@@ -31,7 +30,16 @@ export const getCityFromZIP = async (zipCode) => {
 	}
 };
 
-export const validateAddress = async (address) => {
+/*
+ * returns [boolean, string] with validity and city if valid
+ *
+ * returns boolean based on increasingly specificity of address passed
+ *
+ * two modes:
+ * * only zip passed, will return true if it finds a city corresponding
+ * * full address passed, will return if it ~roughly~ finds that address
+ */
+export const validateAddress = async (address, streetPassed) => {
 	try {
 		const requestInfo =
 			"key=" +
@@ -40,12 +48,20 @@ export const validateAddress = async (address) => {
 			address;
 		const request = geocodingAPI_LOOKUP_URL + requestInfo;
 		const response = await axios.get(request);
-
-		console.log(response); // debug
-
-		return true;
+		const data = response.data;
+		if (streetPassed) {
+			// TODO: make this more robust in terms of matching,
+			// right now it just validates there is a street address kind of there
+			// api is a little silly
+			const street = data.results[0].locations[0].street;
+			return [street != "", address];
+		} else {
+			city = data.results[0].locations[0].adminArea5;
+			state = data.results[0].locations[0].adminArea3;
+			return [city != "", city + " " + state];
+		}
 	} catch (error) {
 		handleHTTPError(error);
-		return false;
+		return [false, ""];
 	}
 };
