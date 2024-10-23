@@ -28,7 +28,7 @@ const StylistDetails2 = () => {
 	const [zip, setZip] = useState("");
 
 	const handleContinue = async () => {
-		const valid = await parseAndValidate();
+		const valid = await validateAddress();
 		if (valid) {
 			// Update context with stylist details
 			userContext.updateUserContext({
@@ -50,7 +50,7 @@ const StylistDetails2 = () => {
 	 * crux of the issue is that we NEED a zip code to work with
 	 * we also need the city, so it will also make sure we have city
 	 */
-	const parseAndValidate = async () => {
+	const validateAddress = async () => {
 		if (!zip) {
 			setMessage("Input a ZIP Code to Continue");
 			return false;
