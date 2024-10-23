@@ -12,49 +12,49 @@ function StylistDetailsComplete() {
 	const navigation = useNavigation();
 	const userContext = useContext(UserContext);
 
-    const handleContinue = async () => {
-        const req = {
-            username: userContext.username,
-            name: userContext.name,
-            email: userContext.email,
-            gender: userContext.gender,
-            age: userContext.age,
-            phoneNumber: userContext.phoneNumber,
-            role: 'stylist'
-        };
-        console.log(req.body);
-        try {
-            const apiUrl = process.env.EXPO_PUBLIC_API_URL;
-            if (!apiUrl) {
-                console.error("API URL not defined");
-                return;
-            }
-            const res = await axios.post(apiUrl + ':5050/stylist/', req);
-            console.log('Stylist created: ', res.data);
+	const handleContinue = async () => {
+		const req = {
+			username: userContext.username,
+			name: userContext.name,
+			email: userContext.email,
+			gender: userContext.gender,
+			age: userContext.age,
+			phoneNumber: userContext.phoneNumber,
+			business: userContext.business,
+			role: "stylist",
+		};
 
-            userContext.updateUserContext({
-                ...userContext,
-                role: 'stylist'
-            });
+		try {
+			const apiUrl = process.env.EXPO_PUBLIC_API_URL;
+			if (!apiUrl) {
+				console.error("API URL not defined");
+				return;
+			}
+			const res = await axios.post(apiUrl + ":5050/stylist/", req);
+			console.log("Stylist created: ", res.data);
+		} catch (error) {
+			handleHTTPError(error);
+			return;
+		}
+		userContext.updateUserContext({
+			username: userContext.username,
+			role: "stylist",
+		});
+		navigation.reset({
+			index: 0,
+			routes: [{ name: "Main" }],
+		});
+	};
 
-            // Reset navigation and navigate to Main screen
-            navigation.reset({
-                index: 0,
-                routes: [{ name: 'Main' }],
-            });
-        } catch (error) {
-            console.error('Error with API: ', error);
-        }
-    };
-
-    return (
-        <View style={globalStyles.container}>
-            <Text style={globalStyles.title}>You're all set, stylist!</Text>
-            <View style={globalStyles.buttonContainer}>
-                <ContinueButton onPress={() => handleContinue()} />
-            </View>
-        </View>
-    );
+	return (
+		<View style={styles.container}>
+			<Text style={styles.title}>You're all set, stylist!</Text>
+			<View style={styles.buttonContainer}>
+				{/* Continue Button for navigating to BusinessInfoPage */}
+				<ContinueButton onPress={handleContinue} />
+			</View>
+		</View>
+	);
 }
 
 export default StylistDetailsComplete;

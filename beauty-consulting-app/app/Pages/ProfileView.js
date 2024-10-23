@@ -5,7 +5,6 @@ import {
 	View,
 	TextInput,
 	TouchableOpacity,
-    ScrollView,
 	Modal,
 	Touchable,
 } from "react-native";
@@ -15,9 +14,6 @@ import SignupBackground from "../assets/components/SignupBackground";
 import ErrorMessage from "../components/ErrorMessage";
 import globalStyles from "../assets/GlobalStyles";
 import axios from "axios";
-import AboutMeBox from "../assets/components/AboutMeBox";
-import AboutHairBox from "../assets/components/AboutHairBox"
-import ProfilePicture from "../assets/components/ProfilePicture";
 import ProfileImage from "../assets/components/ProfileImage";
 import handleHTTPError from "../errorHandling";
 
@@ -57,8 +53,6 @@ const ProfileView = () => {
 			handleHTTPError(error);
 		}
 	};
-
-  const { profilePicture } = useContext(UserContext);
 
 	const handleEdit = async () => {
 		const updatedName = name !== "" ? name : clientData.info.name;
@@ -157,20 +151,21 @@ const ProfileView = () => {
 		);
 	}
 
- /* return (
-    <SignupBackground>
-    <View style={globalStyles.box}>
-          <View style={styles.inputContainer}>
-            <Text style={globalStyles.inputHeaderText}>Name</Text>
-            <TextInput
-              style={globalStyles.input}
-              placeholder={userContext.name}
-              placeholderTextColor={"#000"}
-              value={name}
-              onChangeText={setName}
-              editable={isEdit}
-            />
-          </View>
+	return (
+		<SignupBackground>
+			<View style={globalStyles.box}>
+				<ProfileImage username={userContext.username} />
+				<View style={styles.inputContainer}>
+					<Text style={globalStyles.inputHeaderText}>Name</Text>
+					<TextInput
+						style={globalStyles.input}
+						placeholder={name}
+						placeholderTextColor={"#000"}
+						value={name}
+						onChangeText={setName}
+						editable={isEdit}
+					/>
+				</View>
 
 				<View style={styles.inputContainer}>
 					<Text style={globalStyles.inputHeaderText}>Gender</Text>
@@ -261,37 +256,17 @@ const ProfileView = () => {
 					</Text>
 				</TouchableOpacity>
 
-        <TouchableOpacity style={globalStyles.button} onPress={deleteAccount}>
-          <Text style={globalStyles.buttonText}>Delete Account</Text>
-        </TouchableOpacity>
-      </View>
-    </SignupBackground>
-  ); */
-
-  return (
-      <SignupBackground>
-        <ScrollView>
-          <View style={{flex: 1}}>
-            <View style={{flexDirection: 'row', alignItems: 'flex-start', marginTop: 100, marginLeft: 20,}}>
-                <ProfilePicture picture={profilePicture}/>
-            </View>
-            <View style={{marginTop: 180}}>
-            <AboutMeBox 
-  userContext={userContext} 
-  onUpdateUser={(updatedUser) => 
-    userContext.updateUserContext(updatedUser)} 
-/>
-                </View>
-                <View>
-                  <AboutHairBox
-                  hairDetails={userContext.hairDetails}
-                  allergies={userContext.allergies}
-                  concerns={userContext.concerns}/>
-                </View>
-            </View>
-          </ScrollView>
-      </SignupBackground>
-  );
+				<TouchableOpacity
+					style={globalStyles.button}
+					onPress={() => {
+						setModalVisible(!modalVisible);
+					}}
+				>
+					<Text style={globalStyles.buttonText}>Delete Account</Text>
+				</TouchableOpacity>
+			</View>
+		</SignupBackground>
+	);
 };
 
 export default ProfileView;
