@@ -27,6 +27,7 @@ const StylistDetails2 = () => {
 		userContext.business.address || ""
 	);
 
+	// this is a comment in javascript
 	const handleContinue = () => {
 		// Update context with stylist details
 		userContext.updateUserContext({
