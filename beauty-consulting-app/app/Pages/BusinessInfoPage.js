@@ -4,17 +4,25 @@ import { UserContext, userContextProvider } from "../contexts/userContext";
 import globalStyles from "../assets/GlobalStyles";
 import ProfileImage from "../assets/components/ProfileImage";
 import axios from "axios";
+import { Button } from "react-native-paper";
+import { useNavigation } from "@react-navigation/native";
 import handleHTTPError from "../errorHandling";
 
-const BusinessInfoPage = () => {
+const BusinessInfoPage = (routeObject) => {
 	// Access the user context
 	const userContext = useContext(UserContext);
+	const navigation = useNavigation();
 
 	var [stylistData, setStylistData] = useState(null);
 
 	useEffect(() => {
-		populateStylistData(userContext.username);
-	}, [userContext.username]);
+		console.log(routeObject);
+		if (userContext.role == "client") {
+			populateStylistData(routeObject.route.params.stylistUsername);
+		} else {
+			populateStylistData(userContext.username);
+		}
+	}, [routeObject]);
 
 	const populateStylistData = async (username) => {
 		try {
@@ -89,6 +97,11 @@ const BusinessInfoPage = () => {
 					{stylistData.business.additionalInfo}
 				</Text>
 			</View>
+			{userContext.role === "client" ? (
+				<Button onPress={() => navigation.goBack()}>
+					Back to Directory
+				</Button>
+			) : null}
 		</ScrollView>
 	);
 };

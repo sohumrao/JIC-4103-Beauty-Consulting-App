@@ -209,8 +209,8 @@ router.get(
 				}, {});
 
 			// Find the profile picture if available
-			const profilePicture = stylist.info.profilePhoto
-				? stylist.info.profilePhoto
+			const profilePicture = stylist.profilePhoto
+				? stylist.profilePhoto
 				: null;
 
 			// Return stylist information including name, business name, and address
