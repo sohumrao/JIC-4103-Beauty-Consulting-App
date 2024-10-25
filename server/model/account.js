@@ -12,7 +12,7 @@ const AccountSchema = new Schema({
 	},
 	info: {
 		name: String,
-		age: Number,
+		birthday: Date,
 		gender: String,
 		zipcode: String,
 		phoneNumber: String,
