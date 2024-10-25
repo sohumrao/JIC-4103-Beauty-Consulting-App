@@ -39,7 +39,7 @@ function ClientDetails2() {
 		userContext.updateUserContext({
 			username: userContext.username,
 			name: userContext.name,
-			age: userContext.age,
+			birthday: userContext.birthday,
 			gender: userContext.gender,
 			phoneNumber: userContext.phoneNumber,
 			email: userContext.email,

@@ -18,7 +18,7 @@ function StylistDetailsComplete() {
 			name: userContext.name,
 			email: userContext.email,
 			gender: userContext.gender,
-			age: userContext.age,
+			birthday: userContext.birthday,
 			phoneNumber: userContext.phoneNumber,
 			business: userContext.business,
 			role: "stylist",

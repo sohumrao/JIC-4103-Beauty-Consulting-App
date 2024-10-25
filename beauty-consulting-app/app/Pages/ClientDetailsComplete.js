@@ -19,7 +19,7 @@ function ClientDetailsComplete() {
 			name: userContext.name,
 			email: userContext.email,
 			gender: userContext.gender,
-			age: userContext.age,
+			birthday: userContext.birthday,
 			phoneNumber: userContext.phoneNumber,
 			hairDetails: userContext.hairDetails,
 			allergies: userContext.allergies,
