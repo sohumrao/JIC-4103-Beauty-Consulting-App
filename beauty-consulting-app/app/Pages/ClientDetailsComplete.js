@@ -48,14 +48,6 @@ function ClientDetailsComplete() {
 		}
 	};
 
-	// return (
-	// 	<View style={globalStyles.container}>
-	// 		<Text style={globalStyles.title}>You're all set!</Text>
-	// 		<View style={globalStyles.buttonContainer}>
-	// 			<ContinueButton onPress={() => handleContinue()} />
-	// 		</View>
-	// 	</View>
-	// );
 	return (
 		<View style={styles.container}>
 			<Text style={styles.title}>You're all set!</Text>

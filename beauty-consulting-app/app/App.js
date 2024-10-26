@@ -20,6 +20,7 @@ import {
 	StylistDetails3,
 	StylistDetailsComplete,
 	BusinessInfoPage,
+	AppointmentsPage,
 } from "./Pages";
 import { UserContext, UserContextProvider } from "./contexts/userContext";
 
@@ -87,6 +88,7 @@ function MainTabNavigator() {
 				/>
 			)}
 			<Tab.Screen name="Profile" component={ProfilePage} />
+			<Tab.Screen name="Appointments" component={AppointmentsPage} />
 		</Tab.Navigator>
 	);
 }
