@@ -24,9 +24,6 @@ const StylistListing = ({
 	profilePicture,
 	mostSimilarHairDetails,
 }) => {
-	console.log(businessAddress);
-	console.log(profilePicture.photoData);
-
 	// Method to convert profile data from byte array
 	const arrayToBase64 = (byteArray) => {
 		// Convert the array of integers to a Uint8Array
@@ -37,16 +34,14 @@ const StylistListing = ({
 		return btoa(binaryString);
 	};
 
-	console.log(arrayToBase64(profilePicture.photoData?.data));
-
 	return (
 		<View style={globalStyles.stylistListingContainer}>
 			<Image
 				style={globalStyles.stylistImage}
 				source={
-					profilePicture.photoData
+					profilePicture?.data
 						? {
-								uri: `data:${profilePicture.photoContentType};base64,${arrayToBase64(profilePicture.photoData.data)}`,
+								uri: `data:${profilePicture?.contentType};base64,${arrayToBase64(profilePicture?.data)}`,
 							}
 						: require("../assets/images/placeholder.png")
 				}
