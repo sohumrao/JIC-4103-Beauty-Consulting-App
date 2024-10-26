@@ -5,6 +5,7 @@ import globalStyles from "../assets/GlobalStyles";
 import ProfileImage from "../assets/components/ProfileImage";
 import axios from "axios";
 import handleHTTPError from "../errorHandling";
+import { formatDate } from "../utils";
 
 const BusinessInfoPage = () => {
 	// Access the user context
@@ -55,8 +56,10 @@ const BusinessInfoPage = () => {
 			</View>
 
 			<View style={styles.infoContainer}>
-				<Text style={styles.label}>Age:</Text>
-				<Text style={styles.value}>{stylistData.info.age}</Text>
+				<Text style={styles.label}>Birthday:</Text>
+				<Text style={styles.value}>
+					{formatDate(stylistData.info.birthday)}
+				</Text>
 			</View>
 
 			<View style={styles.infoContainer}>
