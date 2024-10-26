@@ -22,6 +22,9 @@ const StylistServices = ({ stylistData, setStylistData, editable }) => {
 		description: "",
 	});
 
+	const [deleteModalVisible, setDeleteModalVisible] = useState(false);
+	const [serviceToDelete, setServiceToDelete] = useState(null);
+
 	const handleEditService = (service) => {
 		setEditingService(service);
 		setModalVisible(true);
@@ -73,6 +76,35 @@ const StylistServices = ({ stylistData, setStylistData, editable }) => {
 			handleHTTPError(error);
 		}
 	};
+	const handleDeleteService = (service) => {
+		setServiceToDelete(service);
+		setDeleteModalVisible(true);
+	};
+
+	const confirmDeleteService = async () => {
+		if (!serviceToDelete) return;
+
+		try {
+			const apiURL = `${process.env.EXPO_PUBLIC_API_URL}:5050/stylist/service/${stylistData.username}`;
+			await axios.delete(apiURL, { data: { _id: serviceToDelete._id } });
+
+			// Update local state
+			setStylistData({
+				...stylistData,
+				business: {
+					...stylistData.business,
+					services: stylistData.business.services.filter(
+						(service) => service._id !== serviceToDelete._id
+					),
+				},
+			});
+
+			setDeleteModalVisible(false);
+			setServiceToDelete(null);
+		} catch (error) {
+			handleHTTPError(error);
+		}
+	};
 
 	return (
 		<View style={styles.servicesContainer}>
@@ -85,8 +117,8 @@ const StylistServices = ({ stylistData, setStylistData, editable }) => {
 					<Feather name="plus" size={24} color="#3498db" />
 				</TouchableOpacity>
 			</View>
-			{stylistData.business.services.map((service, index) => (
-				<View key={index} style={styles.serviceItem}>
+			{stylistData.business.services.map((service) => (
+				<View key={service._id} style={styles.serviceItem}>
 					<View style={styles.serviceHeader}>
 						<View style={styles.serviceInfo}>
 							<Text style={styles.serviceName}>
@@ -96,9 +128,9 @@ const StylistServices = ({ stylistData, setStylistData, editable }) => {
 								${service.price.toFixed(2)}
 							</Text>
 						</View>
-						{editable && (
+						<View style={styles.serviceActions}>
 							<TouchableOpacity
-								style={styles.editButton}
+								style={styles.actionButton}
 								onPress={() => handleEditService(service)}
 							>
 								<Feather
@@ -107,7 +139,17 @@ const StylistServices = ({ stylistData, setStylistData, editable }) => {
 									color="#3498db"
 								/>
 							</TouchableOpacity>
-						)}
+							<TouchableOpacity
+								style={styles.actionButton}
+								onPress={() => handleDeleteService(service)}
+							>
+								<Feather
+									name="trash-2"
+									size={20}
+									color="#e74c3c"
+								/>
+							</TouchableOpacity>
+						</View>
 					</View>
 					{service.description && (
 						<Text style={styles.serviceDescription}>
@@ -243,6 +285,47 @@ const StylistServices = ({ stylistData, setStylistData, editable }) => {
 							</View>
 						</View>
 					</Modal>
+					<Modal
+						animationType="fade"
+						transparent={true}
+						visible={deleteModalVisible}
+						onRequestClose={() => setDeleteModalVisible(false)}
+					>
+						<View style={styles.centeredView}>
+							<View style={styles.modalView}>
+								<Text style={styles.modalText}>
+									Are you sure you want to delete
+									{` ${serviceToDelete?.name}?`}
+								</Text>
+								<View style={styles.modalButtons}>
+									<TouchableOpacity
+										style={[
+											styles.button,
+											styles.buttonCancel,
+										]}
+										onPress={() =>
+											setDeleteModalVisible(false)
+										}
+									>
+										<Text style={styles.buttonText}>
+											Cancel
+										</Text>
+									</TouchableOpacity>
+									<TouchableOpacity
+										style={[
+											styles.button,
+											styles.buttonDelete,
+										]}
+										onPress={confirmDeleteService}
+									>
+										<Text style={styles.buttonText}>
+											Delete
+										</Text>
+									</TouchableOpacity>
+								</View>
+							</View>
+						</View>
+					</Modal>
 				</>
 			)}
 		</View>
@@ -280,8 +363,18 @@ const styles = StyleSheet.create({
 	serviceHeader: {
 		flexDirection: "row",
 		justifyContent: "space-between",
-		alignItems: "center",
-		marginBottom: 15,
+		alignItems: "flex-start",
+		marginBottom: 8,
+	},
+	serviceInfo: {
+		flex: 1,
+	},
+	serviceActions: {
+		flexDirection: "row",
+	},
+	actionButton: {
+		padding: 5,
+		marginLeft: 10,
 	},
 	addButton: {
 		padding: 5,
@@ -305,12 +398,18 @@ const styles = StyleSheet.create({
 		color: "#7f8c8d",
 		marginTop: 5,
 	},
-	editButton: {
-		padding: 5,
+	centeredView: {
+		flex: 1,
+		justifyContent: "center",
+		alignItems: "center",
+		backgroundColor: "rgba(0,0,0,0.5)",
 	},
-	editButtonText: {
-		color: "#fff",
-		textAlign: "center",
+	input: {
+		height: 40,
+		margin: 12,
+		borderWidth: 1,
+		padding: 10,
+		width: 200,
 	},
 	centeredView: {
 		flex: 1,
@@ -333,19 +432,33 @@ const styles = StyleSheet.create({
 		shadowRadius: 4,
 		elevation: 5,
 	},
-	input: {
-		height: 40,
-		margin: 12,
-		borderWidth: 1,
-		padding: 10,
-		width: 200,
+	modalText: {
+		marginBottom: 15,
+		textAlign: "center",
+		fontSize: 18,
+	},
+	serviceNameText: {
+		marginBottom: 20,
+		textAlign: "center",
+		fontSize: 16,
+		fontWeight: "bold",
+	},
+	modalButtons: {
+		flexDirection: "row",
+		justifyContent: "space-between",
+		width: "100%",
 	},
 	button: {
-		backgroundColor: "#2196F3",
 		borderRadius: 20,
 		padding: 10,
 		elevation: 2,
-		marginTop: 10,
+		minWidth: 100,
+	},
+	buttonCancel: {
+		backgroundColor: "#2196F3",
+	},
+	buttonDelete: {
+		backgroundColor: "#e74c3c",
 	},
 	buttonText: {
 		color: "white",

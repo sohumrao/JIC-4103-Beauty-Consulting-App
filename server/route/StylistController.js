@@ -239,4 +239,49 @@ router.get(
 	})
 );
 
+router.delete(
+	"/service/:username", //TODO: pass user_id in JWT instead of username in url
+	[
+		param("username")
+			.exists()
+			.withMessage("Username is required in the URL")
+			.notEmpty()
+			.withMessage("Username cannot be empty"),
+		body("_id")
+			.exists()
+			.withMessage("Service ID is required")
+			.isMongoId()
+			.withMessage("Invalid service ID"),
+	],
+	asyncHandler(async (req, res, next) => {
+		const errors = validationResult(req);
+		if (!errors.isEmpty())
+			return next(new MalformedRequestError(errors.array()[0].msg));
+
+		// Find user data for username
+		const user = await Stylist.findOne({
+			username: req.params.username,
+		});
+
+		// Check if user exists
+		if (!user) return next(new ConflictError("User has no profile data."));
+
+		// Find the index of the service to delete
+		const serviceIndex = user.business.services.findIndex(
+			(service) => service._id.toString() === req.body._id
+		);
+
+		// Check if service exists
+		if (serviceIndex === -1)
+			return next(new ConflictError("Service does not exist."));
+
+		// Remove the service from the array
+		user.business.services.splice(serviceIndex, 1);
+
+		// Save the updated user document
+		await user.save();
+
+		res.status(200).json({ message: "Service deleted successfully" });
+	})
+);
 export default router;
