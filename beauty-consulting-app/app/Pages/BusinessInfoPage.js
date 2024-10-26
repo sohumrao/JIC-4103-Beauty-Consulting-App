@@ -8,13 +8,16 @@ import { Button } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 import handleHTTPError from "../errorHandling";
 import { formatDate } from "../utils";
+import StylistServices from "../components/StylistServices";
 
 const BusinessInfoPage = (routeObject) => {
 	// Access the user context
 	const userContext = useContext(UserContext);
 	const navigation = useNavigation();
+	const [stylistData, setStylistData] = useState(null);
 
-	var [stylistData, setStylistData] = useState(null);
+	//TODO: make BusinessInfo take in stylist_id as a prop, and set editable as whether or not stylist_id is equal to usercontext_id
+	const editable = true;
 
 	useEffect(() => {
 		console.log(routeObject);
@@ -100,6 +103,11 @@ const BusinessInfoPage = (routeObject) => {
 					{stylistData.business.additionalInfo}
 				</Text>
 			</View>
+			<StylistServices
+				stylistData={stylistData}
+				setStylistData={setStylistData}
+				editable={editable}
+			/>
 			{userContext.role === "client" ? (
 				<Button onPress={() => navigation.goBack()}>
 					Back to Directory
