@@ -3,6 +3,7 @@ import { Account } from "../model/account.js";
 import { Stylist } from "../model/stylist.js";
 import { ConflictError, MalformedRequestError } from "../errors.js";
 import asyncHandler from "express-async-handler";
+import { param, body, validationResult } from "express-validator";
 
 /**
  * This router handles user creation and photo upload services for the application.
@@ -87,6 +88,154 @@ router.get(
 
 		// Return user data
 		res.send(user);
+	})
+);
+
+router.post(
+	"/service/:username", //TODO: pass user_id in JWT instead of username in url
+	[
+		param("username")
+			.exists()
+			.withMessage("Username is required in the URL")
+			.notEmpty()
+			.withMessage("Username cannot be empty"),
+		body("name")
+			.exists()
+			.withMessage("Name is required")
+			.trim()
+			.escape()
+			.notEmpty()
+			.withMessage("Name cannot be empty"), //TODO: decide which characters are allowed
+		body("price")
+			.exists()
+			.withMessage("Price is required")
+			.isFloat({ min: 0 })
+			.withMessage("Price must be a positive number")
+			.custom((value) => {
+				// Optional: Check if it has at most two decimal places
+				return /^\d+(\.\d{1,2})?$/.test(value);
+			})
+			.withMessage("Price can have at most two decimal places"),
+	],
+	asyncHandler(async (req, res, next) => {
+		const errors = validationResult(req);
+		if (!errors.isEmpty())
+			return next(new MalformedRequestError(errors.array()[0].msg));
+
+		// Find user data for username
+		const user = await Stylist.findOne({
+			username: req.params.username,
+		});
+
+		// Check if user exists
+		if (!user) return next(new ConflictError("User has no profile data."));
+		// Create new service
+		const newService = {
+			name: req.body.name,
+			price: req.body.price,
+			description: req.body.description || "", // Optional description
+		};
+
+		// Add service to stylist's services
+		user.business.services.push(newService);
+
+		// Save the updated user document
+		await user.save();
+		const serviceWithId = user.business.services.find(
+			(service) => service.name === newService.name
+		);
+		res.status(201).send(serviceWithId);
+	})
+);
+
+router.put(
+	"/service/:username", //TODO: pass user_id in JWT instead of username in url
+	[
+		param("username")
+			.exists()
+			.withMessage("Username is required in the URL")
+			.notEmpty()
+			.withMessage("Username cannot be empty"),
+		body("_id")
+			.exists()
+			.withMessage("_id is required")
+			.trim()
+			.escape()
+			.notEmpty()
+			.withMessage("_id cannot be empty"),
+		body("name")
+			.exists()
+			.withMessage("Name is required")
+			.trim()
+			.escape()
+			.notEmpty()
+			.withMessage("Name cannot be empty"), //TODO: decide which characters are allowed
+		body("price")
+			.exists()
+			.withMessage("Price is required")
+			.isFloat({ min: 0 })
+			.withMessage("Price must be a positive number")
+			.custom((value) => {
+				// Optional: Check if it has at most two decimal places
+				return /^\d+(\.\d{1,2})?$/.test(value);
+			})
+			.withMessage("Price can have at most two decimal places"),
+	],
+	asyncHandler(async (req, res, next) => {
+		console.log(req.body._id);
+		const errors = validationResult(req);
+		if (!errors.isEmpty())
+			return next(new MalformedRequestError(errors.array()[0].msg));
+
+		// Find user data for username
+		const user = await Stylist.findOne({
+			username: req.params.username,
+		});
+
+		// Check if user exists
+		if (!user) return next(new ConflictError("User has no profile data."));
+
+		// Check if service already exists
+		const service = user.business.services.find(
+			(service) => service._id == req.body._id
+		);
+		if (!service) return next(new ConflictError("Service does not exist."));
+
+		// update the service
+		service.name = req.body.name;
+		service.price = req.body.price;
+		service.description = req.body.description || "";
+
+		// Save the updated user document
+		await user.save();
+		res.status(200).send(service);
+	})
+);
+
+router.get(
+	"/services/:username", //TODO: pass user_id in JWT instead of username in url
+	[
+		param("username")
+			.exists()
+			.withMessage("Username is required in the URL")
+			.notEmpty()
+			.withMessage("Username cannot be empty"),
+	],
+	asyncHandler(async (req, res, next) => {
+		const errors = validationResult(req);
+		if (!errors.isEmpty())
+			return next(new MalformedRequestError(errors.array()[0].msg));
+
+		// Find user data for username
+		const user = await Stylist.findOne({
+			username: req.params.username,
+		});
+
+		// Check if user exists
+		if (!user) return next(new ConflictError("User has no profile data."));
+
+		// Return user data
+		res.status(200).send(user.business.services);
 	})
 );
 
