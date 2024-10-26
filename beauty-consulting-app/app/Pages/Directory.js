@@ -17,14 +17,14 @@ import handleHTTPError from "../errorHandling";
 const Directory = () => {
 	const navigation = useNavigation();
 	var userContext = useContext(UserContext);
-
+	const [city, setCity] = useState("Atlanta"); //TODO: change default value once location-based search is implemented
 	var [stylistData, setStylistData] = useState(null);
 
 	useEffect(() => {
-		retrieveStylistData();
-	}, [userContext.username]);
+		retrieveStylistData(city);
+	}, [userContext.username, city]);
 
-	const retrieveStylistData = async () => {
+	const retrieveStylistData = async (city) => {
 		try {
 			const apiURL =
 				process.env.EXPO_PUBLIC_API_URL +
@@ -35,7 +35,7 @@ const Directory = () => {
 				return;
 			}
 
-			const res = await axios.get(apiURL);
+			const res = await axios.get(apiURL, { params: { city: city } });
 			console.log(res.data);
 			setStylistData(res.data);
 		} catch (error) {
