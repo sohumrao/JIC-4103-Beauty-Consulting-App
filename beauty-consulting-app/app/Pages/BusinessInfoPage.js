@@ -7,6 +7,7 @@ import axios from "axios";
 import { Button } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 import handleHTTPError from "../errorHandling";
+import { formatDate } from "../utils";
 
 const BusinessInfoPage = (routeObject) => {
 	// Access the user context
@@ -63,8 +64,10 @@ const BusinessInfoPage = (routeObject) => {
 			</View>
 
 			<View style={styles.infoContainer}>
-				<Text style={styles.label}>Age:</Text>
-				<Text style={styles.value}>{stylistData.info.age}</Text>
+				<Text style={styles.label}>Birthday:</Text>
+				<Text style={styles.value}>
+					{formatDate(stylistData.info.birthday)}
+				</Text>
 			</View>
 
 			<View style={styles.infoContainer}>

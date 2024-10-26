@@ -9,7 +9,7 @@ import asyncHandler from "express-async-handler";
  *
  * - User Creation:
  *    Allows creating a new user by sending a POST request with user details such as username, name, email,
- *    gender, age, phone number, hair details, and allergies.
+ *    gender, birthday, phone number, hair details, and allergies.
  *
  * - Photo Upload:
  *    Provides functionality to upload a user's photo and store it as binary data in MongoDB,
@@ -42,7 +42,7 @@ router.post(
 				email: req.body.email,
 				info: {
 					name: req.body.name,
-					age: req.body.age,
+					birthday: req.body.birthday,
 					gender: req.body.gender,
 					phoneNumber: req.body.phoneNumber,
 					//NOTE: current code forclient HTTP request does not send zipcode
