@@ -1,12 +1,12 @@
 import { StatusBar } from "expo-status-bar";
 import React, { useContext } from "react";
-import { View, Text } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 
 import ContinueButton from "../assets/components/ContinueButton";
 import { UserContext } from "../contexts/userContext";
-import globalStyles from "../assets/GlobalStyles";
+// import globalStyles from "../assets/GlobalStyles";
 
 function StylistDetailsComplete() {
 	const navigation = useNavigation();
@@ -47,14 +47,43 @@ function StylistDetailsComplete() {
 		}
 	};
 
+	// return (
+	// 	<View style={globalStyles.container}>
+	// 		<Text style={globalStyles.title}>You're all set, stylist!</Text>
+	// 		<View style={globalStyles.buttonContainer}>
+	// 			<ContinueButton onPress={() => handleContinue()} />
+	// 		</View>
+	// 	</View>
+	// );
 	return (
-		<View style={globalStyles.container}>
-			<Text style={globalStyles.title}>You're all set, stylist!</Text>
-			<View style={globalStyles.buttonContainer}>
+		<View style={styles.container}>
+			<Text style={styles.title}>You're all set, stylist!</Text>
+			<View style={styles.buttonContainer}>
 				<ContinueButton onPress={() => handleContinue()} />
 			</View>
 		</View>
 	);
 }
+
+const styles = StyleSheet.create({
+	container: {
+		flex: 1,
+		justifyContent: "center",
+		alignItems: "center",
+		backgroundColor: "#fff",
+		padding: 20,
+	},
+	title: {
+		fontSize: 24,
+		fontWeight: "bold",
+		textAlign: "center",
+		marginBottom: 20,
+	},
+	buttonContainer: {
+		marginTop: 20,
+		width: "100%",
+		alignItems: "center",
+	},
+});
 
 export default StylistDetailsComplete;
