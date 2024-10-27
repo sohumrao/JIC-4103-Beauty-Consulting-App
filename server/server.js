@@ -7,6 +7,7 @@ import stylistController from "./route/StylistController.js";
 import accountController from "./route/AccountController.js";
 import clientController from "./route/ClientController.js";
 import createDataController from "./route/GenerateDataController.js";
+import appointmentController from "./route/AppointmentController.js";
 
 import { errorHandler } from "./errors.js";
 
@@ -30,6 +31,7 @@ app.use("/client", clientController);
 app.use("/stylist", stylistController);
 app.use("/account", accountController);
 app.use("/create-data", createDataController);
+app.use("/appointment", appointmentController);
 
 // Throw 404 if no routes were visited
 // Any forwarded errors won't visit this function this function only has 3 arguments
