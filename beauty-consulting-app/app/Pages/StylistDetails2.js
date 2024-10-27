@@ -28,7 +28,7 @@ const StylistDetails2 = () => {
 	const [zip, setZip] = useState("");
 
 	const handleContinue = async () => {
-		const valid = await validateAddress();
+		const valid = await validateAddressStylistSide();
 		if (!valid) {
 			return;
 		}
@@ -51,7 +51,7 @@ const StylistDetails2 = () => {
 	 * crux of the issue is that we NEED a zip code to work with
 	 * we also need the city, so it will also make sure we have city
 	 */
-	const validateAddress = async () => {
+	const validateAddressStylistSide = async () => {
 		if (!zip) {
 			setMessage("Input a ZIP Code to Continue");
 			return false;
@@ -70,7 +70,7 @@ const StylistDetails2 = () => {
 			setMessage("Complete Address to Coninue");
 			return false;
 		}
-		let address;
+		let address = "";
 		if (streetOnePassed) {
 			address = streetOne + ", " + city + " " + stateCode + ", " + zip;
 		} else {
