@@ -16,20 +16,7 @@ const AccountSchema = new Schema({
 		gender: String,
 		phoneNumber: String,
 	},
-	profilePhoto: {
-		photoData: {
-			type: Buffer, // Storing the image data directly in MongoDB as a binary buffer
-			required: false,
-		},
-		photoContentType: {
-			type: String, // Storing the file's MIME type
-			required: false,
-		},
-		uploadedAt: {
-			type: Date,
-			default: Date.now,
-		},
-	},
+	profilePhoto: PhotoSchema,
 	// authToken: JWT token
 	// resetToken: JWT token
 });
