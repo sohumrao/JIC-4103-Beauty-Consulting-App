@@ -1,37 +1,22 @@
 import mongoose from "mongoose";
 import crypto from "crypto";
+import { PhotoSchema } from "./photo.js";
 const Schema = mongoose.Schema;
 
 const AccountSchema = new Schema({
 	username: { type: String, required: true, unique: true },
-	email: { type: String },
-	//TODO: refactor password to be required
+	email: { type: String }, //TODO: refactor password to be required
 	password: {
 		hash: String,
 		salt: String,
 	},
 	info: {
 		name: String,
-		age: Number,
+		birthday: Date,
 		gender: String,
-		zipcode: String,
 		phoneNumber: String,
-		city: String,
 	},
-	profilePhoto: {
-		photoData: {
-			type: Buffer, // Storing the image data directly in MongoDB as a binary buffer
-			required: false,
-		},
-		photoContentType: {
-			type: String, // Storing the file's MIME type
-			required: false,
-		},
-		uploadedAt: {
-			type: Date,
-			default: Date.now,
-		},
-	},
+	profilePhoto: PhotoSchema,
 	// authToken: JWT token
 	// resetToken: JWT token
 });

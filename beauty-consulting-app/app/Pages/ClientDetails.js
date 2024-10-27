@@ -8,6 +8,7 @@ import { ScrollView } from "react-native";
 import { RadioButton } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 import { UserContext } from "../contexts/userContext";
+import DateTimePicker from "@react-native-community/datetimepicker";
 
 import ContinueButton from "../assets/components/ContinueButton";
 
@@ -15,7 +16,7 @@ const ClientDetails = () => {
 	const navigation = useNavigation();
 	const [formData, setFormData] = useState({
 		name: "",
-		age: "",
+		birthday: new Date(),
 		gender: "male",
 		phoneNumber: "",
 		email: "",
@@ -82,7 +83,7 @@ const ClientDetails = () => {
 			padding: 10,
 			marginBottom: 20,
 		},
-		ageInputContainer: {
+		birthdayContainer: {
 			flexDirection: "row",
 			justifyContent: "space-between",
 		},
@@ -135,19 +136,20 @@ const ClientDetails = () => {
 					}
 				/>
 
-				<Text style={styles.label}>Age</Text>
-				{/* REDO THIS PART: MAKE AN ACTUAL DATE INPUT */}
-				<View style={styles.ageInputContainer}>
-					<TextInput
-						style={styles.ageInput}
-						value={formData.age}
-						onChangeText={(text) =>
-							setFormData({ ...formData, age: text })
-						}
-						keyboardType="number-pad"
+				<View style={styles.birthdayContainer}>
+					<Text style={styles.label}>Birth Date</Text>
+					<DateTimePicker
+						value={formData.birthday}
+						mode="date"
+						onChange={(event, date) => {
+							setFormData({
+								...formData,
+								birthday: new Date(date),
+							});
+						}}
+						//key is used so that the dialog dismisses on date selection, see https://github.com/react-native-datetimepicker/datetimepicker/issues/602
+						key={formData.birthday.toISOString()}
 					/>
-					{/* <TextInput style={styles.ageInput} />
-          <TextInput style={styles.ageInput} /> */}
 				</View>
 
 				<Text style={styles.label}>Gender</Text>

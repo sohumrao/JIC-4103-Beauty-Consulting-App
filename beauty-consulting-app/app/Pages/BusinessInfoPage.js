@@ -5,12 +5,16 @@ import globalStyles from "../assets/GlobalStyles";
 import ProfileImage from "../assets/components/ProfileImage";
 import axios from "axios";
 import handleHTTPError from "../errorHandling";
+import { formatDate } from "../utils";
+import StylistServices from "../components/StylistServices";
 
 const BusinessInfoPage = () => {
 	// Access the user context
 	const userContext = useContext(UserContext);
+	const [stylistData, setStylistData] = useState(null);
 
-	var [stylistData, setStylistData] = useState(null);
+	//TODO: make BusinessInfo take in stylist_id as a prop, and set editable as whether or not stylist_id is equal to usercontext_id
+	const editable = true;
 
 	useEffect(() => {
 		populateStylistData(userContext.username);
@@ -55,8 +59,10 @@ const BusinessInfoPage = () => {
 			</View>
 
 			<View style={styles.infoContainer}>
-				<Text style={styles.label}>Age:</Text>
-				<Text style={styles.value}>{stylistData.info.age}</Text>
+				<Text style={styles.label}>Birthday:</Text>
+				<Text style={styles.value}>
+					{formatDate(stylistData.info.birthday)}
+				</Text>
 			</View>
 
 			<View style={styles.infoContainer}>
@@ -89,6 +95,11 @@ const BusinessInfoPage = () => {
 					{stylistData.business.additionalInfo}
 				</Text>
 			</View>
+			<StylistServices
+				stylistData={stylistData}
+				setStylistData={setStylistData}
+				editable={editable}
+			/>
 		</ScrollView>
 	);
 };

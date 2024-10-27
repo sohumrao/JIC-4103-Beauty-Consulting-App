@@ -6,7 +6,7 @@ const UserContextProvider = ({ children }) => {
 	const [userContext, setUserContext] = useState({
 		username: "not signed in",
 		name: "No Name",
-		age: 0,
+		birthday: new Date(),
 		gender: "male",
 		phoneNumber: "0000000000",
 		email: "email@emailsite.com",

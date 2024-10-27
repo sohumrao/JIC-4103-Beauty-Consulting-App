@@ -30,7 +30,7 @@ const StylistDetails2 = () => {
 	const handleContinue = () => {
 		// Update context with stylist details
 		userContext.updateUserContext({
-			...userContext, // Keep existing fields in the context (name, age, gender, etc.)
+			...userContext, // Keep existing fields in the context (name, birthday, gender, etc.)
 			business: {
 				...userContext.business,
 				experience: experience,

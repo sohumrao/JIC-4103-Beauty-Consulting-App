@@ -49,7 +49,11 @@ router.post(
 				email: `stylist${i + 1}@example.com`,
 				info: {
 					name: `Stylist ${i + 1}`,
-					age: Math.floor(Math.random() * 15) + 25, // Random age between 25 and 40
+					birthday: new Date(
+						Math.floor(Math.random() * 13) + 1980,
+						Math.floor(Math.random() * 12),
+						Math.floor(Math.random() * 28) + 1
+					), // Random birth date between 1980 and 1993
 					gender: Math.random() < 0.5 ? "male" : "female",
 					phoneNumber: `123-456-78${i}`,
 					city: city, // Set the city in the account info
