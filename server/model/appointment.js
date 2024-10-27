@@ -2,10 +2,10 @@ import mongoose from "mongoose";
 const Schema = mongoose.Schema;
 
 const AppointmentSchema = new Schema({
-	clientUsername: { type: String, required: false },
-	stylistUsername: { type: String, required: false },
-	appointmentDate: { type: Date, required: false }, // Date of the appointment
-	duration: { type: Number, required: false }, // Duration in minutes
+	clientUsername: { type: String },
+	stylistUsername: { type: String },
+	appointmentDate: { type: Date }, // Date of the appointment
+	duration: { type: Number }, // Duration in minutes
 	status: {
 		type: String,
 		enum: ["Scheduled", "Completed", "Canceled"], // Appointment status
