@@ -27,6 +27,7 @@ const StylistDetails2 = () => {
 				additionalInfo: additionalInfo || "",
 				name: businessName || "",
 				address: businessAddress || "",
+				city: "Atlanta", //TODO: default for now, fix when locaiton-based search implemented
 			},
 		});
 		navigation.navigate("StylistDetails3");

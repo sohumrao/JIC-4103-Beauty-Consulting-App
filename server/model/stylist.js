@@ -17,6 +17,7 @@ const StylistSchema = new mongoose.Schema({
 	business: {
 		name: String,
 		address: String,
+		city: String, //TODO: remove after location-based search is implemented
 		experience: String,
 		specialty: String,
 		additionalInfo: String,

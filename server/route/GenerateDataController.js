@@ -45,8 +45,14 @@ router.post(
 		for (let i = 0; i < 20; i++) {
 			const city = getRandomCity(); // Generate the city once to use in both info and business
 			const stylistData = {
-				username: `stylist${i + 1}`,
-				email: `stylist${i + 1}@example.com`,
+				username: Array(10)
+					.fill(null)
+					.map(() => Math.random().toString(36)[2])
+					.join(""),
+				email: `${Array(10)
+					.fill(null)
+					.map(() => Math.random().toString(36)[2])
+					.join("")}@example.com`,
 				info: {
 					name: `Stylist ${i + 1}`,
 					birthday: new Date(
@@ -56,7 +62,6 @@ router.post(
 					), // Random birth date between 1980 and 1993
 					gender: Math.random() < 0.5 ? "male" : "female",
 					phoneNumber: `123-456-78${i}`,
-					city: city, // Set the city in the account info
 				},
 				business: {
 					name: `Salon ${i + 1}`,

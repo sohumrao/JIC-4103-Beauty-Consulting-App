@@ -21,6 +21,7 @@ import {
 	StylistDetailsComplete,
 	BusinessInfoPage,
 	AppointmentsPage,
+	Directory,
 } from "./Pages";
 import { UserContext, UserContextProvider } from "./contexts/userContext";
 
@@ -87,7 +88,7 @@ function MainTabNavigator() {
 					component={BusinessInfoPage}
 				/>
 			)}
-			<Tab.Screen name="Profile" component={ProfilePage} />
+			<Tab.Screen name="Directory" component={Directory} />
 			<Tab.Screen name="Appointments" component={AppointmentsPage} />
 		</Tab.Navigator>
 	);
@@ -125,6 +126,13 @@ function App() {
 						name="Main"
 						component={MainTabNavigator}
 						options={{ headerShown: false }}
+					/>
+					<Stack.Screen
+						name="BusinessInfoPage"
+						component={BusinessInfoPage}
+						screenOptions={{
+							headerShown: true,
+						}}
 					/>
 				</Stack.Navigator>
 			</NavigationContainer>
