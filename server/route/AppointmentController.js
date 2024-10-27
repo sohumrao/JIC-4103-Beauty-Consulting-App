@@ -4,6 +4,7 @@ import { Client } from "../model/client.js";
 import { Stylist } from "../model/stylist.js";
 import asyncHandler from "express-async-handler";
 import { ConflictError, MalformedRequestError } from "../errors.js";
+import mongoose from "mongoose";
 
 const router = express.Router();
 
@@ -113,10 +114,15 @@ router.get(
 );
 
 // Endpoint to mark an appointment as completed
-router.patch(
+router.put(
 	"/:id/complete",
 	asyncHandler(async (req, res, next) => {
 		const { id } = req.params;
+
+		// Validate ObjectId format
+		if (!mongoose.Types.ObjectId.isValid(id)) {
+			return next(new ConflictError("Invalid appointment ID format."));
+		}
 
 		const updatedAppointment = await Appointment.findByIdAndUpdate(
 			id,
@@ -136,10 +142,15 @@ router.patch(
 );
 
 // Endpoint to mark an appointment as canceled
-router.patch(
+router.put(
 	"/:id/cancel",
 	asyncHandler(async (req, res, next) => {
 		const { id } = req.params;
+
+		// Validate ObjectId format
+		if (!mongoose.Types.ObjectId.isValid(id)) {
+			return next(new ConflictError("Invalid appointment ID format."));
+		}
 
 		const updatedAppointment = await Appointment.findByIdAndUpdate(
 			id,
