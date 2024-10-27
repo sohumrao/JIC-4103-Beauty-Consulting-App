@@ -4,6 +4,7 @@ import { RadioButton } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 import { UserContext } from "../contexts/userContext";
 import ContinueButton from "../assets/components/ContinueButton";
+import DateTimePicker from "@react-native-community/datetimepicker";
 
 const StylistDetails = () => {
 	const navigation = useNavigation();
@@ -11,7 +12,7 @@ const StylistDetails = () => {
 	// State for user input
 	const [gender, setGender] = useState("male");
 	const [name, setName] = useState("");
-	const [age, setAge] = useState("");
+	const [birthday, setbirthday] = useState(new Date());
 	const [phoneNumber, setPhoneNumber] = useState("");
 	const [email, setEmail] = useState("");
 	const [experience, setExperience] = useState("");
@@ -27,7 +28,7 @@ const StylistDetails = () => {
 		userContext.updateUserContext({
 			...userContext,
 			name: name,
-			age: age,
+			birthday: birthday,
 			gender: gender,
 			phoneNumber: phoneNumber,
 			email: email,
@@ -78,7 +79,7 @@ const StylistDetails = () => {
 			padding: 10,
 			marginBottom: 20,
 		},
-		ageInputContainer: {
+		birthdayContainer: {
 			flexDirection: "row",
 			justifyContent: "space-between",
 		},
@@ -128,13 +129,16 @@ const StylistDetails = () => {
 					onChangeText={setName}
 				/>
 
-				<Text style={styles.label}>Age</Text>
-				<View style={styles.ageInputContainer}>
-					<TextInput
-						style={styles.ageInput}
-						value={age}
-						onChangeText={setAge}
-						keyboardType="numeric"
+				<View style={styles.birthdayContainer}>
+					<Text style={styles.label}>Birth Date</Text>
+					<DateTimePicker
+						value={birthday}
+						mode="date"
+						onChange={(event, date) => {
+							setbirthday(new Date(date));
+						}}
+						//key is used so that the dialog dismisses on date selection, see https://github.com/react-native-datetimepicker/datetimepicker/issues/602
+						key={birthday.toISOString()}
 					/>
 				</View>
 

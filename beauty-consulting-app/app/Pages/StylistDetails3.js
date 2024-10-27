@@ -2,12 +2,13 @@ import React, { useState, useContext } from "react";
 import { View, Text, ScrollView, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { UserContext } from "../contexts/userContext";
-import ContinueButton from "../assets/components/ContinueButton";
+
 import OptionsButton from "../assets/components/OptionsButton";
+import ContinueButton from "../assets/components/ContinueButton";
 
 const StylistDetails3 = () => {
-	const navigation = useNavigation();
 	const userContext = useContext(UserContext);
+	const navigation = useNavigation();
 
 	// State for the hair types worked with
 	const [workedWithHairTypes, setWorkedWithHairTypes] = useState({
@@ -90,7 +91,6 @@ const StylistDetails3 = () => {
 	return (
 		<ScrollView style={styles.container}>
 			<Text style={styles.header}>Hair Types Worked With</Text>
-
 			<View style={styles.stepIndicator}>
 				<View style={[styles.step, styles.stepCompleted]}></View>
 				<View style={[styles.step, styles.stepCompleted]}></View>
@@ -139,7 +139,8 @@ const StylistDetails3 = () => {
 						/>
 					</View>
 				</View>
-
+			</View>
+			<View style={styles.container}>
 				<Text style={styles.header}>Hair Density Experience</Text>
 				<View
 					style={[
@@ -164,7 +165,6 @@ const StylistDetails3 = () => {
 					/>
 				</View>
 			</View>
-
 			<View style={styles.buttonContainer}>
 				<ContinueButton onPress={() => handleContinue()} />
 			</View>

@@ -10,7 +10,7 @@ import asyncHandler from "express-async-handler";
  *
  * - User Creation:
  *    Allows creating a new user by sending a POST request with user details such as username, name, email,
- *    gender, age, phone number, hair details, and allergies.
+ *    gender, birthday, phone number, hair details, and allergies.
  *
  * - User Update:
  *    Allows updating an existing user's information by sending a PUT request with updated user details
@@ -52,7 +52,7 @@ router.post(
 				email: req.body.email,
 				info: {
 					name: req.body.name,
-					age: req.body.age,
+					birthday: req.body.birthday,
 					// city: req.body.city,
 					gender: req.body.gender,
 					phoneNumber: req.body.phoneNumber,

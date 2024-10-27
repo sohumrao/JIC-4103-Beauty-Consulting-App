@@ -1,6 +1,18 @@
 import mongoose from "mongoose";
 import { Account } from "./account.js";
 
+const ServiceSchema = new mongoose.Schema({
+	name: {
+		type: String,
+		required: true,
+	},
+	price: {
+		type: Number,
+		required: true,
+	},
+	description: String,
+});
+
 const StylistSchema = new mongoose.Schema({
 	business: {
 		name: String,
@@ -23,10 +35,10 @@ const StylistSchema = new mongoose.Schema({
 		},
 		// TODO: refactor Business Schema
 		// hours: { type: HoursSchema, required: true },
-		// services: [ ServiceSchema],
+		services: [ServiceSchema],
 		// gallery: [{ type: Schema.Types.ObjectId, ref: "Photo" }],
 	},
 });
 
 const Stylist = Account.discriminator("Stylist", StylistSchema);
-export { Stylist };
+export { ServiceSchema, Stylist };

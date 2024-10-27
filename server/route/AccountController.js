@@ -274,8 +274,8 @@ router.post(
 			{ username: req.body.username },
 			{
 				profilePhoto: {
-					photoData: compressedPhoto,
-					photoContentType: "image/jpeg",
+					data: compressedPhoto,
+					contentType: "image/jpeg",
 					uploadedAt: new Date(),
 				},
 			},
@@ -302,11 +302,7 @@ router.get(
 			username: req.params.username,
 		});
 
-		if (
-			!account ||
-			!account.profilePhoto ||
-			!account.profilePhoto.photoData
-		) {
+		if (!account || !account.profilePhoto || !account.profilePhoto.data) {
 			return next(
 				new ConflictError(
 					"No profile photo found for the given username."
@@ -315,10 +311,10 @@ router.get(
 		}
 
 		// Set the content type of the response to the photo's MIME type
-		res.set("Content-Type", account.profilePhoto.photoContentType);
+		res.set("Content-Type", account.profilePhoto.contentType);
 
 		// Send the photo binary data as the response
-		res.send(account.profilePhoto.photoData);
+		res.send(account.profilePhoto.data);
 	})
 );
 

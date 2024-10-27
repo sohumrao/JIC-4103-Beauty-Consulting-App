@@ -1,8 +1,29 @@
 # Beauty Consulting App
 
-This product is a mobile app for beauty consultations. The current product is a client profile creation interface, allowing for users to input personal information as well as specific hair details/concerns. This was chosen as the artifact to be implemented because from the beginning, the goal of this project has been to bridge the gap between beauty client and stylist; allowing users to upload details to be seen by stylists will alleviate concerns on both ends and make the consultation process easier overall. This artifact also allows for a demonstration of the full technology stack, since data can be inputted through the UI, sent to the back end, and uploaded to the database.
+This product is a mobile app for beauty consultations. The current product includes account creation, client and stylist profile creation, and a directory for finding stylists in a client’s city based on their preferences and needs. From the beginning, the goal of this project has been to bridge the gap between beauty client and stylist; allowing users to upload details to be seen by stylists will alleviate concerns on both ends and make the consultation process easier overall.
 
 # Release Notes
+
+## Version 0.3.0
+
+### New Features:
+
+-   Directory screen for clients and stylists with matching
+-   Password validation before account deletion
+-   Intuitive navigation bar
+-   Stylist view screen update
+
+### Bug Fixes
+
+-   Circular dependencies, as well as overreliance on userState resolved
+-   User navigation is limited by new navigation bar
+-   Fields synced between client and stylist
+
+### Known issues
+
+-   Keyboard still obscures some input fields
+-   Directory filtering by city nonfunctional
+-   No logout button
 
 ## Version 0.2.0
 

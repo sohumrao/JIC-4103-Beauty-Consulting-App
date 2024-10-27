@@ -6,6 +6,8 @@ import {
 	TextInput,
 	TouchableOpacity,
 	ScrollView,
+	Modal,
+	Touchable,
 } from "react-native";
 import { Link, useNavigation } from "@react-navigation/native";
 import { UserContext } from "../contexts/userContext";
@@ -15,6 +17,8 @@ import axios from "axios";
 import AboutMeBox from "../assets/components/AboutMeBox";
 import AboutHairBox from "../assets/components/AboutHairBox";
 import ProfilePicture from "../assets/components/ProfilePicture";
+import ProfileImage from "../assets/components/ProfileImage";
+import handleHTTPError from "../errorHandling";
 
 const ProfileView = () => {
 	const navigation = useNavigation();
@@ -27,6 +31,33 @@ const ProfileView = () => {
 	var [allergies, setAllergies] = useState("");
 	var [concerns, setConcerns] = useState("");
 	var [isEdit, setIsEdit] = useState(false);
+	// const [modalVisible, setModalVisible] = useState(false);
+	// var [password, setPassword] = useState("");
+	// const [errorMessage, setErrorMessage] = useState("");
+
+	// useEffect(() => {
+	// 	populateClientData(userContext.username);
+	// }, [userContext.username]);
+
+	// const populateClientData = async (username) => {
+	// 	try {
+	// 		const apiURL =
+	// 			process.env.EXPO_PUBLIC_API_URL + ":5050/client/" + username;
+	// 		if (!apiURL) {
+	// 			console.error("apiURL not defined");
+	// 			return;
+	// 		}
+
+	// 		const res = await axios.get(apiURL);
+	// 		setClientData(res.data);
+	// 		setGender(res.data.info.gender);
+	// 		setName(res.data.info.name);
+	// 		setAllergies(res.data.allergies);
+	// 		setConcerns(res.data.additionalConcerns);
+	// 	} catch (error) {
+	// 		handleHTTPError(error);
+	// 	}
+	// };
 
 	const { profilePicture } = useContext(UserContext);
 
