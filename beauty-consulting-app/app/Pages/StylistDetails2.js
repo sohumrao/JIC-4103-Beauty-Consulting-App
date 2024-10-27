@@ -10,34 +10,23 @@ const StylistDetails2 = () => {
 	// Access the user context
 	const userContext = useContext(UserContext);
 
-	// State for stylist-specific inputs, initialized with context values if available
-	const [experience, setExperience] = useState(
-		userContext.business.experience || ""
-	);
-	const [specialty, setSpecialty] = useState(
-		userContext.business.specialty || ""
-	);
-	const [additionalInfo, setAdditionalInfo] = useState(
-		userContext.business.additionalInfo || ""
-	);
-	const [businessName, setBusinessName] = useState(
-		userContext.business.name || ""
-	);
-	const [businessAddress, setBusinessAddress] = useState(
-		userContext.business.address || ""
-	);
+	// State for stylist-specific inputs, initialized with empty strings as default
+	const [experience, setExperience] = useState("");
+	const [specialty, setSpecialty] = useState("");
+	const [additionalInfo, setAdditionalInfo] = useState("");
+	const [businessName, setBusinessName] = useState("");
+	const [businessAddress, setBusinessAddress] = useState("");
 
 	const handleContinue = () => {
 		// Update context with stylist details
 		userContext.updateUserContext({
-			...userContext, // Keep existing fields in the context (name, birthday, gender, etc.)
+			...userContext, // Keep existing fields in the context (name, age, gender, etc.)
 			business: {
-				...userContext.business,
-				experience: experience,
-				specialty: specialty,
-				additionalInfo: additionalInfo,
-				name: businessName,
-				address: businessAddress,
+				experience: experience || "", // Optional fields can be left empty
+				specialty: specialty || "",
+				additionalInfo: additionalInfo || "",
+				name: businessName || "",
+				address: businessAddress || "",
 				city: "Atlanta", //TODO: default for now, fix when locaiton-based search implemented
 			},
 		});
@@ -110,7 +99,7 @@ const StylistDetails2 = () => {
 				<View style={styles.step}></View>
 			</View>
 
-			<Text style={styles.label}>Name of Business</Text>
+			<Text style={styles.label}>Name of Business (Optional)</Text>
 			<TextInput
 				style={styles.input}
 				value={businessName}
@@ -118,7 +107,7 @@ const StylistDetails2 = () => {
 				placeholder="Enter your business name"
 			/>
 
-			<Text style={styles.label}>Address of Business</Text>
+			<Text style={styles.label}>Address of Business (Optional)</Text>
 			<TextInput
 				style={styles.input}
 				value={businessAddress}
@@ -127,7 +116,7 @@ const StylistDetails2 = () => {
 			/>
 
 			<View style={styles.form}>
-				<Text style={styles.label}>Years of Experience</Text>
+				<Text style={styles.label}>Years of Experience (Optional)</Text>
 				<TextInput
 					style={styles.input}
 					value={experience}
@@ -136,7 +125,7 @@ const StylistDetails2 = () => {
 					placeholder="Enter your years of experience"
 				/>
 
-				<Text style={styles.label}>Specialty</Text>
+				<Text style={styles.label}>Specialty (Optional)</Text>
 				<TextInput
 					style={styles.input}
 					value={specialty}
@@ -144,7 +133,9 @@ const StylistDetails2 = () => {
 					placeholder="Enter your specialty"
 				/>
 
-				<Text style={styles.label}>Anything else we should know?</Text>
+				<Text style={styles.label}>
+					Anything else we should know? (Optional)
+				</Text>
 				<TextInput
 					style={styles.input}
 					value={additionalInfo}

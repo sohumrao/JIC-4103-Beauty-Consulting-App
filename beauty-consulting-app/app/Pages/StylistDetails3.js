@@ -7,9 +7,10 @@ import OptionsButton from "../assets/components/OptionsButton";
 import ContinueButton from "../assets/components/ContinueButton";
 
 const StylistDetails3 = () => {
-	const navigation = useNavigation();
 	const userContext = useContext(UserContext);
+	const navigation = useNavigation();
 
+	// State for the hair types worked with
 	const [workedWithHairTypes, setWorkedWithHairTypes] = useState({
 		Natural: false,
 		Relaxed: false,
@@ -32,11 +33,11 @@ const StylistDetails3 = () => {
 	};
 
 	const handleContinue = () => {
-		// Update context with stylist's hair type experience
+		// Update context with stylist's work experience
 		userContext.updateUserContext({
 			...userContext,
-			business: {
-				...userContext.business,
+			stylistDetails: {
+				...userContext.stylistDetails,
 				workedWithHairTypes: workedWithHairTypes,
 			},
 		});
@@ -73,10 +74,6 @@ const StylistDetails3 = () => {
 		form: {
 			marginBottom: 20,
 		},
-		label: {
-			fontSize: 16,
-			marginBottom: 10,
-		},
 		optionsContainer: {
 			flexDirection: "column",
 			flex: 1,
@@ -93,10 +90,7 @@ const StylistDetails3 = () => {
 
 	return (
 		<ScrollView style={styles.container}>
-			<Text style={styles.header}>
-				What Hair Types Have You Worked With?
-			</Text>
-
+			<Text style={styles.header}>Hair Types Worked With</Text>
 			<View style={styles.stepIndicator}>
 				<View style={[styles.step, styles.stepCompleted]}></View>
 				<View style={[styles.step, styles.stepCompleted]}></View>
@@ -145,7 +139,8 @@ const StylistDetails3 = () => {
 						/>
 					</View>
 				</View>
-
+			</View>
+			<View style={styles.container}>
 				<Text style={styles.header}>Hair Density Experience</Text>
 				<View
 					style={[
@@ -156,27 +151,20 @@ const StylistDetails3 = () => {
 						},
 					]}
 				>
-					<View style={[styles.optionsContainer]}>
-						<OptionsButton
-							title="Fine"
-							onPress={() => handleSelectionChange("Fine")}
-						/>
-					</View>
-					<View style={[styles.optionsContainer]}>
-						<OptionsButton
-							title="Medium"
-							onPress={() => handleSelectionChange("Medium")}
-						/>
-					</View>
-					<View style={[styles.optionsContainer]}>
-						<OptionsButton
-							title="Thick"
-							onPress={() => handleSelectionChange("Thick")}
-						/>
-					</View>
+					<OptionsButton
+						title="Fine"
+						onPress={() => handleSelectionChange("Fine")}
+					/>
+					<OptionsButton
+						title="Medium"
+						onPress={() => handleSelectionChange("Medium")}
+					/>
+					<OptionsButton
+						title="Thick"
+						onPress={() => handleSelectionChange("Thick")}
+					/>
 				</View>
 			</View>
-
 			<View style={styles.buttonContainer}>
 				<ContinueButton onPress={() => handleContinue()} />
 			</View>

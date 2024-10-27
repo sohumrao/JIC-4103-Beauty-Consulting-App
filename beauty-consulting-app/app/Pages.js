@@ -15,6 +15,7 @@ import StylistDetails3 from "./Pages/StylistDetails3";
 import StylistDetailsComplete from "./Pages/StylistDetailsComplete";
 import BusinessInfoPage from "./Pages/BusinessInfoPage";
 import Directory from "./Pages/Directory";
+import AppointmentsPage from "./Pages/AppointmentsPage";
 
 export {
 	LandingPage,
@@ -34,4 +35,5 @@ export {
 	StylistDetailsComplete,
 	BusinessInfoPage,
 	Directory,
+	AppointmentsPage,
 };

@@ -1,12 +1,12 @@
+import { StatusBar } from "expo-status-bar";
 import React, { useContext } from "react";
-import { View, Text } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 
 import ContinueButton from "../assets/components/ContinueButton";
 import { UserContext } from "../contexts/userContext";
-import globalStyles from "../assets/GlobalStyles";
-import handleHTTPError from "../errorHandling";
+// import globalStyles from "../assets/GlobalStyles";
 
 function StylistDetailsComplete() {
 	const navigation = useNavigation();
@@ -18,12 +18,11 @@ function StylistDetailsComplete() {
 			name: userContext.name,
 			email: userContext.email,
 			gender: userContext.gender,
-			birthday: userContext.birthday,
+			age: userContext.age,
 			phoneNumber: userContext.phoneNumber,
-			business: userContext.business,
 			role: "stylist",
 		};
-
+		console.log(req.body);
 		try {
 			const apiUrl = process.env.EXPO_PUBLIC_API_URL;
 			if (!apiUrl) {
@@ -32,34 +31,33 @@ function StylistDetailsComplete() {
 			}
 			const res = await axios.post(apiUrl + ":5050/stylist/", req);
 			console.log("Stylist created: ", res.data);
+
+			userContext.updateUserContext({
+				...userContext,
+				role: "stylist",
+			});
+
+			// Reset navigation and navigate to Main screen
+			navigation.reset({
+				index: 0,
+				routes: [{ name: "Main" }],
+			});
 		} catch (error) {
-			handleHTTPError(error);
-			return;
+			console.error("Error with API: ", error);
 		}
-		userContext.updateUserContext({
-			username: userContext.username,
-			role: "stylist",
-		});
-		navigation.reset({
-			index: 0,
-			routes: [{ name: "Main" }],
-		});
 	};
 
 	return (
 		<View style={styles.container}>
 			<Text style={styles.title}>You're all set, stylist!</Text>
 			<View style={styles.buttonContainer}>
-				{/* Continue Button for navigating to BusinessInfoPage */}
-				<ContinueButton onPress={handleContinue} />
+				<ContinueButton onPress={() => handleContinue()} />
 			</View>
 		</View>
 	);
 }
 
-export default StylistDetailsComplete;
-
-const styles = {
+const styles = StyleSheet.create({
 	container: {
 		flex: 1,
 		justifyContent: "center",
@@ -78,4 +76,6 @@ const styles = {
 		width: "100%",
 		alignItems: "center",
 	},
-};
+});
+
+export default StylistDetailsComplete;
