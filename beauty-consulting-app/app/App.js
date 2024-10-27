@@ -20,6 +20,7 @@ import {
 	StylistDetails3,
 	StylistDetailsComplete,
 	BusinessInfoPage,
+	AppointmentsPage,
 } from "./Pages";
 import { UserContext, UserContextProvider } from "./contexts/userContext";
 
@@ -54,12 +55,31 @@ function StylistDetailsStack() {
 	);
 }
 
+// function MainTabNavigator() {
+// 	const { role } = useContext(UserContext);
+
+// 	return (
+// 		<Tab.Navigator screenOptions={{ headerShown: false }}>
+// 			{role === "client" ? (
+// 				<Tab.Screen name="ProfileView" component={ProfileView} />
+// 			) : (
+// 				<Tab.Screen
+// 					name="BusinessInfoPage"
+// 					component={BusinessInfoPage}
+// 				/>
+// 			)}
+// 			<Tab.Screen name="Profile" component={ProfilePage} />
+// 		</Tab.Navigator>
+// 	);
+// }
+
 function MainTabNavigator() {
 	const { role } = useContext(UserContext);
 
 	return (
 		<Tab.Navigator screenOptions={{ headerShown: false }}>
-			{role === "client" ? (
+			{role === "client" || role === "stylist" ? (
+				// Navigate to ProfileView for both clients and stylists
 				<Tab.Screen name="ProfileView" component={ProfileView} />
 			) : (
 				<Tab.Screen
@@ -68,6 +88,7 @@ function MainTabNavigator() {
 				/>
 			)}
 			<Tab.Screen name="Profile" component={ProfilePage} />
+			<Tab.Screen name="Appointments" component={AppointmentsPage} />
 		</Tab.Navigator>
 	);
 }
