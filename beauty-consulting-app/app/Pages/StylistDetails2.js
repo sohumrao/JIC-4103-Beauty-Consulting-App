@@ -33,6 +33,7 @@ const StylistDetails2 = () => {
 		if (!valid) {
 			return;
 		}
+		console.log(businessCity);
 		// Update context with stylist details
 		userContext.updateUserContext({
 			...userContext, // Keep existing fields in the context (name, age, gender, etc.)
@@ -45,6 +46,7 @@ const StylistDetails2 = () => {
 				city: businessCity,
 			},
 		});
+		console.log(userContext);
 		navigation.navigate("StylistDetails3");
 	};
 
@@ -79,9 +81,11 @@ const StylistDetails2 = () => {
 			address = zip;
 		}
 		const result = await validateAddress(address, streetOnePassed);
+		console.log(result);
 		if (!result[0]) {
 			setMessage("Error Locating Business, Try Again");
 		} else {
+			console.log("updating business unformation");
 			setMessage(null);
 			setBusinessAddress(result[1]);
 			setBusinessCity(result[2]);

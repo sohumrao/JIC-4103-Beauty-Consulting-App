@@ -12,6 +12,8 @@ function StylistDetailsComplete() {
 	const navigation = useNavigation();
 	const userContext = useContext(UserContext);
 
+	console.log(userContext);
+
 	const handleContinue = async () => {
 		const req = {
 			username: userContext.username,
@@ -20,6 +22,7 @@ function StylistDetailsComplete() {
 			gender: userContext.gender,
 			age: userContext.age,
 			phoneNumber: userContext.phoneNumber,
+			business: userContext.business,
 		};
 		console.log(req.body);
 		try {

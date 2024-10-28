@@ -192,14 +192,12 @@ router.post(
 			const stylistCity = stylist.business.city.trim();
 			// case 1: stylists city directly matches client city
 			// lazily won't do lookup in this case
-			if (stylistCity.localeCompare(cityToUse)) {
+			if (stylistCity.localeCompare(cityToUse) === 0) {
 				stylistsInCity.push(stylist);
 				continue;
 			}
 			// case 2: actually have to do some work
-			// TODO make this use more specific address once we enforce
-			// that the fields don't just say "address 2"
-
+			// TODO make this use more specific address once we enforce robust addresses
 			const stylistCoords = await getCoordsOfLocation(stylistCity);
 			if (!stylistCoords[0]) {
 				continue;
