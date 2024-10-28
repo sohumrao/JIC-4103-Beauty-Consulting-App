@@ -148,7 +148,6 @@ router.post(
 	"/matchStylists/:username",
 	asyncHandler(async (req, res, next) => {
 		const username = req.body.username;
-		console.log(username);
 		const distanceToSearch = req.body.distance;
 
 		// Step 1: Retrieve client details based on username
@@ -164,7 +163,6 @@ router.post(
 		// Step 3: Determine city based on request body or client info
 		const city = req.body.city;
 		const cityToUse = city.trim();
-		console.log(cityToUse);
 		const clientCoords = await getCoordsOfLocation(cityToUse);
 		if (!clientCoords[0]) {
 			return next(new ConflictError("Error with Client Location."));
@@ -190,6 +188,10 @@ router.post(
 				continue;
 			}
 			const stylistCity = stylist.business.city.trim();
+			if (stylistCity.includes("Address")) {
+				console.log("dummy account purged");
+				continue;
+			}
 			// case 1: stylists city directly matches client city
 			// lazily won't do lookup in this case
 			if (stylistCity.localeCompare(cityToUse) === 0) {
@@ -215,8 +217,6 @@ router.post(
 				stylistsInCity.push(stylist);
 			}
 		}
-
-		console.log(stylistsInCity.length);
 
 		// Check if there are no stylists in the specified city
 		if (!stylistsInCity || stylistsInCity.length === 0) {

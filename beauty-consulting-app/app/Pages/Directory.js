@@ -15,6 +15,7 @@ import { useNavigation } from "@react-navigation/native";
 import { UserContext } from "../contexts/userContext";
 import handleHTTPError from "../errorHandling.js";
 import { getCityFromZIP } from "../geocoding.js";
+import ErrorMessage from "../components/ErrorMessage";
 
 const Directory = () => {
 	const navigation = useNavigation();
@@ -22,6 +23,7 @@ const Directory = () => {
 	const [city, setCity] = useState("Atlanta"); //TODO: change default value once location-based search is implemented
 	var [stylistData, setStylistData] = useState(null);
 	var [zipCode, setZipCode] = useState("30332");
+	const [messageError, setMessageError] = useState("");
 
 	useEffect(() => {
 		retrieveStylistData(city);
@@ -59,11 +61,17 @@ const Directory = () => {
 	};
 
 	const refreshSearch = async () => {
+		if (zipCode.length < 5) {
+			setMessageError("Input a full ZIP code.");
+			return;
+		}
 		try {
 			const locationResponse = await getCityFromZIP(zipCode);
+			setMessageError("");
 			setCity(locationResponse.city);
 			retrieveStylistData(city);
 		} catch (error) {
+			setMessageError("Error Retrieving Results");
 			handleHTTPError(error);
 		}
 	};
@@ -106,6 +114,15 @@ const Directory = () => {
 			flex: 1,
 			marginLeft: 8,
 		},
+		button: {
+			backgroundColor: "#FF5252",
+			paddingVertical: 10,
+			borderRadius: 5,
+			justifyContent: "center",
+			marginRight: 8,
+			padding: 10,
+			alignItems: "center",
+		},
 	});
 
 	if (!stylistData) {
@@ -142,13 +159,12 @@ const Directory = () => {
 					style={styles.dropDown}
 					selectedTextStyle={styles.selectedText}
 				/>
-				<TouchableOpacity
-					style={globalStyles.button}
-					onPress={refreshSearch}
-				>
-					<Text style={globalStyles.buttonText}>Search</Text>
+				<TouchableOpacity style={styles.button} onPress={refreshSearch}>
+					<Text style={globalStyles.buttonText}>Refresh</Text>
 				</TouchableOpacity>
 			</View>
+
+			<ErrorMessage message={messageError} />
 
 			<ScrollView style={globalStyles.directoryContainer}>
 				{stylistData.map((stylist) => (

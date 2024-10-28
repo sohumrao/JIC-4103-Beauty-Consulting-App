@@ -46,9 +46,8 @@ router.post(
 					birthday: req.body.birthday,
 					gender: req.body.gender,
 					phoneNumber: req.body.phoneNumber,
-					//NOTE: current code forclient HTTP request does not send zipcode
 				},
-				business: req.body.business,
+				business: req.body.business, // NOTE: zip code is findable under business.city
 				/* -------------------------------------------------------------------------- */
 				//needed to cast User into Stylist, can be removed after refactoring one-step account creation
 				__t: "Stylist",
