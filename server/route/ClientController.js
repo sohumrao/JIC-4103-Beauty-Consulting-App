@@ -56,8 +56,6 @@ router.post(
 					// city: req.body.city,
 					gender: req.body.gender,
 					phoneNumber: req.body.phoneNumber,
-					city: req.body.city,
-					//NOTE: current code forclient HTTP request does not send zipcode
 				},
 				hairDetails: req.body.hairDetails,
 				allergies: req.body.allergies,
@@ -162,9 +160,8 @@ router.get(
 		const clientHairDetails = client.hairDetails;
 
 		// Step 3: Determine city based on request body or client info
-		const bodyCity = req.body.city;
-		const cityToUse =
-			bodyCity && bodyCity.trim() ? bodyCity : client.info.city;
+		const { city } = req.query;
+		const cityToUse = city.trim();
 
 		if (!cityToUse) {
 			return next(
@@ -175,7 +172,9 @@ router.get(
 		}
 
 		// Step 4: Retrieve stylists from the determined city
-		const stylistsInCity = await Stylist.find({ "info.city": cityToUse });
+		const stylistsInCity = await Stylist.find({
+			"business.city": cityToUse,
+		});
 
 		// Check if there are no stylists in the specified city
 		if (!stylistsInCity || stylistsInCity.length === 0) {
@@ -209,8 +208,8 @@ router.get(
 				}, {});
 
 			// Find the profile picture if available
-			const profilePicture = stylist.info.profilePhoto
-				? stylist.info.profilePhoto
+			const profilePicture = stylist.profilePhoto
+				? stylist.profilePhoto
 				: null;
 
 			// Return stylist information including name, business name, and address

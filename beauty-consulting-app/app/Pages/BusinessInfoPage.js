@@ -4,21 +4,29 @@ import { UserContext, userContextProvider } from "../contexts/userContext";
 import globalStyles from "../assets/GlobalStyles";
 import ProfileImage from "../assets/components/ProfileImage";
 import axios from "axios";
+import { Button } from "react-native-paper";
+import { useNavigation } from "@react-navigation/native";
 import handleHTTPError from "../errorHandling";
 import { formatDate } from "../utils";
 import StylistServices from "../components/StylistServices";
 
-const BusinessInfoPage = () => {
+const BusinessInfoPage = (routeObject) => {
 	// Access the user context
 	const userContext = useContext(UserContext);
+	const navigation = useNavigation();
 	const [stylistData, setStylistData] = useState(null);
 
 	//TODO: make BusinessInfo take in stylist_id as a prop, and set editable as whether or not stylist_id is equal to usercontext_id
 	const editable = true;
 
 	useEffect(() => {
-		populateStylistData(userContext.username);
-	}, [userContext.username]);
+		console.log(routeObject);
+		if (userContext.role == "client") {
+			populateStylistData(routeObject.route.params.stylistUsername);
+		} else {
+			populateStylistData(userContext.username);
+		}
+	}, [routeObject]);
 
 	const populateStylistData = async (username) => {
 		try {
@@ -100,6 +108,11 @@ const BusinessInfoPage = () => {
 				setStylistData={setStylistData}
 				editable={editable}
 			/>
+			{userContext.role === "client" ? (
+				<Button onPress={() => navigation.goBack()}>
+					Back to Directory
+				</Button>
+			) : null}
 		</ScrollView>
 	);
 };

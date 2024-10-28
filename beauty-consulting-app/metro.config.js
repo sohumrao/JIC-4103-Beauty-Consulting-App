@@ -2,15 +2,30 @@
 const { getDefaultConfig } = require("expo/metro-config");
 const path = require("path");
 
-const projectRoot = __dirname;
-const workspaceRoot = path.resolve(__dirname, "..");
+module.exports = (() => {
+	const config = getDefaultConfig(__dirname);
+	const projectRoot = __dirname;
+	const workspaceRoot = path.resolve(__dirname, "..");
 
-const config = getDefaultConfig(projectRoot);
+	config.watchFolders = [workspaceRoot];
 
-config.watchFolders = [workspaceRoot];
-config.resolver.nodeModulesPaths = [
-	path.resolve(projectRoot, "node_modules"),
-	path.resolve(workspaceRoot, "node_modules"),
-];
+	const { transformer, resolver } = config;
 
-module.exports = config;
+	config.transformer = {
+		...transformer,
+		babelTransformerPath: require.resolve(
+			"react-native-svg-transformer/expo"
+		),
+	};
+	config.resolver = {
+		...resolver,
+		nodeModulesPaths: [
+			path.resolve(projectRoot, "node_modules"),
+			path.resolve(workspaceRoot, "node_modules"),
+		],
+		assetExts: resolver.assetExts.filter((ext) => ext !== "svg"),
+		sourceExts: [...resolver.sourceExts, "svg"],
+	};
+
+	return config;
+})();
