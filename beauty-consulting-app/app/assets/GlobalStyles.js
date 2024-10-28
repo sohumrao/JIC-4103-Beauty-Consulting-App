@@ -7,6 +7,11 @@ const globalStyles = StyleSheet.create({
 		// alignItems: 'center',
 		backgroundColor: "#fff",
 	},
+	centeringContainer: {
+		justifyContent: "center",
+		alignItems: "center",
+		flex: 1,
+	},
 	box: {
 		width: "80%",
 		padding: 20,

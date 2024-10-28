@@ -129,8 +129,10 @@ const Directory = () => {
 
 	if (!stylistData) {
 		return (
-			<View style={globalStyles.box}>
-				<Text style={globalStyles.promptText}>Loading...</Text>
+			<View style={globalStyles.centeringContainer}>
+				<View style={globalStyles.box}>
+					<Text style={globalStyles.promptText}>Loading...</Text>
+				</View>
 			</View>
 		);
 	}
