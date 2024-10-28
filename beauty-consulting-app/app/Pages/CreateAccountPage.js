@@ -7,6 +7,7 @@ import SignupBackground from "../assets/components/SignupBackground";
 import globalStyles from "../assets/GlobalStyles";
 import ErrorMessage from "../components/ErrorMessage";
 import handleHTTPError from "../errorHandling";
+import { createAccountSchema } from "../../../shared/schemas";
 
 const CreateAccountPage = () => {
 	const [formData, setFormData] = useState({
@@ -19,6 +20,7 @@ const CreateAccountPage = () => {
 	const userContext = useContext(UserContext);
 	const handleCreateAccount = async () => {
 		try {
+			await createAccountSchema.validateAsync(formData);
 			const apiUrl = process.env.EXPO_PUBLIC_API_URL;
 			if (!apiUrl) {
 				console.error("API URL not defined");

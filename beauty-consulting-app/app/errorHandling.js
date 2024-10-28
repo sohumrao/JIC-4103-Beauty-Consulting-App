@@ -14,7 +14,9 @@ function handleHTTPError(
 	setErrorMessage = null,
 	consoleLogErrors = true
 ) {
-	if (error.response) {
+	if (error.isJoi && error.name === "ValidationError") {
+		setErrorMessage(error.message);
+	} else if (error.response) {
 		// The request was made and the server responded with a status code
 		// that falls out of the range of 2xx
 		const errorMessage =
@@ -33,9 +35,8 @@ function handleHTTPError(
 			console.error("No response received:", error.request);
 	} else {
 		// Something else happened
-		if (setErrorMessage) setErrorMessage("An error occurred");
-		if (consoleLogErrors)
-			console.error("Error setting up request:", error.message);
+		if (setErrorMessage) setErrorMessage("An unhandled error occurred");
+		if (consoleLogErrors) console.error(error.message);
 	}
 }
 
