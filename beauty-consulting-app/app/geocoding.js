@@ -81,30 +81,3 @@ export const getCoordsOfLocation = async (address) => {
 		return [false, null];
 	}
 };
-
-/*
- * given two sets of latitude and longitude, calculates distance between them
- * not fully sure if it works, needs testing
- */
-export const haversineDistance = (lat1, long1, lat2, long2) => {
-	var km = 6371;
-
-	const latDiff = lat2 - lat1;
-	const longDiff = long2 - long1;
-
-	const latDiffRad = latDiff.toRad();
-	const longDiffRad = longDiff.toRad();
-
-	const lot_o_math =
-		Math.sin(latDiffRad / 2) * Math.sin(latDiffRad / 2) +
-		Math.cos(lat1.toRad()) *
-			Math.cose(lat2.toRad()) *
-			Math.sin(longDiffRad / 2) *
-			Math.sin(longDiffRad / 2);
-	const dist_pre_km =
-		2 * Math.atan2(Math.sqrt(lot_o_math), Math.sqrt(1 - lot_o_math));
-	const distance_km = km * dist_pre_km;
-	const distance_mile = 0.6213 * distance_km;
-
-	return distance_mile;
-};

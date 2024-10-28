@@ -29,6 +29,8 @@ const Directory = () => {
 		retrieveStylistData(city);
 	}, [userContext.username, city]);
 
+	// TODO: figure out how to display erorr when no stylists found,
+	// TODO: clear search when no stylists found
 	const retrieveStylistData = async (city) => {
 		try {
 			req = {

@@ -83,15 +83,18 @@ export const getCoordsOfLocation = async (address) => {
 	}
 };
 
+// helper for haversine distance
 const toRad = (value) => {
 	return (value * Math.PI) / 180;
 };
+
 /*
  * given two sets of latitude and longitude, calculates distance between them
  * not fully sure if it works, needs testing
  */
 export const haversineDistance = (lat1, long1, lat2, long2) => {
-	var km = 6371;
+	const FORMULA_TO_KM = 6371;
+	const KM_TO_MILES = 0.6213;
 
 	const latDiff = lat2 - lat1;
 	const longDiff = long2 - long1;
@@ -107,8 +110,8 @@ export const haversineDistance = (lat1, long1, lat2, long2) => {
 			Math.sin(longDiffRad / 2);
 	const dist_pre_km =
 		2 * Math.atan2(Math.sqrt(lot_o_math), Math.sqrt(1 - lot_o_math));
-	const distance_km = km * dist_pre_km;
-	const distance_mile = 0.6213 * distance_km;
+	const distance_km = FORMULA_TO_KM * dist_pre_km;
+	const distance_mile = KM_TO_MILES * distance_km;
 
 	return distance_mile;
 };
