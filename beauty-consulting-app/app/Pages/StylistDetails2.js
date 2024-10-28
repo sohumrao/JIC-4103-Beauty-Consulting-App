@@ -19,6 +19,7 @@ const StylistDetails2 = () => {
 	const [additionalInfo, setAdditionalInfo] = useState("");
 	const [businessName, setBusinessName] = useState("");
 	const [businessAddress, setBusinessAddress] = useState("");
+	const [businessCity, setBusinessCity] = useState("");
 
 	const [message, setMessage] = useState("");
 
@@ -41,7 +42,7 @@ const StylistDetails2 = () => {
 				additionalInfo: additionalInfo || "",
 				name: businessName || "",
 				address: businessAddress || "",
-				city: "Atlanta", //TODO: default for now, fix when locaiton-based search implemented
+				city: businessCity,
 			},
 		});
 		navigation.navigate("StylistDetails3");
@@ -83,6 +84,7 @@ const StylistDetails2 = () => {
 		} else {
 			setMessage(null);
 			setBusinessAddress(result[1]);
+			setBusinessCity(result[2]);
 		}
 		return result[0];
 	};

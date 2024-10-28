@@ -22,8 +22,6 @@ export const getCityFromZIP = async (zipCode) => {
 		city = data.results[0].locations[0].adminArea5;
 		state = data.results[0].location[0].adminArea3;
 
-		console.log(city, state); // debugging
-
 		return { city: city, state: state };
 	} catch (error) {
 		handleHTTPError(error);
@@ -58,7 +56,7 @@ export const validateAddress = async (address, streetPassed) => {
 		} else {
 			city = data.results[0].locations[0].adminArea5;
 			state = data.results[0].locations[0].adminArea3;
-			return [city != "", city + " " + state];
+			return [city != "", city + " " + state, city];
 		}
 	} catch (error) {
 		handleHTTPError(error);

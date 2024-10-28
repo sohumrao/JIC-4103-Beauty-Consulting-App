@@ -7,18 +7,21 @@ import {
 	TouchableOpacity,
 	ScrollView,
 } from "react-native";
+import { Dropdown } from "react-native-element-dropdown";
 import globalStyles from "../assets/GlobalStyles";
 import StylistListing from "../components/StylistListing";
 import axios from "axios";
 import { useNavigation } from "@react-navigation/native";
 import { UserContext } from "../contexts/userContext";
 import handleHTTPError from "../errorHandling";
+import { getCityFromZIP } from "../geocoding";
 
 const Directory = () => {
 	const navigation = useNavigation();
 	var userContext = useContext(UserContext);
 	const [city, setCity] = useState("Atlanta"); //TODO: change default value once location-based search is implemented
 	var [stylistData, setStylistData] = useState(null);
+	const [zipCode, setZipCode] = useState("30332");
 
 	useEffect(() => {
 		retrieveStylistData(city);
@@ -50,6 +53,46 @@ const Directory = () => {
 		});
 	};
 
+	const dropDownData = [
+		{ label: "10 miles", value: 10 },
+		{ label: "20 miles", value: 20 },
+		{ label: "50 miles", value: 50 },
+	];
+
+	const [dropDownValue, setDropDownValue] = useState(dropDownData[0].value);
+
+	const styles = StyleSheet.create({
+		container: {
+			flexDirection: "row",
+			alignItems: "center",
+			marginBottom: 8,
+			marginTop: 8,
+		},
+		dropDown: {
+			flex: 1,
+			borderColor: "#ccc",
+			borderWidth: 1,
+			fontSize: 16,
+			padding: 10,
+			marginLeft: 8,
+			marginRight: 8,
+			borderRadius: 5,
+		},
+		selectedText: {
+			fontSize: 16,
+			color: "#000",
+		},
+		stateAndZipInput: {
+			fontSize: 16,
+			borderWidth: 1,
+			padding: 10,
+			borderRadius: 5,
+			borderColor: "#ccc",
+			flex: 1,
+			marginLeft: 8,
+		},
+	});
+
 	if (!stylistData) {
 		return (
 			<View style={globalStyles.box}>
@@ -65,6 +108,27 @@ const Directory = () => {
 					Stylists for You
 				</Text>
 			</View>
+			<View style={styles.container}>
+				<TextInput
+					style={styles.stateAndZipInput}
+					value={zipCode}
+					onEndEditing={setZipCode}
+					inputMode="numeric"
+					maxLength={5}
+				/>
+				<Dropdown
+					data={dropDownData}
+					value={dropDownValue}
+					labelField="label"
+					valueField="value"
+					onChange={(item) => {
+						setDropDownValue(item.value);
+					}}
+					style={styles.dropDown}
+					selectedTextStyle={styles.selectedText}
+				/>
+			</View>
+
 			<ScrollView style={globalStyles.directoryContainer}>
 				{stylistData.map((stylist) => (
 					<TouchableOpacity

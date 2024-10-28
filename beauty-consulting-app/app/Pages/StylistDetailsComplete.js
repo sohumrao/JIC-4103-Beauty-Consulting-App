@@ -20,7 +20,6 @@ function StylistDetailsComplete() {
 			gender: userContext.gender,
 			age: userContext.age,
 			phoneNumber: userContext.phoneNumber,
-			role: "stylist",
 		};
 		console.log(req.body);
 		try {
