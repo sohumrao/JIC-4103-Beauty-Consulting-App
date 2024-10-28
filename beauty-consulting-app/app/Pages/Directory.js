@@ -13,15 +13,15 @@ import StylistListing from "../components/StylistListing";
 import axios from "axios";
 import { useNavigation } from "@react-navigation/native";
 import { UserContext } from "../contexts/userContext";
-import handleHTTPError from "../errorHandling";
-import { getCityFromZIP } from "../geocoding";
+import handleHTTPError from "../errorHandling.js";
+import { getCityFromZIP } from "../geocoding.js";
 
 const Directory = () => {
 	const navigation = useNavigation();
 	var userContext = useContext(UserContext);
 	const [city, setCity] = useState("Atlanta"); //TODO: change default value once location-based search is implemented
 	var [stylistData, setStylistData] = useState(null);
-	const [zipCode, setZipCode] = useState("30332");
+	var [zipCode, setZipCode] = useState("30332");
 
 	useEffect(() => {
 		retrieveStylistData(city);
@@ -29,6 +29,11 @@ const Directory = () => {
 
 	const retrieveStylistData = async (city) => {
 		try {
+			req = {
+				username: userContext.username,
+				distance: dropDownValue,
+				city: city,
+			};
 			const apiURL =
 				process.env.EXPO_PUBLIC_API_URL +
 				":5050/client/matchStylists/" +
@@ -38,8 +43,8 @@ const Directory = () => {
 				return;
 			}
 
-			const res = await axios.get(apiURL, { params: { city: city } });
-			console.log(res.data);
+			const res = await axios.post(apiURL, req);
+			// console.log(res.data); // // clogs up console quite a bit
 			setStylistData(res.data);
 		} catch (error) {
 			handleHTTPError(error);
@@ -51,6 +56,16 @@ const Directory = () => {
 		navigation.navigate("BusinessInfoPage", {
 			stylistUsername: stylistUsername,
 		});
+	};
+
+	const refreshSearch = async () => {
+		try {
+			const locationResponse = await getCityFromZIP(zipCode);
+			setCity(locationResponse.city);
+			retrieveStylistData(city);
+		} catch (error) {
+			handleHTTPError(error);
+		}
 	};
 
 	const dropDownData = [
@@ -112,7 +127,7 @@ const Directory = () => {
 				<TextInput
 					style={styles.stateAndZipInput}
 					value={zipCode}
-					onEndEditing={setZipCode}
+					onChangeText={setZipCode}
 					inputMode="numeric"
 					maxLength={5}
 				/>
@@ -127,6 +142,12 @@ const Directory = () => {
 					style={styles.dropDown}
 					selectedTextStyle={styles.selectedText}
 				/>
+				<TouchableOpacity
+					style={globalStyles.button}
+					onPress={refreshSearch}
+				>
+					<Text style={globalStyles.buttonText}>Search</Text>
+				</TouchableOpacity>
 			</View>
 
 			<ScrollView style={globalStyles.directoryContainer}>

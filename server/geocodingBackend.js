@@ -1,6 +1,5 @@
 import axios from "axios";
-import handleHTTPError from "./errorHandling.js";
-
+import { errorHandler } from "./errors.js";
 /**
  * Handles any and all geocoding utilies.
  * Technically our API doesn't allow us to store results, so this is the compromise.
@@ -14,16 +13,17 @@ export const getCityFromZIP = async (zipCode) => {
 		const requestInfo =
 			"key=" +
 			process.env.EXPO_PUBLIC_GEOCODING_API_KEY +
-			"&location=" +
+			"location=" +
 			zipCode;
 		const request = geocodingAPI_LOOKUP_URL + requestInfo;
 		const response = await axios.get(request);
 		const data = response.data;
 		city = data.results[0].locations[0].adminArea5;
-		state = data.results[0].locations[0].adminArea3;
+		state = data.results[0].location[0].adminArea3;
+
 		return { city: city, state: state };
 	} catch (error) {
-		handleHTTPError(error);
+		errorHandler(error);
 	}
 };
 
@@ -58,7 +58,7 @@ export const validateAddress = async (address, streetPassed) => {
 			return [city != "", city + " " + state, city];
 		}
 	} catch (error) {
-		handleHTTPError(error);
+		errorHandler(error);
 		return [false, ""];
 	}
 };
@@ -74,14 +74,18 @@ export const getCoordsOfLocation = async (address) => {
 		const response = await axios.get(request);
 		const data = response.data;
 		const lat = data.results[0].locations[0].latLng.lat;
-		const long = data.results[0].locations[0].latLng.long;
+		const long = data.results[0].locations[0].latLng.lng;
 		return [true, lat, long];
 	} catch (error) {
-		handleHTTPError(error);
+		console.error(error);
+		errorHandler(error);
 		return [false, null];
 	}
 };
 
+const toRad = (value) => {
+	return (value * Math.PI) / 180;
+};
 /*
  * given two sets of latitude and longitude, calculates distance between them
  * not fully sure if it works, needs testing
@@ -92,13 +96,13 @@ export const haversineDistance = (lat1, long1, lat2, long2) => {
 	const latDiff = lat2 - lat1;
 	const longDiff = long2 - long1;
 
-	const latDiffRad = latDiff.toRad();
-	const longDiffRad = longDiff.toRad();
+	const latDiffRad = toRad(latDiff);
+	const longDiffRad = toRad(longDiff);
 
 	const lot_o_math =
 		Math.sin(latDiffRad / 2) * Math.sin(latDiffRad / 2) +
-		Math.cos(lat1.toRad()) *
-			Math.cose(lat2.toRad()) *
+		Math.cos(toRad(lat1)) *
+			Math.cos(toRad(lat2)) *
 			Math.sin(longDiffRad / 2) *
 			Math.sin(longDiffRad / 2);
 	const dist_pre_km =
