@@ -5,7 +5,7 @@ import { UserContext } from "../contexts/userContext";
 import ContinueButton from "../assets/components/ContinueButton";
 import ErrorMessage from "../components/ErrorMessage";
 
-import { getCityFromZIP, validateAddress } from "../geocoding";
+import { getCityFromZIP, validateAddress } from "../geocoding.js";
 
 const StylistDetails2 = () => {
 	const navigation = useNavigation();
@@ -19,6 +19,7 @@ const StylistDetails2 = () => {
 	const [additionalInfo, setAdditionalInfo] = useState("");
 	const [businessName, setBusinessName] = useState("");
 	const [businessAddress, setBusinessAddress] = useState("");
+	const [businessCity, setBusinessCity] = useState("");
 
 	const [message, setMessage] = useState("");
 
@@ -32,6 +33,7 @@ const StylistDetails2 = () => {
 		if (!valid) {
 			return;
 		}
+		console.log(businessCity);
 		// Update context with stylist details
 		userContext.updateUserContext({
 			...userContext, // Keep existing fields in the context (name, age, gender, etc.)
@@ -41,9 +43,10 @@ const StylistDetails2 = () => {
 				additionalInfo: additionalInfo || "",
 				name: businessName || "",
 				address: businessAddress || "",
-				city: "Atlanta", //TODO: default for now, fix when locaiton-based search implemented
+				city: businessCity,
 			},
 		});
+		console.log(userContext);
 		navigation.navigate("StylistDetails3");
 	};
 
@@ -78,11 +81,14 @@ const StylistDetails2 = () => {
 			address = zip;
 		}
 		const result = await validateAddress(address, streetOnePassed);
+		console.log(result);
 		if (!result[0]) {
 			setMessage("Error Locating Business, Try Again");
 		} else {
+			console.log("updating business unformation");
 			setMessage(null);
 			setBusinessAddress(result[1]);
+			setBusinessCity(result[2]);
 		}
 		return result[0];
 	};

@@ -20,9 +20,8 @@ function StylistDetailsComplete() {
 			gender: userContext.gender,
 			age: userContext.age,
 			phoneNumber: userContext.phoneNumber,
-			role: "stylist",
+			business: userContext.business,
 		};
-		console.log(req.body);
 		try {
 			const apiUrl = process.env.EXPO_PUBLIC_API_URL;
 			if (!apiUrl) {

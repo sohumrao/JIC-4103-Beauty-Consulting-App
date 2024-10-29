@@ -4,7 +4,7 @@ import { Stylist } from "../model/stylist.js";
 import { Account } from "../model/account.js";
 import { ConflictError, MalformedRequestError } from "../errors.js";
 import asyncHandler from "express-async-handler";
-
+import { getCoordsOfLocation, haversineDistance } from "../geocodingBackend.js";
 /**
  * This router handles user creation, updating, deletion, and photo upload services for the application.
  *
@@ -144,10 +144,11 @@ router.delete(
 );
 
 // Route to match stylists based on client's hair details and city
-router.get(
+router.post(
 	"/matchStylists/:username",
 	asyncHandler(async (req, res, next) => {
-		const { username } = req.params;
+		const username = req.body.username;
+		const distanceToSearch = req.body.distance;
 
 		// Step 1: Retrieve client details based on username
 		const client = await Client.findOne({ username });
@@ -160,8 +161,14 @@ router.get(
 		const clientHairDetails = client.hairDetails;
 
 		// Step 3: Determine city based on request body or client info
-		const { city } = req.query;
+		const city = req.body.city;
 		const cityToUse = city.trim();
+		const clientCoords = await getCoordsOfLocation(cityToUse);
+		if (!clientCoords[0]) {
+			return next(new ConflictError("Error with Client Location."));
+		}
+		const clientLat = clientCoords[1];
+		const clientLong = clientCoords[2];
 
 		if (!cityToUse) {
 			return next(
@@ -171,10 +178,45 @@ router.get(
 			);
 		}
 
-		// Step 4: Retrieve stylists from the determined city
-		const stylistsInCity = await Stylist.find({
-			"business.city": cityToUse,
-		});
+		const allStylists = await Stylist.find();
+		let stylistsInCity = [];
+
+		// Step 4: big loop to determine eligible stylists
+		for (const stylist of allStylists) {
+			console.log("next stylist");
+			if (!stylist.business.city) {
+				continue;
+			}
+			const stylistCity = stylist.business.city.trim();
+			if (stylistCity.includes("Address")) {
+				console.log("dummy account purged");
+				continue;
+			}
+			// case 1: stylists city directly matches client city
+			// lazily won't do lookup in this case
+			if (stylistCity.localeCompare(cityToUse) === 0) {
+				stylistsInCity.push(stylist);
+				continue;
+			}
+			// case 2: actually have to do some work
+			// TODO make this use more specific address once we enforce robust addresses
+			const stylistCoords = await getCoordsOfLocation(stylistCity);
+			if (!stylistCoords[0]) {
+				continue;
+			}
+			const stylistLat = stylistCoords[1];
+			const stylistLong = stylistCoords[2];
+
+			const distance = haversineDistance(
+				clientLat,
+				clientLong,
+				stylistLat,
+				stylistLong
+			);
+			if (distance < distanceToSearch) {
+				stylistsInCity.push(stylist);
+			}
+		}
 
 		// Check if there are no stylists in the specified city
 		if (!stylistsInCity || stylistsInCity.length === 0) {
