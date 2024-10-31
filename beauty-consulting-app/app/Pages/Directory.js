@@ -196,7 +196,13 @@ const Directory = () => {
 					))}
 				</ScrollView>
 			) : (
-				<ErrorMessage message={"Could not find stylist in area"} />
+				<ErrorMessage
+					message={
+						"Could not find stylist in " +
+						city +
+						". \n Try a different search."
+					}
+				/>
 			)}
 		</View>
 	);
