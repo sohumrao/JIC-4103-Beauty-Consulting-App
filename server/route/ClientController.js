@@ -188,7 +188,6 @@ router.post(
 			}
 			const stylistCity = stylist.business.city.trim();
 			if (stylistCity.includes("Address")) {
-				console.log("dummy account purged");
 				continue;
 			}
 			// case 1: stylists city directly matches client city

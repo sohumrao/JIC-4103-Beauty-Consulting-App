@@ -20,7 +20,7 @@ import ErrorMessage from "../components/ErrorMessage";
 const Directory = () => {
 	const navigation = useNavigation();
 	var userContext = useContext(UserContext);
-	const [city, setCity] = useState("Atlanta"); //TODO: change default value once location-based search is implemented
+	const [city, setCity] = useState("Atlanta"); //TODO: change default value once clients input address
 	var [stylistData, setStylistData] = useState(null);
 	var [zipCode, setZipCode] = useState("30332");
 	const [messageError, setMessageError] = useState("");
@@ -30,10 +30,10 @@ const Directory = () => {
 		retrieveStylistData(city);
 	}, [userContext.username, city]);
 
-	// TODO: figure out how to display erorr when no stylists found,
+	// TODO: figure out how to display error (city) when no stylists found,
 	const retrieveStylistData = async (city) => {
 		try {
-			req = {
+			const req = {
 				username: userContext.username,
 				distance: dropDownValue,
 				city: city,
@@ -57,7 +57,6 @@ const Directory = () => {
 	};
 
 	const handleListingPress = (stylistUsername) => {
-		console.log(stylistUsername);
 		navigation.navigate("BusinessInfoPage", {
 			stylistUsername: stylistUsername,
 		});
