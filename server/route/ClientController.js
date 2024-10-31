@@ -183,7 +183,6 @@ router.post(
 
 		// Step 4: big loop to determine eligible stylists
 		for (const stylist of allStylists) {
-			console.log("next stylist");
 			if (!stylist.business.city) {
 				continue;
 			}

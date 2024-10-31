@@ -31,7 +31,6 @@ const Directory = () => {
 	}, [userContext.username, city]);
 
 	// TODO: figure out how to display erorr when no stylists found,
-	// TODO: clear search when no stylists found
 	const retrieveStylistData = async (city) => {
 		try {
 			req = {
@@ -47,7 +46,6 @@ const Directory = () => {
 				console.error("apiURL not defined");
 				return;
 			}
-
 			setIsLoading(true);
 			const res = await axios.post(apiURL, req);
 			setIsLoading(false);
@@ -143,6 +141,7 @@ const Directory = () => {
 					onChangeText={setZipCode}
 					inputMode="numeric"
 					maxLength={5}
+					returnKeyType="done"
 				/>
 				<Dropdown
 					data={dropDownData}
@@ -198,7 +197,7 @@ const Directory = () => {
 					))}
 				</ScrollView>
 			) : (
-				<ErrorMessage message={"Could not find stylist area"} />
+				<ErrorMessage message={"Could not find stylist in area"} />
 			)}
 		</View>
 	);
