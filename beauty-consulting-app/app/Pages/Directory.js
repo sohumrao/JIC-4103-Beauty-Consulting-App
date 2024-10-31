@@ -24,6 +24,7 @@ const Directory = () => {
 	var [stylistData, setStylistData] = useState(null);
 	var [zipCode, setZipCode] = useState("30332");
 	const [messageError, setMessageError] = useState("");
+	var [isLoading, setIsLoading] = useState(true);
 
 	useEffect(() => {
 		retrieveStylistData(city);
@@ -47,11 +48,13 @@ const Directory = () => {
 				return;
 			}
 
+			setIsLoading(true);
 			const res = await axios.post(apiURL, req);
-			// console.log(res.data); // // clogs up console quite a bit
+			setIsLoading(false);
 			setStylistData(res.data);
 		} catch (error) {
-			handleHTTPError(error);
+			setIsLoading(false);
+			setStylistData(null);
 		}
 	};
 
@@ -126,19 +129,8 @@ const Directory = () => {
 			alignItems: "center",
 		},
 	});
-
-	if (!stylistData) {
-		return (
-			<View style={globalStyles.centeringContainer}>
-				<View style={globalStyles.box}>
-					<Text style={globalStyles.promptText}>Loading...</Text>
-				</View>
-			</View>
-		);
-	}
-
-	return (
-		<View style={globalStyles.container}>
+	const renderHeaderWithInputs = () => (
+		<View>
 			<View style={globalStyles.directoryHeaderContainer}>
 				<Text style={globalStyles.directoryHeaderText}>
 					Stylists for You
@@ -167,27 +159,47 @@ const Directory = () => {
 					<Text style={globalStyles.buttonText}>Refresh</Text>
 				</TouchableOpacity>
 			</View>
-
 			<ErrorMessage message={messageError} />
+		</View>
+	);
 
-			<ScrollView style={globalStyles.directoryContainer}>
-				{stylistData.map((stylist) => (
-					<TouchableOpacity
-						key={stylist.username}
-						onPress={() => handleListingPress(stylist.username)}
-					>
-						<StylistListing
-							profilePicture={stylist.profilePicture}
-							stylistName={stylist.name}
-							businessName={stylist.businessName}
-							businessAddress={stylist.businessAddress}
-							mostSimilarHairDetails={
-								stylist.mostSimilarHairDetails
-							}
-						/>
-					</TouchableOpacity>
-				))}
-			</ScrollView>
+	if (isLoading) {
+		return (
+			<View style={globalStyles.container}>
+				{renderHeaderWithInputs()}
+				<View style={globalStyles.centeringContainer}>
+					<View style={globalStyles.box}>
+						<Text style={globalStyles.promptText}>Loading...</Text>
+					</View>
+				</View>
+			</View>
+		);
+	}
+	return (
+		<View style={globalStyles.container}>
+			{renderHeaderWithInputs()}
+			{stylistData ? (
+				<ScrollView style={globalStyles.directoryContainer}>
+					{stylistData.map((stylist) => (
+						<TouchableOpacity
+							key={stylist.username}
+							onPress={() => handleListingPress(stylist.username)}
+						>
+							<StylistListing
+								profilePicture={stylist.profilePicture}
+								stylistName={stylist.name}
+								businessName={stylist.businessName}
+								businessAddress={stylist.businessAddress}
+								mostSimilarHairDetails={
+									stylist.mostSimilarHairDetails
+								}
+							/>
+						</TouchableOpacity>
+					))}
+				</ScrollView>
+			) : (
+				<ErrorMessage message={"Could not find stylist area"} />
+			)}
 		</View>
 	);
 };
