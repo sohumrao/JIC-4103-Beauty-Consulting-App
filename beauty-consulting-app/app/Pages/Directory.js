@@ -30,7 +30,6 @@ const Directory = () => {
 		retrieveStylistData(city);
 	}, [userContext.username, city]);
 
-	// TODO: figure out how to display error (city) when no stylists found,
 	const retrieveStylistData = async (city) => {
 		try {
 			const req = {
