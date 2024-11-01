@@ -183,13 +183,11 @@ router.post(
 
 		// Step 4: big loop to determine eligible stylists
 		for (const stylist of allStylists) {
-			console.log("next stylist");
 			if (!stylist.business.city) {
 				continue;
 			}
 			const stylistCity = stylist.business.city.trim();
 			if (stylistCity.includes("Address")) {
-				console.log("dummy account purged");
 				continue;
 			}
 			// case 1: stylists city directly matches client city

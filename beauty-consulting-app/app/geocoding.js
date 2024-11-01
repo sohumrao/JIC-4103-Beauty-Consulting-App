@@ -19,8 +19,8 @@ export const getCityFromZIP = async (zipCode) => {
 		const request = geocodingAPI_LOOKUP_URL + requestInfo;
 		const response = await axios.get(request);
 		const data = response.data;
-		city = data.results[0].locations[0].adminArea5;
-		state = data.results[0].locations[0].adminArea3;
+		const city = data.results[0].locations[0].adminArea5;
+		const state = data.results[0].locations[0].adminArea3;
 		return { city: city, state: state };
 	} catch (error) {
 		handleHTTPError(error);
@@ -53,8 +53,8 @@ export const validateAddress = async (address, streetPassed) => {
 			const street = data.results[0].locations[0].street;
 			return [street != "", address];
 		} else {
-			city = data.results[0].locations[0].adminArea5;
-			state = data.results[0].locations[0].adminArea3;
+			const city = data.results[0].locations[0].adminArea5;
+			const state = data.results[0].locations[0].adminArea3;
 			return [city != "", city + " " + state, city];
 		}
 	} catch (error) {

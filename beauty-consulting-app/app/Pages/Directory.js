@@ -20,20 +20,19 @@ import ErrorMessage from "../components/ErrorMessage";
 const Directory = () => {
 	const navigation = useNavigation();
 	var userContext = useContext(UserContext);
-	const [city, setCity] = useState("Atlanta"); //TODO: change default value once location-based search is implemented
+	const [city, setCity] = useState("Atlanta"); //TODO: change default value once clients input address
 	var [stylistData, setStylistData] = useState(null);
 	var [zipCode, setZipCode] = useState("30332");
 	const [messageError, setMessageError] = useState("");
+	var [isLoading, setIsLoading] = useState(true);
 
 	useEffect(() => {
 		retrieveStylistData(city);
 	}, [userContext.username, city]);
 
-	// TODO: figure out how to display erorr when no stylists found,
-	// TODO: clear search when no stylists found
 	const retrieveStylistData = async (city) => {
 		try {
-			req = {
+			const req = {
 				username: userContext.username,
 				distance: dropDownValue,
 				city: city,
@@ -46,17 +45,17 @@ const Directory = () => {
 				console.error("apiURL not defined");
 				return;
 			}
-
+			setIsLoading(true);
 			const res = await axios.post(apiURL, req);
-			// console.log(res.data); // // clogs up console quite a bit
+			setIsLoading(false);
 			setStylistData(res.data);
 		} catch (error) {
-			handleHTTPError(error);
+			setIsLoading(false);
+			setStylistData(null);
 		}
 	};
 
 	const handleListingPress = (stylistUsername) => {
-		console.log(stylistUsername);
 		navigation.navigate("BusinessInfoPage", {
 			stylistUsername: stylistUsername,
 		});
@@ -126,19 +125,8 @@ const Directory = () => {
 			alignItems: "center",
 		},
 	});
-
-	if (!stylistData) {
-		return (
-			<View style={globalStyles.centeringContainer}>
-				<View style={globalStyles.box}>
-					<Text style={globalStyles.promptText}>Loading...</Text>
-				</View>
-			</View>
-		);
-	}
-
-	return (
-		<View style={globalStyles.container}>
+	const renderHeaderWithInputs = () => (
+		<View>
 			<View style={globalStyles.directoryHeaderContainer}>
 				<Text style={globalStyles.directoryHeaderText}>
 					Stylists for You
@@ -151,6 +139,7 @@ const Directory = () => {
 					onChangeText={setZipCode}
 					inputMode="numeric"
 					maxLength={5}
+					returnKeyType="done"
 				/>
 				<Dropdown
 					data={dropDownData}
@@ -167,27 +156,53 @@ const Directory = () => {
 					<Text style={globalStyles.buttonText}>Refresh</Text>
 				</TouchableOpacity>
 			</View>
-
 			<ErrorMessage message={messageError} />
+		</View>
+	);
 
-			<ScrollView style={globalStyles.directoryContainer}>
-				{stylistData.map((stylist) => (
-					<TouchableOpacity
-						key={stylist.username}
-						onPress={() => handleListingPress(stylist.username)}
-					>
-						<StylistListing
-							profilePicture={stylist.profilePicture}
-							stylistName={stylist.name}
-							businessName={stylist.businessName}
-							businessAddress={stylist.businessAddress}
-							mostSimilarHairDetails={
-								stylist.mostSimilarHairDetails
-							}
-						/>
-					</TouchableOpacity>
-				))}
-			</ScrollView>
+	if (isLoading) {
+		return (
+			<View style={globalStyles.container}>
+				{renderHeaderWithInputs()}
+				<View style={globalStyles.centeringContainer}>
+					<View style={globalStyles.box}>
+						<Text style={globalStyles.promptText}>Loading...</Text>
+					</View>
+				</View>
+			</View>
+		);
+	}
+	return (
+		<View style={globalStyles.container}>
+			{renderHeaderWithInputs()}
+			{stylistData ? (
+				<ScrollView style={globalStyles.directoryContainer}>
+					{stylistData.map((stylist) => (
+						<TouchableOpacity
+							key={stylist.username}
+							onPress={() => handleListingPress(stylist.username)}
+						>
+							<StylistListing
+								profilePicture={stylist.profilePicture}
+								stylistName={stylist.name}
+								businessName={stylist.businessName}
+								businessAddress={stylist.businessAddress}
+								mostSimilarHairDetails={
+									stylist.mostSimilarHairDetails
+								}
+							/>
+						</TouchableOpacity>
+					))}
+				</ScrollView>
+			) : (
+				<ErrorMessage
+					message={
+						"Could not find stylist in " +
+						city +
+						". \n Try a different search."
+					}
+				/>
+			)}
 		</View>
 	);
 };
