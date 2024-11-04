@@ -6,7 +6,6 @@ import {
 	TextInput,
 	TouchableOpacity,
 	ScrollView,
-	Modal,
 } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
 import globalStyles from "../assets/GlobalStyles";
@@ -16,16 +15,17 @@ import { UserContext } from "../contexts/userContext";
 import handleHTTPError from "../errorHandling.js";
 import { getCityFromZIP } from "../geocoding.js";
 import ErrorMessage from "../components/ErrorMessage";
+import { renderAppointmentModal } from "../assets/components/appointmentModal.js";
 import moment from "moment";
 import MyCalendar from "../assets/components/Calendar";
 
 const Directory = () => {
 	var userContext = useContext(UserContext);
 	const [city, setCity] = useState("Atlanta"); // TODO: change default value once clients input address
-	var [stylistData, setStylistData] = useState(null);
-	var [zipCode, setZipCode] = useState("30332");
+	const [stylistData, setStylistData] = useState(null);
+	const [zipCode, setZipCode] = useState("30332");
 	const [messageError, setMessageError] = useState("");
-	var [isLoading, setIsLoading] = useState(true);
+	const [isLoading, setIsLoading] = useState(true);
 	const [modalVisible, setModalVisible] = useState(false);
 	const [selectedDay, setSelectedDay] = useState(false);
 
@@ -64,9 +64,8 @@ const Directory = () => {
 	 * done in this file so we don't have to pass state around
 	 */
 	const handleBookPress = (stylistUsername) => {
-		setModalVisible(!modalVisible);
+		setModalVisible(true);
 		setCurrentStylist(stylistUsername);
-		renderAppointmentModal();
 	};
 
 	const handleDaySelect = (day) => {
@@ -77,6 +76,8 @@ const Directory = () => {
 		moment().format("YYYY-MM-DD")
 	);
 	var [timeSelected, setTimeSelected] = useState("12:00:00");
+	// TODO: prevent multiple appointments being created
+	// maybe blur button / make it non interactable for that session?
 	const createAppointment = async () => {
 		try {
 			const apiURL =
@@ -98,6 +99,10 @@ const Directory = () => {
 		} catch (error) {
 			handleHTTPError(error);
 		}
+	};
+
+	const hideModal = () => {
+		setModalVisible(false);
 	};
 
 	const refreshSearch = async () => {
@@ -159,47 +164,6 @@ const Directory = () => {
 		</View>
 	);
 
-	const renderAppointmentModal = () => (
-		<Modal visible={modalVisible} transparent={false} animationType="slide">
-			<View style={globalStyles.directoryHeaderContainer}>
-				<Text style={globalStyles.directoryHeaderText}>
-					Book Appointment
-				</Text>
-			</View>
-			<View style={{ flex: 1, justifyContent: "center" }}>
-				<View style={globalStyles.box}>
-					<Text style={globalStyles.title}> CALENDAR GOES HERE</Text>
-					<MyCalendar onDaySelect={handleDaySelect} />
-				</View>
-				<View style={globalStyles.box}>
-					<Text style={globalStyles.title}>
-						{" "}
-						{selectedDay ? selectedDay : "No date selected"}
-					</Text>
-				</View>
-				<View style={globalStyles.box}>
-					<Text style={globalStyles.title}> TIMES GOES HERE</Text>
-				</View>
-				<TouchableOpacity
-					style={[globalStyles.button, { marginBottom: 10 }]}
-					onPress={() => {
-						createAppointment();
-					}}
-				>
-					<Text style={globalStyles.buttonText}> Book Time </Text>
-				</TouchableOpacity>
-				<TouchableOpacity
-					style={globalStyles.button}
-					onPress={() => {
-						setModalVisible(!modalVisible);
-					}}
-				>
-					<Text style={globalStyles.buttonText}> Go Back </Text>
-				</TouchableOpacity>
-			</View>
-		</Modal>
-	);
-
 	if (isLoading) {
 		return (
 			<View style={globalStyles.container}>
@@ -236,7 +200,12 @@ const Directory = () => {
 							</View>
 						))}
 					</ScrollView>
-					{renderAppointmentModal()}
+					{modalVisible &&
+						renderAppointmentModal(
+							modalVisible,
+							createAppointment,
+							hideModal
+						)}
 				</View>
 			) : (
 				<ErrorMessage

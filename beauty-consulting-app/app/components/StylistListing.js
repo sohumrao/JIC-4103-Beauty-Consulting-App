@@ -38,8 +38,6 @@ const StylistListing = ({
 
 	const navigation = useNavigation();
 
-	const handle = () => {};
-
 	const handleMoreInfoPress = () => {
 		navigation.navigate("BusinessInfoPage", {
 			stylistUsername: username,
