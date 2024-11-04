@@ -24,6 +24,7 @@ const StylistListing = ({
 	profilePicture,
 	mostSimilarHairDetails,
 	username,
+	handleBookingPress,
 }) => {
 	// Method to convert profile data from byte array
 	const arrayToBase64 = (byteArray) => {
@@ -76,7 +77,7 @@ const StylistListing = ({
 				</TouchableOpacity>
 				<TouchableOpacity
 					style={[globalStyles.button, { marginTop: 10 }]}
-					onPress={handle}
+					onPress={handleBookingPress}
 				>
 					<Text style={globalStyles.buttonText}>Book Now</Text>
 				</TouchableOpacity>
