@@ -10,7 +10,6 @@ import SignupBackground from "../assets/components/SignupBackground";
 
 function AppointmentsPage() {
 	const [appointments, setAppointments] = useState([
-		// Example appointments data
 		{
 			id: 1,
 			clientName: "John Doe",
@@ -68,18 +67,17 @@ const styles = StyleSheet.create({
 	container: {
 		flex: 1,
 		padding: 20,
-		// backgroundColor: "#f9f9f9", this is for debugging purposes to see the container size
-		width: "100%", // Ensure the container takes up the entire horizontal space
+		width: "100%",
 	},
 	header: {
 		fontSize: 24,
 		fontWeight: "bold",
 		textAlign: "center",
-		marginBottom: 30, // Increased margin to lower the header
-		marginTop: 40, // Added margin to provide spacing from the top
+		marginBottom: 30,
+		marginTop: 40,
 	},
 	scrollContainer: {
-		paddingBottom: 20, // Adds padding at the bottom to allow scrolling
+		paddingBottom: 20,
 	},
 	appointmentBox: {
 		backgroundColor: "#fff",
@@ -94,8 +92,7 @@ const styles = StyleSheet.create({
 		shadowRadius: 4,
 		elevation: 2,
 		width: "90%",
-		// maxWidth: 400, // Optional: Ensure it doesn't become too wide on larger screens
-		alignSelf: "center", // Center it within the container
+		alignSelf: "center",
 	},
 	clientName: {
 		fontSize: 18,

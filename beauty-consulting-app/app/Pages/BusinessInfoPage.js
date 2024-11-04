@@ -9,6 +9,7 @@ import { useNavigation } from "@react-navigation/native";
 import handleHTTPError from "../errorHandling";
 import { formatDate } from "../utils";
 import StylistServices from "../components/StylistServices";
+import SignupBackground from "../assets/components/SignupBackground";
 
 const BusinessInfoPage = (routeObject) => {
 	// Access the user context
@@ -122,6 +123,7 @@ const styles = StyleSheet.create({
 		flex: 1,
 		padding: 20,
 		backgroundColor: "#fff",
+		marginTop: 20, // temp fix to make more readable, TODO:
 	},
 	header: {
 		fontSize: 24,

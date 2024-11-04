@@ -178,10 +178,7 @@ const Directory = () => {
 			{stylistData ? (
 				<ScrollView style={globalStyles.directoryContainer}>
 					{stylistData.map((stylist) => (
-						<TouchableOpacity
-							key={stylist.username}
-							onPress={() => handleListingPress(stylist.username)}
-						>
+						<View key={stylist.username}>
 							<StylistListing
 								profilePicture={stylist.profilePicture}
 								stylistName={stylist.name}
@@ -190,8 +187,9 @@ const Directory = () => {
 								mostSimilarHairDetails={
 									stylist.mostSimilarHairDetails
 								}
+								username={stylist.username}
 							/>
-						</TouchableOpacity>
+						</View>
 					))}
 				</ScrollView>
 			) : (
