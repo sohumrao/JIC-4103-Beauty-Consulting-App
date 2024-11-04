@@ -17,6 +17,7 @@ import handleHTTPError from "../errorHandling.js";
 import { getCityFromZIP } from "../geocoding.js";
 import ErrorMessage from "../components/ErrorMessage";
 import moment from "moment";
+import MyCalendar from "../assets/components/Calendar";
 
 const Directory = () => {
 	var userContext = useContext(UserContext);
@@ -26,6 +27,7 @@ const Directory = () => {
 	const [messageError, setMessageError] = useState("");
 	var [isLoading, setIsLoading] = useState(true);
 	const [modalVisible, setModalVisible] = useState(false);
+	const [selectedDay, setSelectedDay] = useState(false);
 
 	useEffect(() => {
 		retrieveStylistData(city);
@@ -65,6 +67,10 @@ const Directory = () => {
 		setModalVisible(!modalVisible);
 		setCurrentStylist(stylistUsername);
 		renderAppointmentModal();
+	};
+
+	const handleDaySelect = (day) => {
+		setSelectedDay(day.dateString);
 	};
 
 	var [dateSelected, setDateSelected] = useState(
@@ -163,9 +169,13 @@ const Directory = () => {
 			<View style={{ flex: 1, justifyContent: "center" }}>
 				<View style={globalStyles.box}>
 					<Text style={globalStyles.title}> CALENDAR GOES HERE</Text>
+					<MyCalendar onDaySelect={handleDaySelect} />
 				</View>
 				<View style={globalStyles.box}>
-					<Text style={globalStyles.title}> DATES GOES HERE</Text>
+					<Text style={globalStyles.title}>
+						{" "}
+						{selectedDay ? selectedDay : "No date selected"}
+					</Text>
 				</View>
 				<View style={globalStyles.box}>
 					<Text style={globalStyles.title}> TIMES GOES HERE</Text>

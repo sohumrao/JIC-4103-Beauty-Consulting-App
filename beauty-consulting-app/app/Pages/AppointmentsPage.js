@@ -7,7 +7,6 @@ import {
 	TouchableOpacity,
 } from "react-native";
 import SignupBackground from "../assets/components/SignupBackground";
-import MyCalendar from "../assets/components/Calendar";
 
 function AppointmentsPage() {
 	const [appointments, setAppointments] = useState([
@@ -60,7 +59,6 @@ function AppointmentsPage() {
 					))}
 				</ScrollView>
 			</View>
-			<MyCalendar />
 		</SignupBackground>
 	);
 }
