@@ -23,6 +23,8 @@ const StylistListing = ({
 	businessAddress,
 	profilePicture,
 	mostSimilarHairDetails,
+	username,
+	handleBookingPress,
 }) => {
 	// Method to convert profile data from byte array
 	const arrayToBase64 = (byteArray) => {
@@ -32,6 +34,16 @@ const StylistListing = ({
 		const binaryString = String.fromCharCode(...uint8Array);
 		// Convert the binary string to base64
 		return btoa(binaryString);
+	};
+
+	const navigation = useNavigation();
+
+	const handle = () => {};
+
+	const handleMoreInfoPress = () => {
+		navigation.navigate("BusinessInfoPage", {
+			stylistUsername: username,
+		});
 	};
 
 	return (
@@ -57,8 +69,19 @@ const StylistListing = ({
 					Experienced with hair that is:{" "}
 					{Object.keys(mostSimilarHairDetails).join(", ")}
 				</Text>
+				<TouchableOpacity
+					style={[globalStyles.button, { marginTop: 10 }]}
+					onPress={handleMoreInfoPress}
+				>
+					<Text style={globalStyles.buttonText}>More Info</Text>
+				</TouchableOpacity>
+				<TouchableOpacity
+					style={[globalStyles.button, { marginTop: 10 }]}
+					onPress={handleBookingPress}
+				>
+					<Text style={globalStyles.buttonText}>Book Now</Text>
+				</TouchableOpacity>
 			</View>
-			<View></View>
 		</View>
 	);
 };
