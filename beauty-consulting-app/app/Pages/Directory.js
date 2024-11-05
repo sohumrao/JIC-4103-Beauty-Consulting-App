@@ -28,6 +28,8 @@ const Directory = () => {
 	const [isLoading, setIsLoading] = useState(true);
 	const [modalVisible, setModalVisible] = useState(false);
 	const [selectedDay, setSelectedDay] = useState(false);
+	const [currentStylist, setCurrentStylist] = useState(null);
+	const [stylistsBooked, setStylistsBooked] = useState([]);
 
 	useEffect(() => {
 		retrieveStylistData(city);
@@ -58,7 +60,6 @@ const Directory = () => {
 		}
 	};
 
-	const [currentStylist, setCurrentStylist] = useState(null);
 	/*
 	 * function passed to each stylist listing block
 	 * done in this file so we don't have to pass state around
@@ -98,6 +99,7 @@ const Directory = () => {
 			const res = await axios.post(apiURL, req);
 			console.log("Appointment Created!");
 			setModalVisible(false);
+			setStylistsBooked([...stylistsBooked, currentStylist]);
 		} catch (error) {
 			handleHTTPError(error);
 		}
@@ -195,6 +197,7 @@ const Directory = () => {
 										stylist.mostSimilarHairDetails
 									}
 									username={stylist.username}
+									booked={stylistsBooked}
 									handleBookingPress={() => {
 										handleBookPress(stylist.username);
 									}}

@@ -24,6 +24,7 @@ const StylistListing = ({
 	profilePicture,
 	mostSimilarHairDetails,
 	username,
+	booked,
 	handleBookingPress,
 }) => {
 	// Method to convert profile data from byte array
@@ -43,6 +44,10 @@ const StylistListing = ({
 			stylistUsername: username,
 		});
 	};
+	var bookedAlready = false;
+	if (booked) {
+		bookedAlready = booked.indexOf(username) > -1;
+	}
 
 	return (
 		<View style={globalStyles.stylistListingContainer}>
@@ -74,10 +79,16 @@ const StylistListing = ({
 					<Text style={globalStyles.buttonText}>More Info</Text>
 				</TouchableOpacity>
 				<TouchableOpacity
-					style={[globalStyles.button, { marginTop: 10 }]}
-					onPress={handleBookingPress}
+					style={[
+						globalStyles.button,
+						{ marginTop: 10 },
+						bookedAlready && { backgroundColor: "#CCC" },
+					]}
+					onPress={bookedAlready ? null : handleBookingPress}
 				>
-					<Text style={globalStyles.buttonText}>Book Now</Text>
+					<Text style={globalStyles.buttonText}>
+						{bookedAlready ? "Booked!" : "Book Now"}
+					</Text>
 				</TouchableOpacity>
 			</View>
 		</View>
