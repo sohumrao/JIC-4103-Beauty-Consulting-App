@@ -75,14 +75,18 @@ const Directory = () => {
 	var [timeSelected, setTimeSelected] = useState("12:00:00");
 	// TODO: prevent multiple appointments being created
 	// maybe blur button / make it non interactable for that session?
-	const createAppointment = async () => {
+	const createAppointment = async (date, time) => {
 		try {
+			if (!date || !time) {
+				console.error("AHHHHHH"); // TODO: handle better
+				return;
+			}
 			const apiURL =
 				process.env.EXPO_PUBLIC_API_URL + ":5050/appointment/create";
 			const req = {
 				clientUsername: userContext.username,
 				stylistUsername: currentStylist,
-				appointmentDate: dateSelected + "T" + timeSelected,
+				appointmentDate: date + "T" + time,
 				duration: 60,
 				notes: "",
 			};
@@ -93,6 +97,7 @@ const Directory = () => {
 			}
 			const res = await axios.post(apiURL, req);
 			console.log("Appointment Created!");
+			setModalVisible(false);
 		} catch (error) {
 			handleHTTPError(error);
 		}

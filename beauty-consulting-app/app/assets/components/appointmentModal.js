@@ -46,9 +46,6 @@ const AppointmentModal = ({ visible, onClose, onCreateAppointment }) => {
 					}}
 				>
 					<View style={globalStyles.box}>
-						<Text style={globalStyles.title}>
-							CALENDAR GOES HERE
-						</Text>
 						<MyCalendar onDaySelect={handleDaySelect} />
 					</View>
 					<View style={globalStyles.box}>
@@ -69,7 +66,7 @@ const AppointmentModal = ({ visible, onClose, onCreateAppointment }) => {
 											globalStyles.button,
 											{ marginVertical: 5 },
 											selectedTime === time && {
-												backgroundColor: "#FF5252",
+												backgroundColor: "#CCC",
 											},
 										]}
 										onPress={() => setSelectedTime(time)}
