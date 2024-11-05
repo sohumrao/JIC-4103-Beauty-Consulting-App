@@ -19,7 +19,6 @@ const MyCalendar = ({ onDaySelect }) => {
 				.endOf("month")
 				.format("YYYY-MM-DD")}
 			onDayPress={(day) => {
-				console.log("selected day", day);
 				setSelectedDay(day.dateString);
 				onDaySelect(day);
 			}}

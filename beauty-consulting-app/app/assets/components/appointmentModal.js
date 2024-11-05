@@ -38,75 +38,85 @@ const AppointmentModal = ({ visible, onClose, onCreateAppointment }) => {
 
 	return (
 		<Modal visible={visible} transparent={false} animationType="slide">
-			<ScrollView>
+			<View>
 				<View style={globalStyles.directoryHeaderContainer}>
 					<Text style={globalStyles.directoryHeaderText}>
 						Book Appointment
 					</Text>
 				</View>
-				<View
-					style={{
-						flex: 1,
-						justifyContent: "center",
-						alignItems: "center",
-						margin: "10px",
-					}}
-				>
-					<View style={globalStyles.box}>
-						<MyCalendar onDaySelect={handleDaySelect} />
-					</View>
-					<View style={globalStyles.box}>
-						<Text style={globalStyles.title}>
-							{selectedDay
-								? `Selected Date: ${selectedDay}`
-								: "No date selected"}
-						</Text>
-					</View>
-					<View style={globalStyles.box}>
-						<Text style={globalStyles.title}>Available Times</Text>
-						{selectedDay ? (
-							<ScrollView horizontal={true}>
-								{timeSlots.map((time) => (
-									<TouchableOpacity
-										key={time}
-										style={[
-											styles.button,
-											{ marginVertical: 5 },
-											selectedTime === time && {
-												backgroundColor: "#CCC",
-											},
-										]}
-										onPress={() => setSelectedTime(time)}
-									>
-										<Text style={globalStyles.buttonText}>
-											{time}
-										</Text>
-									</TouchableOpacity>
-								))}
-							</ScrollView>
-						) : (
-							<Text style={globalStyles.promptText}>
-								Select a date to see times
+				<ScrollView>
+					<View
+						style={{
+							flex: 1,
+							justifyContent: "center",
+							alignItems: "center",
+							margin: "10px",
+						}}
+					>
+						<View style={globalStyles.box}>
+							<MyCalendar onDaySelect={handleDaySelect} />
+						</View>
+						<View style={globalStyles.box}>
+							<Text style={globalStyles.title}>
+								{selectedDay
+									? `Selected Date: ${selectedDay}`
+									: "No date selected"}
 							</Text>
-						)}
+						</View>
+						<View style={globalStyles.box}>
+							<Text style={globalStyles.title}>
+								Available Times
+							</Text>
+							{selectedDay ? (
+								<ScrollView horizontal={true}>
+									{timeSlots.map((time) => (
+										<TouchableOpacity
+											key={time}
+											style={[
+												styles.button,
+												{ marginVertical: 5 },
+												selectedTime === time && {
+													backgroundColor: "#CCC",
+												},
+											]}
+											onPress={() =>
+												setSelectedTime(time)
+											}
+										>
+											<Text
+												style={globalStyles.buttonText}
+											>
+												{time}
+											</Text>
+										</TouchableOpacity>
+									))}
+								</ScrollView>
+							) : (
+								<Text style={globalStyles.promptText}>
+									Select a date to see times
+								</Text>
+							)}
+						</View>
+						<TouchableOpacity
+							style={[globalStyles.button, { marginBottom: 10 }]}
+							onPress={() =>
+								onCreateAppointment(selectedDay, selectedTime)
+							}
+							disabled={!selectedTime}
+						>
+							<Text style={globalStyles.buttonText}>
+								Book Time
+							</Text>
+						</TouchableOpacity>
+						<TouchableOpacity
+							style={globalStyles.button}
+							onPress={onClose}
+						>
+							<Text style={globalStyles.buttonText}>Go Back</Text>
+						</TouchableOpacity>
 					</View>
-					<TouchableOpacity
-						style={[globalStyles.button, { marginBottom: 10 }]}
-						onPress={() =>
-							onCreateAppointment(selectedDay, selectedTime)
-						}
-						disabled={!selectedTime}
-					>
-						<Text style={globalStyles.buttonText}>Book Time</Text>
-					</TouchableOpacity>
-					<TouchableOpacity
-						style={globalStyles.button}
-						onPress={onClose}
-					>
-						<Text style={globalStyles.buttonText}>Go Back</Text>
-					</TouchableOpacity>
-				</View>
-			</ScrollView>
+				</ScrollView>
+			</View>
 		</Modal>
 	);
 };
