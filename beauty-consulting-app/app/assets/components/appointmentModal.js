@@ -37,7 +37,14 @@ const AppointmentModal = ({ visible, onClose, onCreateAppointment }) => {
 						Book Appointment
 					</Text>
 				</View>
-				<View style={{ flex: 1, justifyContent: "center" }}>
+				<View
+					style={{
+						flex: 1,
+						justifyContent: "center",
+						alignItems: "center",
+						margin: "10px",
+					}}
+				>
 					<View style={globalStyles.box}>
 						<Text style={globalStyles.title}>
 							CALENDAR GOES HERE
@@ -63,7 +70,7 @@ const AppointmentModal = ({ visible, onClose, onCreateAppointment }) => {
 											{ marginVertical: 5 },
 											selectedTime === time && {
 												backgroundColor: "#FF5252",
-											}, // Highlight selected time
+											},
 										]}
 										onPress={() => setSelectedTime(time)}
 									>
@@ -84,7 +91,7 @@ const AppointmentModal = ({ visible, onClose, onCreateAppointment }) => {
 						onPress={() =>
 							onCreateAppointment(selectedDay, selectedTime)
 						}
-						disabled={!selectedTime} // Disable if no time selected
+						disabled={!selectedTime}
 					>
 						<Text style={globalStyles.buttonText}>Book Time</Text>
 					</TouchableOpacity>
