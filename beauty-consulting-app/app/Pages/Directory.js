@@ -16,8 +16,6 @@ import handleHTTPError from "../errorHandling.js";
 import { getCityFromZIP } from "../geocoding.js";
 import ErrorMessage from "../components/ErrorMessage";
 import AppointmentModal from "../assets/components/appointmentModal";
-import moment from "moment";
-import MyCalendar from "../assets/components/Calendar";
 
 const Directory = () => {
 	var userContext = useContext(UserContext);
@@ -27,7 +25,6 @@ const Directory = () => {
 	const [messageError, setMessageError] = useState("");
 	const [isLoading, setIsLoading] = useState(true);
 	const [modalVisible, setModalVisible] = useState(false);
-	const [selectedDay, setSelectedDay] = useState(false);
 	const [currentStylist, setCurrentStylist] = useState(null);
 	const [stylistsBooked, setStylistsBooked] = useState([]);
 
@@ -69,11 +66,6 @@ const Directory = () => {
 		setCurrentStylist(stylistUsername);
 	};
 
-	const handleDaySelect = (day) => {
-		setSelectedDay(day.dateString);
-	};
-
-	var [timeSelected, setTimeSelected] = useState("12:00:00");
 	// TODO: prevent multiple appointments being created
 	// maybe blur button / make it non interactable for that session?
 	const createAppointment = async (date, time) => {
@@ -96,7 +88,7 @@ const Directory = () => {
 				console.error("apiURL not defined");
 				return;
 			}
-			const res = await axios.post(apiURL, req);
+			await axios.post(apiURL, req);
 			console.log("Appointment Created!");
 			setModalVisible(false);
 			setStylistsBooked([...stylistsBooked, currentStylist]);
