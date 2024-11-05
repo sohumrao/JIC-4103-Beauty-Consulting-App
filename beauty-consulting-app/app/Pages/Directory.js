@@ -15,7 +15,7 @@ import { UserContext } from "../contexts/userContext";
 import handleHTTPError from "../errorHandling.js";
 import { getCityFromZIP } from "../geocoding.js";
 import ErrorMessage from "../components/ErrorMessage";
-import { renderAppointmentModal } from "../assets/components/appointmentModal.js";
+import AppointmentModal from "../assets/components/appointmentModal";
 import moment from "moment";
 import MyCalendar from "../assets/components/Calendar";
 
@@ -72,9 +72,6 @@ const Directory = () => {
 		setSelectedDay(day.dateString);
 	};
 
-	var [dateSelected, setDateSelected] = useState(
-		moment().format("YYYY-MM-DD")
-	);
 	var [timeSelected, setTimeSelected] = useState("12:00:00");
 	// TODO: prevent multiple appointments being created
 	// maybe blur button / make it non interactable for that session?
@@ -200,12 +197,13 @@ const Directory = () => {
 							</View>
 						))}
 					</ScrollView>
-					{modalVisible &&
-						renderAppointmentModal(
-							modalVisible,
-							createAppointment,
-							hideModal
-						)}
+					{modalVisible && (
+						<AppointmentModal
+							visible={modalVisible}
+							onClose={hideModal}
+							onCreateAppointment={createAppointment}
+						/>
+					)}
 				</View>
 			) : (
 				<ErrorMessage
