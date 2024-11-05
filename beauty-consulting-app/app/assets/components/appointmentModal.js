@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { Modal, View, Text, TouchableOpacity, ScrollView } from "react-native";
+import {
+	Modal,
+	View,
+	Text,
+	TouchableOpacity,
+	ScrollView,
+	StyleSheet,
+} from "react-native";
 import globalStyles from "../GlobalStyles";
 import MyCalendar from "./Calendar";
 
@@ -58,12 +65,12 @@ const AppointmentModal = ({ visible, onClose, onCreateAppointment }) => {
 					<View style={globalStyles.box}>
 						<Text style={globalStyles.title}>Available Times</Text>
 						{selectedDay ? (
-							<ScrollView>
+							<ScrollView horizontal={true}>
 								{timeSlots.map((time) => (
 									<TouchableOpacity
 										key={time}
 										style={[
-											globalStyles.button,
+											styles.button,
 											{ marginVertical: 5 },
 											selectedTime === time && {
 												backgroundColor: "#CCC",
@@ -104,4 +111,14 @@ const AppointmentModal = ({ visible, onClose, onCreateAppointment }) => {
 	);
 };
 
+const styles = StyleSheet.create({
+	button: {
+		backgroundColor: "#FF5252",
+		padding: 8,
+		justifyContent: "center",
+		marginHorizontal: 5,
+		marginVertical: 5,
+		borderRadius: "50%",
+	},
+});
 export default AppointmentModal;
