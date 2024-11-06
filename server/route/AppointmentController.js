@@ -170,7 +170,7 @@ router.put(
 );
 
 // Endpoint to get availability for each date in a specified month for a stylist
-router.post(
+router.get(
 	"/availability",
 	asyncHandler(async (req, res, next) => {
 		const { username, month } = req.body;
