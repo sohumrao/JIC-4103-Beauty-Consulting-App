@@ -23,6 +23,9 @@ const StylistListing = ({
 	businessAddress,
 	profilePicture,
 	mostSimilarHairDetails,
+	username,
+	booked,
+	handleBookingPress,
 }) => {
 	// Method to convert profile data from byte array
 	const arrayToBase64 = (byteArray) => {
@@ -33,6 +36,18 @@ const StylistListing = ({
 		// Convert the binary string to base64
 		return btoa(binaryString);
 	};
+
+	const navigation = useNavigation();
+
+	const handleMoreInfoPress = () => {
+		navigation.navigate("BusinessInfoPage", {
+			stylistUsername: username,
+		});
+	};
+	var bookedAlready = false;
+	if (booked) {
+		bookedAlready = booked.indexOf(username) > -1;
+	}
 
 	return (
 		<View style={globalStyles.stylistListingContainer}>
@@ -57,8 +72,25 @@ const StylistListing = ({
 					Experienced with hair that is:{" "}
 					{Object.keys(mostSimilarHairDetails).join(", ")}
 				</Text>
+				<TouchableOpacity
+					style={[globalStyles.button, { marginTop: 10 }]}
+					onPress={handleMoreInfoPress}
+				>
+					<Text style={globalStyles.buttonText}>More Info</Text>
+				</TouchableOpacity>
+				<TouchableOpacity
+					style={[
+						globalStyles.button,
+						{ marginTop: 10 },
+						bookedAlready && { backgroundColor: "#CCC" },
+					]}
+					onPress={bookedAlready ? null : handleBookingPress}
+				>
+					<Text style={globalStyles.buttonText}>
+						{bookedAlready ? "Booked!" : "Book Now"}
+					</Text>
+				</TouchableOpacity>
 			</View>
-			<View></View>
 		</View>
 	);
 };

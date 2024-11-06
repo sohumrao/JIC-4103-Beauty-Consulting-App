@@ -11,20 +11,22 @@ import { Dropdown } from "react-native-element-dropdown";
 import globalStyles from "../assets/GlobalStyles";
 import StylistListing from "../components/StylistListing";
 import axios from "axios";
-import { useNavigation } from "@react-navigation/native";
 import { UserContext } from "../contexts/userContext";
 import handleHTTPError from "../errorHandling.js";
 import { getCityFromZIP } from "../geocoding.js";
 import ErrorMessage from "../components/ErrorMessage";
+import AppointmentModal from "../assets/components/appointmentModal";
 
 const Directory = () => {
-	const navigation = useNavigation();
 	var userContext = useContext(UserContext);
-	const [city, setCity] = useState("Atlanta"); //TODO: change default value once clients input address
-	var [stylistData, setStylistData] = useState(null);
-	var [zipCode, setZipCode] = useState("30332");
+	const [city, setCity] = useState("Atlanta"); // TODO: change default value once clients input address
+	const [stylistData, setStylistData] = useState(null);
+	const [zipCode, setZipCode] = useState("30332");
 	const [messageError, setMessageError] = useState("");
-	var [isLoading, setIsLoading] = useState(true);
+	const [isLoading, setIsLoading] = useState(true);
+	const [modalVisible, setModalVisible] = useState(false);
+	const [currentStylist, setCurrentStylist] = useState(null);
+	const [stylistsBooked, setStylistsBooked] = useState([]);
 
 	useEffect(() => {
 		retrieveStylistData(city);
@@ -55,10 +57,48 @@ const Directory = () => {
 		}
 	};
 
-	const handleListingPress = (stylistUsername) => {
-		navigation.navigate("BusinessInfoPage", {
-			stylistUsername: stylistUsername,
-		});
+	/*
+	 * function passed to each stylist listing block
+	 * done in this file so we don't have to pass state around
+	 */
+	const handleBookPress = (stylistUsername) => {
+		setModalVisible(true);
+		setCurrentStylist(stylistUsername);
+	};
+
+	// TODO: prevent multiple appointments being created
+	// maybe blur button / make it non interactable for that session?
+	const createAppointment = async (date, time) => {
+		try {
+			if (!date || !time) {
+				console.error("AHHHHHH"); // TODO: handle better
+				return;
+			}
+			const apiURL =
+				process.env.EXPO_PUBLIC_API_URL + ":5050/appointment/create";
+			const req = {
+				clientUsername: userContext.username,
+				stylistUsername: currentStylist,
+				appointmentDate: date + "T" + time,
+				duration: 60,
+				notes: "",
+			};
+			console.log(req);
+			if (!apiURL) {
+				console.error("apiURL not defined");
+				return;
+			}
+			await axios.post(apiURL, req);
+			console.log("Appointment Created!");
+			setModalVisible(false);
+			setStylistsBooked([...stylistsBooked, currentStylist]);
+		} catch (error) {
+			handleHTTPError(error);
+		}
+	};
+
+	const hideModal = () => {
+		setModalVisible(false);
 	};
 
 	const refreshSearch = async () => {
@@ -85,46 +125,6 @@ const Directory = () => {
 
 	const [dropDownValue, setDropDownValue] = useState(dropDownData[0].value);
 
-	const styles = StyleSheet.create({
-		container: {
-			flexDirection: "row",
-			alignItems: "center",
-			marginBottom: 8,
-			marginTop: 8,
-		},
-		dropDown: {
-			flex: 1,
-			borderColor: "#ccc",
-			borderWidth: 1,
-			fontSize: 16,
-			padding: 10,
-			marginLeft: 8,
-			marginRight: 8,
-			borderRadius: 5,
-		},
-		selectedText: {
-			fontSize: 16,
-			color: "#000",
-		},
-		stateAndZipInput: {
-			fontSize: 16,
-			borderWidth: 1,
-			padding: 10,
-			borderRadius: 5,
-			borderColor: "#ccc",
-			flex: 1,
-			marginLeft: 8,
-		},
-		button: {
-			backgroundColor: "#FF5252",
-			paddingVertical: 10,
-			borderRadius: 5,
-			justifyContent: "center",
-			marginRight: 8,
-			padding: 10,
-			alignItems: "center",
-		},
-	});
 	const renderHeaderWithInputs = () => (
 		<View>
 			<View style={globalStyles.directoryHeaderContainer}>
@@ -176,24 +176,35 @@ const Directory = () => {
 		<View style={globalStyles.container}>
 			{renderHeaderWithInputs()}
 			{stylistData ? (
-				<ScrollView style={globalStyles.directoryContainer}>
-					{stylistData.map((stylist) => (
-						<TouchableOpacity
-							key={stylist.username}
-							onPress={() => handleListingPress(stylist.username)}
-						>
-							<StylistListing
-								profilePicture={stylist.profilePicture}
-								stylistName={stylist.name}
-								businessName={stylist.businessName}
-								businessAddress={stylist.businessAddress}
-								mostSimilarHairDetails={
-									stylist.mostSimilarHairDetails
-								}
-							/>
-						</TouchableOpacity>
-					))}
-				</ScrollView>
+				<View>
+					<ScrollView style={globalStyles.directoryContainer}>
+						{stylistData.map((stylist) => (
+							<View key={stylist.username}>
+								<StylistListing
+									profilePicture={stylist.profilePicture}
+									stylistName={stylist.name}
+									businessName={stylist.businessName}
+									businessAddress={stylist.businessAddress}
+									mostSimilarHairDetails={
+										stylist.mostSimilarHairDetails
+									}
+									username={stylist.username}
+									booked={stylistsBooked}
+									handleBookingPress={() => {
+										handleBookPress(stylist.username);
+									}}
+								/>
+							</View>
+						))}
+					</ScrollView>
+					{modalVisible && (
+						<AppointmentModal
+							visible={modalVisible}
+							onClose={hideModal}
+							onCreateAppointment={createAppointment}
+						/>
+					)}
+				</View>
 			) : (
 				<ErrorMessage
 					message={
@@ -206,5 +217,46 @@ const Directory = () => {
 		</View>
 	);
 };
+
+const styles = StyleSheet.create({
+	container: {
+		flexDirection: "row",
+		alignItems: "center",
+		marginBottom: 8,
+		marginTop: 8,
+	},
+	dropDown: {
+		flex: 1,
+		borderColor: "#ccc",
+		borderWidth: 1,
+		fontSize: 16,
+		padding: 10,
+		marginLeft: 8,
+		marginRight: 8,
+		borderRadius: 5,
+	},
+	selectedText: {
+		fontSize: 16,
+		color: "#000",
+	},
+	stateAndZipInput: {
+		fontSize: 16,
+		borderWidth: 1,
+		padding: 10,
+		borderRadius: 5,
+		borderColor: "#ccc",
+		flex: 1,
+		marginLeft: 8,
+	},
+	button: {
+		backgroundColor: "#FF5252",
+		paddingVertical: 10,
+		borderRadius: 5,
+		justifyContent: "center",
+		marginRight: 8,
+		padding: 10,
+		alignItems: "center",
+	},
+});
 
 export default Directory;
