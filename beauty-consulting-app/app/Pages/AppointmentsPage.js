@@ -1,3 +1,4 @@
+// AppointmentsPage.js
 import React, { useState, useEffect, useContext } from "react";
 import {
 	View,
@@ -27,11 +28,23 @@ function AppointmentsPage() {
 
 				const endpoint =
 					role === "client"
-						? `${apiUrl}:5050/appointments/client/${username}`
-						: `${apiUrl}:5050/appointments/stylist/${username}`;
+						? `${apiUrl}:5050/appointment/client/${username}`
+						: `${apiUrl}:5050/appointment/stylist/${username}`;
 
 				const response = await axios.get(endpoint);
-				setAppointments(response.data);
+				const fetchedAppointments = response.data;
+
+				// No need to map clientUsername and stylistUsername anymore
+				// as the backend now populates 'client' and 'stylist'
+
+				// Sort appointments by date and time
+				const sortedAppointments = fetchedAppointments.sort(
+					(a, b) =>
+						new Date(a.appointmentDate) -
+						new Date(b.appointmentDate)
+				);
+
+				setAppointments(sortedAppointments);
 			} catch (err) {
 				console.error("Error fetching appointments: ", err);
 				setError(
@@ -44,6 +57,28 @@ function AppointmentsPage() {
 
 		fetchAppointments();
 	}, [username, role]);
+
+	// Function to group appointments by date
+	const groupAppointmentsByDate = (appointments) => {
+		return appointments.reduce((groups, appointment) => {
+			const date = new Date(appointment.appointmentDate)
+				.toISOString()
+				.split("T")[0];
+			if (!groups[date]) {
+				groups[date] = [];
+			}
+			groups[date].push(appointment);
+			return groups;
+		}, {});
+	};
+
+	// Get grouped appointments
+	const groupedAppointments = groupAppointmentsByDate(appointments);
+
+	// Get sorted dates
+	const sortedDates = Object.keys(groupedAppointments).sort(
+		(a, b) => new Date(a) - new Date(b)
+	);
 
 	if (loading) {
 		return (
@@ -76,62 +111,64 @@ function AppointmentsPage() {
 							No scheduled appointments found.
 						</Text>
 					) : (
-						appointments.map((appointment) => (
-							<TouchableOpacity
-								key={appointment._id}
-								style={styles.appointmentBox}
-							>
-								{/* If populated */}
-								{appointment.clientUsername &&
-								appointment.clientUsername.info ? (
-									<Text style={styles.clientName}>
-										Client:{" "}
-										{appointment.clientUsername.info.name}
-									</Text>
-								) : (
-									<Text style={styles.clientName}>
-										Client: {appointment.clientUsername}
-									</Text>
-								)}
-								{/* If populated */}
-								{appointment.stylistUsername &&
-								appointment.stylistUsername.business ? (
-									<Text style={styles.stylistName}>
-										Stylist:{" "}
+						sortedDates.map((date) => (
+							<View key={date} style={styles.dateGroup}>
+								<Text style={styles.dateHeader}>
+									{new Date(date).toLocaleDateString(
+										undefined,
 										{
-											appointment.stylistUsername.business
-												.name
+											weekday: "long",
+											year: "numeric",
+											month: "long",
+											day: "numeric",
 										}
-									</Text>
-								) : (
-									<Text style={styles.stylistName}>
-										Stylist: {appointment.stylistUsername}
-									</Text>
+									)}
+								</Text>
+								{groupedAppointments[date].map(
+									(appointment) => (
+										<View
+											key={appointment._id}
+											style={styles.appointmentBox}
+										>
+											<Text style={styles.clientName}>
+												Client:{" "}
+												{appointment.client.info.name}
+											</Text>
+											<Text style={styles.stylistName}>
+												Stylist:{" "}
+												{appointment.stylist.info.name}
+											</Text>
+											<Text style={styles.details}>
+												Date:{" "}
+												{new Date(
+													appointment.appointmentDate
+												).toLocaleDateString()}
+											</Text>
+											<Text style={styles.details}>
+												Time:{" "}
+												{new Date(
+													appointment.appointmentDate
+												).toLocaleTimeString([], {
+													hour: "2-digit",
+													minute: "2-digit",
+												})}
+											</Text>
+											<Text style={styles.details}>
+												Duration: {appointment.duration}{" "}
+												mins
+											</Text>
+											<Text style={styles.details}>
+												Status: {appointment.status}
+											</Text>
+											{appointment.notes ? (
+												<Text style={styles.details}>
+													Notes: {appointment.notes}
+												</Text>
+											) : null}
+										</View>
+									)
 								)}
-								<Text style={styles.details}>
-									Date:{" "}
-									{new Date(
-										appointment.appointmentDate
-									).toLocaleDateString()}
-								</Text>
-								<Text style={styles.details}>
-									Time:{" "}
-									{new Date(
-										appointment.appointmentDate
-									).toLocaleTimeString()}
-								</Text>
-								<Text style={styles.details}>
-									Duration: {appointment.duration} mins
-								</Text>
-								<Text style={styles.details}>
-									Status: {appointment.status}
-								</Text>
-								{appointment.notes ? (
-									<Text style={styles.details}>
-										Notes: {appointment.notes}
-									</Text>
-								) : null}
-							</TouchableOpacity>
+							</View>
 						))
 					)}
 				</ScrollView>
@@ -156,10 +193,19 @@ const styles = StyleSheet.create({
 	scrollContainer: {
 		paddingBottom: 20,
 	},
+	dateGroup: {
+		marginBottom: 20,
+	},
+	dateHeader: {
+		fontSize: 20,
+		fontWeight: "bold",
+		marginBottom: 10,
+		color: "#333",
+	},
 	appointmentBox: {
 		backgroundColor: "#fff",
 		padding: 15,
-		marginVertical: 10,
+		marginVertical: 5,
 		borderRadius: 8,
 		borderWidth: 1,
 		borderColor: "#ddd",
@@ -168,8 +214,6 @@ const styles = StyleSheet.create({
 		shadowOpacity: 0.1,
 		shadowRadius: 4,
 		elevation: 2,
-		width: "95%",
-		alignSelf: "center",
 	},
 	clientName: {
 		fontSize: 18,
