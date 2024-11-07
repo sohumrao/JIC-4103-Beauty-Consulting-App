@@ -173,7 +173,10 @@ router.put(
 router.get(
 	"/availability",
 	asyncHandler(async (req, res, next) => {
-		const { username, month } = req.body;
+		// Extract query parameters from the request URL
+		const { username, month } = req.query;
+
+		// Validate that both parameters are provided
 		if (!username || !month) {
 			return next(
 				new MalformedRequestError(
