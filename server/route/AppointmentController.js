@@ -169,4 +169,54 @@ router.put(
 	})
 );
 
+// Endpoint to get availability for each date in a specified month for a stylist
+router.get(
+	"/availability",
+	asyncHandler(async (req, res, next) => {
+		// Extract query parameters from the request URL
+		const { username, month } = req.query;
+
+		// Validate that both parameters are provided
+		if (!username || !month) {
+			return next(
+				new MalformedRequestError(
+					"Stylist username and month are required."
+				)
+			);
+		}
+
+		const currentDate = new Date();
+		const year = currentDate.getFullYear();
+
+		// Set the start and end of the month for the query
+		const startOfMonth = new Date(year, month - 1, 1); // First day of the specified month
+		const endOfMonth = new Date(year, month, 0); // Last day of the specified month
+
+		// Check stylist's availability for each date in the entire month
+		let availability = [];
+
+		for (let day = 1; day <= endOfMonth.getDate(); day++) {
+			const currentDay = new Date(year, month - 1, day);
+
+			// Count appointments on this date
+			const appointmentCount = await Appointment.countDocuments({
+				stylistUsername: username,
+				appointmentDate: {
+					$gte: currentDay,
+					$lt: new Date(currentDay.getTime() + 24 * 60 * 60 * 1000),
+				},
+				status: "Scheduled",
+			});
+
+			// Mark date as available if fewer than 3 scheduled appointments
+			availability.push({
+				date: currentDay.toISOString().split("T")[0],
+				available: appointmentCount < 3,
+			});
+		}
+
+		res.json(availability);
+	})
+);
+
 export default router;

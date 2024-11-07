@@ -332,6 +332,31 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "Appointment Availability",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5050/appointment/availability?username=stylist123&month=10",
+					"protocol": "http",
+					"host": ["localhost"],
+					"port": "5050",
+					"path": ["appointment", "availability"],
+					"query": [
+						{
+							"key": "username",
+							"value": "stylist123"
+						},
+						{
+							"key": "month",
+							"value": "10"
+						}
+					]
+				}
+			},
+			"response": []
 		}
 	]
 }
