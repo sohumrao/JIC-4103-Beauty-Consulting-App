@@ -1,62 +1,117 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
 	View,
 	Text,
 	ScrollView,
 	StyleSheet,
 	TouchableOpacity,
+	ActivityIndicator,
 } from "react-native";
+import axios from "axios";
 import SignupBackground from "../assets/components/SignupBackground";
+import { UserContext } from "../contexts/userContext";
 
 function AppointmentsPage() {
-	const [appointments, setAppointments] = useState([
-		{
-			id: 1,
-			clientName: "John Doe",
-			date: "2024-10-10",
-			time: "10:00 AM",
-			service: "Haircut",
-		},
-		{
-			id: 2,
-			clientName: "Jane Smith",
-			date: "2024-10-11",
-			time: "12:00 PM",
-			service: "Hair Coloring",
-		},
-		{
-			id: 3,
-			clientName: "Alex Johnson",
-			date: "2024-10-12",
-			time: "02:30 PM",
-			service: "Nail Care",
-		},
-	]);
+	const [appointments, setAppointments] = useState([]);
+	const [loading, setLoading] = useState(true);
+	const [error, setError] = useState(null);
+	const { username, role } = useContext(UserContext);
+
+	useEffect(() => {
+		const fetchAppointments = async () => {
+			try {
+				const apiUrl = process.env.EXPO_PUBLIC_API_URL;
+				if (!apiUrl) {
+					throw new Error("API URL not defined");
+				}
+
+				const endpoint =
+					role === "client"
+						? `${apiUrl}:5050/client/${username}`
+						: `${apiUrl}:5050/stylist/${username}`;
+
+				const response = await axios.get(endpoint);
+				setAppointments(response.data);
+			} catch (err) {
+				console.error("Error fetching appointments: ", err);
+				setError(
+					"Failed to load appointments. Please try again later."
+				);
+			} finally {
+				setLoading(false);
+			}
+		};
+
+		fetchAppointments();
+	}, [username, role]);
+
+	if (loading) {
+		return (
+			<SignupBackground>
+				<View style={styles.loaderContainer}>
+					<ActivityIndicator size="large" color="#0000ff" />
+					<Text>Loading Appointments...</Text>
+				</View>
+			</SignupBackground>
+		);
+	}
+
+	if (error) {
+		return (
+			<SignupBackground>
+				<View style={styles.errorContainer}>
+					<Text style={styles.errorText}>{error}</Text>
+				</View>
+			</SignupBackground>
+		);
+	}
 
 	return (
 		<SignupBackground>
 			<View style={styles.container}>
 				<Text style={styles.header}>Appointments</Text>
 				<ScrollView contentContainerStyle={styles.scrollContainer}>
-					{appointments.map((appointment) => (
-						<TouchableOpacity
-							key={appointment.id}
-							style={styles.appointmentBox}
-						>
-							<Text style={styles.clientName}>
-								{appointment.clientName}
-							</Text>
-							<Text style={styles.details}>
-								Date: {appointment.date}
-							</Text>
-							<Text style={styles.details}>
-								Time: {appointment.time}
-							</Text>
-							<Text style={styles.details}>
-								Service: {appointment.service}
-							</Text>
-						</TouchableOpacity>
-					))}
+					{appointments.length === 0 ? (
+						<Text style={styles.noAppointmentsText}>
+							No scheduled appointments found.
+						</Text>
+					) : (
+						appointments.map((appointment) => (
+							<TouchableOpacity
+								key={appointment._id}
+								style={styles.appointmentBox}
+							>
+								<Text style={styles.clientName}>
+									Client:{" "}
+									{appointment.clientUsername.info.name ||
+										appointment.clientUsername}
+								</Text>
+								<Text style={styles.details}>
+									Date:{" "}
+									{new Date(
+										appointment.appointmentDate
+									).toLocaleDateString()}
+								</Text>
+								<Text style={styles.details}>
+									Time:{" "}
+									{new Date(
+										appointment.appointmentDate
+									).toLocaleTimeString()}
+								</Text>
+								<Text style={styles.details}>
+									Duration: {appointment.duration} mins
+								</Text>
+								<Text style={styles.details}>
+									Status: {appointment.status}
+								</Text>
+								{appointment.notes ? (
+									<Text style={styles.details}>
+										Notes: {appointment.notes}
+									</Text>
+								) : null}
+							</TouchableOpacity>
+						))
+					)}
 				</ScrollView>
 			</View>
 		</SignupBackground>
@@ -91,7 +146,7 @@ const styles = StyleSheet.create({
 		shadowOpacity: 0.1,
 		shadowRadius: 4,
 		elevation: 2,
-		width: "90%",
+		width: "95%",
 		alignSelf: "center",
 	},
 	clientName: {
@@ -102,6 +157,29 @@ const styles = StyleSheet.create({
 	details: {
 		fontSize: 16,
 		color: "#555",
+		marginBottom: 5,
+	},
+	loaderContainer: {
+		flex: 1,
+		justifyContent: "center",
+		alignItems: "center",
+	},
+	errorContainer: {
+		flex: 1,
+		justifyContent: "center",
+		alignItems: "center",
+		padding: 20,
+	},
+	errorText: {
+		color: "red",
+		fontSize: 16,
+		textAlign: "center",
+	},
+	noAppointmentsText: {
+		fontSize: 16,
+		color: "#555",
+		textAlign: "center",
+		marginTop: 20,
 	},
 });
 
