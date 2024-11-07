@@ -27,8 +27,8 @@ function AppointmentsPage() {
 
 				const endpoint =
 					role === "client"
-						? `${apiUrl}:5050/client/${username}`
-						: `${apiUrl}:5050/stylist/${username}`;
+						? `${apiUrl}:5050/appointments/client/${username}`
+						: `${apiUrl}:5050/appointments/stylist/${username}`;
 
 				const response = await axios.get(endpoint);
 				setAppointments(response.data);
@@ -81,11 +81,33 @@ function AppointmentsPage() {
 								key={appointment._id}
 								style={styles.appointmentBox}
 							>
-								<Text style={styles.clientName}>
-									Client:{" "}
-									{appointment.clientUsername.info.name ||
-										appointment.clientUsername}
-								</Text>
+								{/* If populated */}
+								{appointment.clientUsername &&
+								appointment.clientUsername.info ? (
+									<Text style={styles.clientName}>
+										Client:{" "}
+										{appointment.clientUsername.info.name}
+									</Text>
+								) : (
+									<Text style={styles.clientName}>
+										Client: {appointment.clientUsername}
+									</Text>
+								)}
+								{/* If populated */}
+								{appointment.stylistUsername &&
+								appointment.stylistUsername.business ? (
+									<Text style={styles.stylistName}>
+										Stylist:{" "}
+										{
+											appointment.stylistUsername.business
+												.name
+										}
+									</Text>
+								) : (
+									<Text style={styles.stylistName}>
+										Stylist: {appointment.stylistUsername}
+									</Text>
+								)}
 								<Text style={styles.details}>
 									Date:{" "}
 									{new Date(
@@ -153,6 +175,13 @@ const styles = StyleSheet.create({
 		fontSize: 18,
 		fontWeight: "bold",
 		marginBottom: 5,
+		color: "#333",
+	},
+	stylistName: {
+		fontSize: 18,
+		fontWeight: "bold",
+		marginBottom: 5,
+		color: "#333",
 	},
 	details: {
 		fontSize: 16,
