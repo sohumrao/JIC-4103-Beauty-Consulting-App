@@ -4,7 +4,6 @@ import { useNavigation } from "@react-navigation/native";
 import api from "utils/axios";
 import ContinueButton from "../assets/components/ContinueButton";
 import { UserContext } from "../contexts/userContext";
-// import globalStyles from "../assets/GlobalStyles";
 
 function StylistDetailsComplete() {
 	const navigation = useNavigation();

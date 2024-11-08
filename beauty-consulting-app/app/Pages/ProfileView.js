@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { StyleSheet, View, ScrollView } from "react-native";
+import { View, ScrollView } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { UserContext } from "../contexts/userContext";
 import SignupBackground from "../assets/components/SignupBackground";
@@ -19,33 +19,6 @@ const ProfileView = () => {
 	var [allergies, setAllergies] = useState("");
 	var [concerns, setConcerns] = useState("");
 	var [isEdit, setIsEdit] = useState(false);
-	// const [modalVisible, setModalVisible] = useState(false);
-	// var [password, setPassword] = useState("");
-	// const [errorMessage, setErrorMessage] = useState("");
-
-	// useEffect(() => {
-	// 	populateClientData(userContext.username);
-	// }, [userContext.username]);
-
-	// const populateClientData = async (username) => {
-	// 	try {
-	// 		const apiURL =
-	// 			process.env.EXPO_PUBLIC_API_URL + ":5050/client/" + username;
-	// 		if (!apiURL) {
-	// 			console.error("apiURL not defined");
-	// 			return;
-	// 		}
-
-	// 		const res = await axios.get(apiURL);
-	// 		setClientData(res.data);
-	// 		setGender(res.data.info.gender);
-	// 		setName(res.data.info.name);
-	// 		setAllergies(res.data.allergies);
-	// 		setConcerns(res.data.additionalConcerns);
-	// 	} catch (error) {
-	// 		handleHTTPError(error);
-	// 	}
-	// };
 
 	const { profilePicture } = useContext(UserContext);
 
@@ -107,79 +80,6 @@ const ProfileView = () => {
 		}
 		navigation.navigate("Sign In");
 	};
-
-	const styles = StyleSheet.create({
-		inputContainer: {
-			marginBottom: 10,
-		},
-	});
-
-	/* return (
-    <SignupBackground>
-    <View style={globalStyles.box}>
-          <View style={styles.inputContainer}>
-            <Text style={globalStyles.inputHeaderText}>Name</Text>
-            <TextInput
-              style={globalStyles.input}
-              placeholder={userContext.name}
-              placeholderTextColor={"#000"}
-              value={name}
-              onChangeText={setName}
-              editable={isEdit}
-            />
-          </View>
-
-          <View style={styles.inputContainer}>
-            <Text style={globalStyles.inputHeaderText}>Gender</Text>
-            <TextInput
-              style={globalStyles.input}
-              placeholder={userContext.gender}
-              placeholderTextColor={"#000"}
-              value={gender}
-              onChangeText={setGender}
-              editable={isEdit}
-            />
-          </View>
-
-          <View style={styles.inputContainer}>
-            <Text style={globalStyles.inputHeaderText}>Allergies</Text>
-            <TextInput
-              style={globalStyles.input}
-              placeholder={userContext.allergies}
-              placeholderTextColor={"#000"}
-              value={allergies}
-              onChangeText={setAllergies}
-              editable={isEdit}
-            />
-          </View>
-
-          <View style={styles.inputContainer}>
-            <Text style={globalStyles.inputHeaderText}>Concerns</Text>
-            <TextInput
-              style={globalStyles.input}
-              placeholder={userContext.concerns}
-              placeholderTextColor={"#000"}
-              value={concerns}
-              onChangeText={setConcerns}
-              editable={isEdit}
-            />
-          </View>
-
-        <TouchableOpacity
-          style={[globalStyles.button, { marginBottom: 15 }]}
-          onPress={handleEdit}
-        >
-          <Text style={globalStyles.buttonText}>
-            {isEdit ? "Update" : "Edit"}
-          </Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={globalStyles.button} onPress={deleteAccount}>
-          <Text style={globalStyles.buttonText}>Delete Account</Text>
-        </TouchableOpacity>
-      </View>
-    </SignupBackground>
-  ); */
 
 	return (
 		<SignupBackground>
