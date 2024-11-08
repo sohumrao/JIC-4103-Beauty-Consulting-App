@@ -3,7 +3,7 @@ import { StyleSheet, View, ScrollView } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { UserContext } from "../contexts/userContext";
 import SignupBackground from "../assets/components/SignupBackground";
-import axios from "axios";
+import api from "utils/axios";
 import AboutMeBox from "../assets/components/AboutMeBox";
 import AboutHairBox from "../assets/components/AboutHairBox";
 import ProfilePicture from "../assets/components/ProfilePicture";
@@ -56,27 +56,22 @@ const ProfileView = () => {
 		concerns = concerns != "" ? concerns : userContext.concerns;
 
 		if (isEdit) {
-			req = {
-				username: userContext.username,
-				name: name,
-				age: userContext.age,
-				gender: gender,
-				phoneNumber: userContext.phoneNumber,
-				email: userContext.email,
-				hairDetails: userContext.hairDetails,
-				allergies: allergies,
-				concerns: concerns,
-			};
 			try {
-				const apiURL =
-					process.env.EXPO_PUBLIC_API_URL +
-					":5050/client/" +
-					userContext.username;
-				if (!apiURL) {
-					console.error("apiURL not defined");
-					return;
-				}
-				const res = await axios.put(apiURL, req);
+				const req = {
+					username: userContext.username,
+					name: name,
+					age: userContext.age,
+					gender: gender,
+					phoneNumber: userContext.phoneNumber,
+					email: userContext.email,
+					hairDetails: userContext.hairDetails,
+					allergies: allergies,
+					concerns: concerns,
+				};
+				const res = await api.put(
+					`/client/${userContext.username}`,
+					req
+				);
 				console.log("update successful: ", res.data);
 			} catch (error) {
 				console.error("Error with request: ", error);
@@ -104,14 +99,7 @@ const ProfileView = () => {
 
 		try {
 			console.log(userContext);
-			const apiURL =
-				process.env.EXPO_PUBLIC_API_URL +
-				":5050/client/" +
-				userContext.username;
-			if (!apiURL) {
-				console.error("apiURL not defined");
-			}
-			const res = axios.delete(apiURL);
+			const res = api.delete(`/client/${userContext.username}`);
 			console.log(res.message);
 		} catch (error) {
 			console.error("Error with request: ", error);

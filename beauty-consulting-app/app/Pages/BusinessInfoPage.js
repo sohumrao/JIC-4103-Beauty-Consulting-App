@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { View, Text, StyleSheet, ScrollView } from "react-native";
 import { UserContext } from "../contexts/userContext";
 import globalStyles from "../assets/GlobalStyles";
-import axios from "axios";
+import api from "utils/axios";
 import { Button } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 import handleHTTPError from "utils/errorHandling";
@@ -29,14 +29,7 @@ const BusinessInfoPage = (routeObject) => {
 
 	const populateStylistData = async (username) => {
 		try {
-			const apiURL =
-				process.env.EXPO_PUBLIC_API_URL + ":5050/stylist/" + username;
-			if (!apiURL) {
-				console.error("apiURL not defined");
-				return;
-			}
-
-			const res = await axios.get(apiURL);
+			const res = await api.get(`/stylist/${username}`);
 			setStylistData(res.data);
 		} catch (error) {
 			handleHTTPError(error);

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { View, Image, Alert, TouchableOpacity, Text } from "react-native";
-import axios from "axios";
+import api from "utils/axios";
 import { launchImageLibrary } from "react-native-image-picker";
 import globalStyles from "../assets/GlobalStyles";
 import handleHTTPError from "utils/errorHandling";
@@ -34,15 +34,12 @@ const PhotoUpload = () => {
 		});
 
 		try {
-			const response = await axios.post(
-				"http://localhost:3000/upload",
-				formData,
-				{
-					headers: {
-						"Content-Type": "multipart/form-data",
-					},
-				}
-			);
+			//FIXME: not sure if this works
+			await api.post("/upload", formData, {
+				headers: {
+					"Content-Type": "multipart/form-data",
+				},
+			});
 			Alert.alert("Success", "Photo uploaded successfully!");
 		} catch (error) {
 			handleHTTPError(error, (message) =>

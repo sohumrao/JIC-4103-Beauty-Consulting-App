@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { View, Button, Image, Alert } from "react-native";
 import * as ImagePicker from "expo-image-picker";
-import axios from "axios";
+import api from "utils/axios";
 
 const ProfileImage = ({ username }) => {
 	const [imageUri, setImageUri] = useState(null);
@@ -37,13 +37,7 @@ const ProfileImage = ({ username }) => {
 				name: "profile_photo.jpg",
 			});
 
-			const apiURL =
-				process.env.EXPO_PUBLIC_API_URL + ":5050/account/photo";
-			if (!apiURL) {
-				console.error("apiURL not defined");
-				return;
-			}
-			await axios.post(apiURL, formData, {
+			await api.post("/account/photo", formData, {
 				headers: {
 					"Content-Type": "multipart/form-data",
 				},

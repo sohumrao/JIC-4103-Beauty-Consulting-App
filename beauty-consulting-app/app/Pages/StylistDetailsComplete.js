@@ -1,8 +1,7 @@
 import React, { useContext } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import axios from "axios";
-
+import api from "utils/axios";
 import ContinueButton from "../assets/components/ContinueButton";
 import { UserContext } from "../contexts/userContext";
 // import globalStyles from "../assets/GlobalStyles";
@@ -22,12 +21,7 @@ function StylistDetailsComplete() {
 			business: userContext.business,
 		};
 		try {
-			const apiUrl = process.env.EXPO_PUBLIC_API_URL;
-			if (!apiUrl) {
-				console.error("API URL not defined");
-				return;
-			}
-			const res = await axios.post(apiUrl + ":5050/stylist/", req);
+			const res = await api.post("/stylist/", req);
 			console.log("Stylist created: ", res.data);
 
 			userContext.updateUserContext({
