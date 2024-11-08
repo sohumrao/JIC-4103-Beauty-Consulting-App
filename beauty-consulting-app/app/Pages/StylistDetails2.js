@@ -4,8 +4,7 @@ import { useNavigation } from "@react-navigation/native";
 import { UserContext } from "../contexts/userContext";
 import ContinueButton from "../assets/components/ContinueButton";
 import ErrorMessage from "../components/ErrorMessage";
-
-import { validateAddress } from "../geocoding.js";
+import { validateAddress } from "utils/geocoding";
 
 const StylistDetails2 = () => {
 	const navigation = useNavigation();

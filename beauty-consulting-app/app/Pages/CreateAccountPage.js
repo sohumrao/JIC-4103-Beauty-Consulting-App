@@ -6,7 +6,7 @@ import { UserContext } from "../contexts/userContext";
 import SignupBackground from "../assets/components/SignupBackground";
 import globalStyles from "../assets/GlobalStyles";
 import ErrorMessage from "../components/ErrorMessage";
-import handleHTTPError from "../errorHandling";
+import handleHTTPError from "utils/errorHandling";
 import { createAccountSchema } from "../../../shared/schemas";
 
 const CreateAccountPage = () => {

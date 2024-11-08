@@ -6,7 +6,7 @@ import axios from "axios";
 import ContinueButton from "../assets/components/ContinueButton";
 import { UserContext } from "../contexts/userContext";
 // import globalStyles from "../assets/GlobalStyles";
-import handleHTTPError from "../errorHandling";
+import handleHTTPError from "utils/errorHandling";
 
 function ClientDetailsComplete() {
 	const navigation = useNavigation();

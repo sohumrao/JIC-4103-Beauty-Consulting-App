@@ -4,7 +4,7 @@ import { useNavigation } from "@react-navigation/native";
 import { UserContext } from "../contexts/userContext";
 import SignupBackground from "../assets/components/SignupBackground";
 import globalStyles from "../assets/GlobalStyles";
-import { formatDate } from "../utils";
+import { formatDate } from "utils/utils";
 
 function ProfilePage() {
 	const userContext = useContext(UserContext);

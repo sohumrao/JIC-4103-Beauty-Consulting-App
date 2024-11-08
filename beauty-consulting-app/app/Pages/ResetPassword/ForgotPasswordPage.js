@@ -5,7 +5,7 @@ import ErrorMessage from "../../components/ErrorMessage";
 import globalStyles from "../../assets/GlobalStyles";
 import axios from "axios";
 import { useNavigation } from "@react-navigation/native";
-import handleHTTPError from "../../errorHandling";
+import handleHTTPError from "utils/errorHandling";
 
 const ForgotPasswordPage = () => {
 	const [email, setEmail] = useState("");

@@ -12,8 +12,8 @@ import globalStyles from "../assets/GlobalStyles";
 import StylistListing from "../components/StylistListing";
 import axios from "axios";
 import { UserContext } from "../contexts/userContext";
-import handleHTTPError from "../errorHandling.js";
-import { getCityFromZIP } from "../geocoding.js";
+import handleHTTPError from "utils/errorHandling";
+import { getCityFromZIP } from "utils/geocoding";
 import ErrorMessage from "../components/ErrorMessage";
 import AppointmentModal from "../assets/components/appointmentModal";
 

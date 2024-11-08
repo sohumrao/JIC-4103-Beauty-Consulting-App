@@ -3,7 +3,7 @@ import { View, Image, Alert, TouchableOpacity, Text } from "react-native";
 import axios from "axios";
 import { launchImageLibrary } from "react-native-image-picker";
 import globalStyles from "../assets/GlobalStyles";
-import handleHTTPError from "../errorHandling";
+import handleHTTPError from "utils/errorHandling";
 
 const PhotoUpload = () => {
 	const [photo, setPhoto] = useState(null);

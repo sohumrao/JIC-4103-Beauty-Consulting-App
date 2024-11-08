@@ -7,7 +7,7 @@ import SignupBackground from "../assets/components/SignupBackground";
 import globalStyles from "../assets/GlobalStyles";
 import ErrorMessage from "../components/ErrorMessage";
 import KeyboardMove from "../assets/components/KeyboardMove";
-import handleHTTPError from "../errorHandling";
+import handleHTTPError from "utils/errorHandling";
 
 const SignInPage = () => {
 	const navigation = useNavigation();

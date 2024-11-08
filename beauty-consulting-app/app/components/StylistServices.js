@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import React, { useState } from "react";
 import axios from "axios";
-import handleHTTPError from "../errorHandling";
+import handleHTTPError from "utils/errorHandling";
 
 const StylistServices = ({ stylistData, setStylistData, editable }) => {
 	const [modalVisible, setModalVisible] = useState(false);

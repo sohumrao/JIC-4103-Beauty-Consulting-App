@@ -5,8 +5,8 @@ import globalStyles from "../assets/GlobalStyles";
 import axios from "axios";
 import { Button } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
-import handleHTTPError from "../errorHandling";
-import { formatDate } from "../utils";
+import handleHTTPError from "utils/errorHandling";
+import { formatDate } from "utils/utils";
 import StylistServices from "../components/StylistServices";
 
 const BusinessInfoPage = (routeObject) => {

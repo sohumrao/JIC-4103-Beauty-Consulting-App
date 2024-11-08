@@ -1,5 +1,5 @@
 import axios from "axios";
-import handleHTTPError from "./errorHandling.js";
+import handleHTTPError from "utils/errorHandling.js";
 
 /**
  * Handles any and all geocoding utilies.
