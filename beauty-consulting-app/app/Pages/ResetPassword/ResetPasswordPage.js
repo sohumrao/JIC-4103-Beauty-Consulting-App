@@ -1,14 +1,11 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity } from "react-native";
-import axios from "axios";
 import { useNavigation } from "@react-navigation/native";
 import SignupBackground from "../../assets/components/SignupBackground";
 import globalStyles from "../../assets/GlobalStyles";
 import ErrorMessage from "../../components/ErrorMessage";
-import handleHTTPError from "../../errorHandling";
-
-const API_URL = process.env.EXPO_PUBLIC_API_URL;
-
+import handleHTTPError from "utils/errorHandling";
+import api from "utils/axios";
 //TODO:
 // clean up error display
 // allow resending code
@@ -34,12 +31,9 @@ const ResetPasswordPage = () => {
 		}
 
 		try {
-			await axios.post(
-				`${API_URL}:5050/account/verifyResetPasswordCode`,
-				{
-					code: formData.code,
-				}
-			);
+			await api.post("/account/verifyResetPasswordCode", {
+				code: formData.code,
+			});
 			setValidCode(true);
 			setErrorMessage(""); // Clear error on success
 		} catch (error) {
@@ -59,7 +53,7 @@ const ResetPasswordPage = () => {
 		}
 
 		try {
-			await axios.post(`${API_URL}:5050/account/resetPassword`, {
+			await api.post("/account/resetPassword", {
 				code: formData.code,
 				password: formData.password,
 			});

@@ -1,23 +1,23 @@
 import axios from "axios";
-import handleHTTPError from "./errorHandling.js";
+import handleHTTPError from "utils/errorHandling.js";
 
 /**
  * Handles any and all geocoding utilies.
  * Technically our API doesn't allow us to store results, so this is the compromise.
  */
 
-const geocodingAPI_LOOKUP_URL =
-	"https://www.mapquestapi.com/geocoding/v1/address?";
+const geocodingAPI = axios.create({
+	baseURL: "https://www.mapquestapi.com/geocoding/v1/address",
+	params: {
+		key: process.env.EXPO_PUBLIC_GEOCODING_API_KEY,
+	},
+});
 
 export const getCityFromZIP = async (zipCode) => {
 	try {
-		const requestInfo =
-			"key=" +
-			process.env.EXPO_PUBLIC_GEOCODING_API_KEY +
-			"&location=" +
-			zipCode;
-		const request = geocodingAPI_LOOKUP_URL + requestInfo;
-		const response = await axios.get(request);
+		const response = await geocodingAPI.get("", {
+			params: { location: zipCode },
+		});
 		const data = response.data;
 		const city = data.results[0].locations[0].adminArea5;
 		const state = data.results[0].locations[0].adminArea3;
@@ -38,13 +38,9 @@ export const getCityFromZIP = async (zipCode) => {
  */
 export const validateAddress = async (address, streetPassed) => {
 	try {
-		const requestInfo =
-			"key=" +
-			process.env.EXPO_PUBLIC_GEOCODING_API_KEY +
-			"&location=" +
-			address;
-		const request = geocodingAPI_LOOKUP_URL + requestInfo;
-		const response = await axios.get(request);
+		const response = await geocodingAPI.get("", {
+			params: { location: address },
+		});
 		const data = response.data;
 		if (streetPassed) {
 			// TODO: make this more robust in terms of matching,
@@ -65,13 +61,9 @@ export const validateAddress = async (address, streetPassed) => {
 
 export const getCoordsOfLocation = async (address) => {
 	try {
-		const requestInfo =
-			"key=" +
-			process.env.EXPO_PUBLIC_GEOCODING_API_KEY +
-			"&location=" +
-			address;
-		const request = geocodingAPI_LOOKUP_URL + requestInfo;
-		const response = await axios.get(request);
+		const response = await geocodingAPI.get("", {
+			params: { location: address },
+		});
 		const data = response.data;
 		const lat = data.results[0].locations[0].latLng.lat;
 		const long = data.results[0].locations[0].latLng.long;

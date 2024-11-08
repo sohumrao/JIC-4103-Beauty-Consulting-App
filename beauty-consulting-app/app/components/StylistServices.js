@@ -8,8 +8,8 @@ import {
 	StyleSheet,
 } from "react-native";
 import React, { useState } from "react";
-import axios from "axios";
-import handleHTTPError from "../errorHandling";
+import handleHTTPError from "utils/errorHandling";
+import api from "utils/axios";
 
 const StylistServices = ({ stylistData, setStylistData, editable }) => {
 	const [modalVisible, setModalVisible] = useState(false);
@@ -32,8 +32,10 @@ const StylistServices = ({ stylistData, setStylistData, editable }) => {
 
 	const handleUpdateService = async () => {
 		try {
-			const apiURL = `${process.env.EXPO_PUBLIC_API_URL}:5050/stylist/service/${stylistData.username}`;
-			const editedService = await axios.put(apiURL, editingService);
+			const editedService = await api.put(
+				`/stylist/service/${stylistData.username}`,
+				editingService
+			);
 
 			// Update local state
 			const updatedServices = stylistData.business.services.map(
@@ -58,8 +60,10 @@ const StylistServices = ({ stylistData, setStylistData, editable }) => {
 
 	const handleAddService = async () => {
 		try {
-			const apiURL = `${process.env.EXPO_PUBLIC_API_URL}:5050/stylist/service/${stylistData.username}`;
-			const response = await axios.post(apiURL, newService);
+			const response = await api.post(
+				`/stylist/service/${stylistData.username}`,
+				newService
+			);
 
 			// Update local state
 			setStylistData({
@@ -85,8 +89,9 @@ const StylistServices = ({ stylistData, setStylistData, editable }) => {
 		if (!serviceToDelete) return;
 
 		try {
-			const apiURL = `${process.env.EXPO_PUBLIC_API_URL}:5050/stylist/service/${stylistData.username}`;
-			await axios.delete(apiURL, { data: { _id: serviceToDelete._id } });
+			await api.delete(`/stylist/service/${stylistData.username}`, {
+				data: { _id: serviceToDelete._id },
+			});
 
 			// Update local state
 			setStylistData({

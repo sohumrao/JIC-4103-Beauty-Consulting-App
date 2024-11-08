@@ -9,7 +9,6 @@ import {
 	ClientDetails2,
 	ClientDetails3,
 	ClientDetailsComplete,
-	ProfilePage,
 	SignInPage,
 	CreateAccountPage,
 	ProfileView,
@@ -55,24 +54,6 @@ function StylistDetailsStack() {
 		</Stack.Navigator>
 	);
 }
-
-// function MainTabNavigator() {
-// 	const { role } = useContext(UserContext);
-
-// 	return (
-// 		<Tab.Navigator screenOptions={{ headerShown: false }}>
-// 			{role === "client" ? (
-// 				<Tab.Screen name="ProfileView" component={ProfileView} />
-// 			) : (
-// 				<Tab.Screen
-// 					name="BusinessInfoPage"
-// 					component={BusinessInfoPage}
-// 				/>
-// 			)}
-// 			<Tab.Screen name="Profile" component={ProfilePage} />
-// 		</Tab.Navigator>
-// 	);
-// }
 
 function MainTabNavigator() {
 	const { role } = useContext(UserContext);

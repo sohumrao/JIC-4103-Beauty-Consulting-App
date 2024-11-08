@@ -1,6 +1,5 @@
 import express from "express";
 import cors from "cors";
-import mongoose from "mongoose";
 
 import connectDB from "./db/connection.js";
 import stylistController from "./route/StylistController.js";
@@ -14,13 +13,8 @@ import { errorHandler } from "./errors.js";
 const PORT = process.env.PORT || 5050;
 const app = express();
 
-connectDB();
 // MongoDB Connection
-const db = mongoose.connection;
-db.on("error", console.error.bind(console, "MongoDB connection error:"));
-db.once("open", function () {
-	console.log("MongoDB connection is open");
-});
+connectDB();
 
 // Middleware setup
 app.use(cors());

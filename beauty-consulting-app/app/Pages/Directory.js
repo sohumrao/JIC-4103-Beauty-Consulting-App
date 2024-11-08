@@ -10,10 +10,10 @@ import {
 import { Dropdown } from "react-native-element-dropdown";
 import globalStyles from "../assets/GlobalStyles";
 import StylistListing from "../components/StylistListing";
-import axios from "axios";
+import api from "utils/axios";
 import { UserContext } from "../contexts/userContext";
-import handleHTTPError from "../errorHandling.js";
-import { getCityFromZIP } from "../geocoding.js";
+import handleHTTPError from "utils/errorHandling";
+import { getCityFromZIP } from "utils/geocoding";
 import ErrorMessage from "../components/ErrorMessage";
 import AppointmentModal from "../assets/components/appointmentModal";
 
@@ -39,19 +39,15 @@ const Directory = () => {
 				distance: dropDownValue,
 				city: city,
 			};
-			const apiURL =
-				process.env.EXPO_PUBLIC_API_URL +
-				":5050/client/matchStylists/" +
-				userContext.username;
-			if (!apiURL) {
-				console.error("apiURL not defined");
-				return;
-			}
 			setIsLoading(true);
-			const res = await axios.post(apiURL, req);
+			const res = await api.post(
+				`/client/matchStylists/${userContext.username}`,
+				req
+			);
 			setIsLoading(false);
 			setStylistData(res.data);
 		} catch (error) {
+			handleHTTPError(error);
 			setIsLoading(false);
 			setStylistData(null);
 		}
@@ -74,8 +70,6 @@ const Directory = () => {
 				console.error("AHHHHHH"); // TODO: handle better
 				return;
 			}
-			const apiURL =
-				process.env.EXPO_PUBLIC_API_URL + ":5050/appointment/create";
 			const req = {
 				clientUsername: userContext.username,
 				stylistUsername: currentStylist,
@@ -84,11 +78,7 @@ const Directory = () => {
 				notes: "",
 			};
 			console.log(req);
-			if (!apiURL) {
-				console.error("apiURL not defined");
-				return;
-			}
-			await axios.post(apiURL, req);
+			await api.post("/appointment/create", req);
 			console.log("Appointment Created!");
 			setModalVisible(false);
 			setStylistsBooked([...stylistsBooked, currentStylist]);

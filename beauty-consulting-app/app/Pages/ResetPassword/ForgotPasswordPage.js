@@ -3,9 +3,9 @@ import { Text, View, TextInput, TouchableOpacity } from "react-native";
 import SignupBackground from "../../assets/components/SignupBackground";
 import ErrorMessage from "../../components/ErrorMessage";
 import globalStyles from "../../assets/GlobalStyles";
-import axios from "axios";
+import api from "utils/axios";
 import { useNavigation } from "@react-navigation/native";
-import handleHTTPError from "../../errorHandling";
+import handleHTTPError from "utils/errorHandling";
 
 const ForgotPasswordPage = () => {
 	const [email, setEmail] = useState("");
@@ -15,15 +15,7 @@ const ForgotPasswordPage = () => {
 	const handleForgotPassword = async () => {
 		const req = { email: email };
 		try {
-			const apiUrl = process.env.EXPO_PUBLIC_API_URL;
-			if (!apiUrl) {
-				console.error("API URL not defined");
-				return;
-			}
-			const res = await axios.post(
-				apiUrl + ":5050/account/emailResetPasswordCode",
-				req
-			);
+			await api.post("/account/emailResetPasswordCode", req);
 			setErrorMessage("");
 			navigation.navigate("Reset Password");
 		} catch (error) {

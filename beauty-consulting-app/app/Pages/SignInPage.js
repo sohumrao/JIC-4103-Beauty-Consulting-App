@@ -1,13 +1,13 @@
 import React, { useContext, useState } from "react";
 import { View, TextInput, Text, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import axios from "axios";
+import api from "utils/axios";
 import { UserContext } from "../contexts/userContext";
 import SignupBackground from "../assets/components/SignupBackground";
 import globalStyles from "../assets/GlobalStyles";
 import ErrorMessage from "../components/ErrorMessage";
 import KeyboardMove from "../assets/components/KeyboardMove";
-import handleHTTPError from "../errorHandling";
+import handleHTTPError from "utils/errorHandling";
 
 const SignInPage = () => {
 	const navigation = useNavigation();
@@ -21,17 +21,8 @@ const SignInPage = () => {
 
 	const handleSignIn = async () => {
 		//NOTE: I think it's ok to not do any frontend validation for sign in
-		const apiUrl = process.env.EXPO_PUBLIC_API_URL;
-		if (!apiUrl) {
-			console.error("API URL not defined");
-			return;
-		}
-
 		try {
-			const res = await axios.post(
-				apiUrl + ":5050/account/signIn",
-				formData
-			);
+			const res = await api.post("/account/signIn", formData);
 			setError("");
 			console.log("Sign in successful: " + res.data);
 		} catch (error) {
@@ -42,9 +33,8 @@ const SignInPage = () => {
 		let userProfileDataExists = false;
 
 		try {
-			const clientRes = await axios.get(
-				apiUrl + ":5050/client/" + formData.username
-			);
+			// FIXME: should use data from database
+			const clientRes = await api.get(`/client/${formData.username}`);
 			userProfileDataExists = true;
 			userContext.updateUserContext({
 				username: formData.username,
@@ -58,8 +48,9 @@ const SignInPage = () => {
 
 		if (!userProfileDataExists) {
 			try {
-				const stylistRes = await axios.get(
-					apiUrl + ":5050/stylist/" + formData.username
+				// FIXME: should use data from database
+				const stylistRes = await api.get(
+					`/stylist/${formData.username}`
 				);
 				userProfileDataExists = true;
 				userContext.updateUserContext({

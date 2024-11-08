@@ -12,7 +12,7 @@ import AgeIcon from "../images/birthday-cake.svg";
 import PhoneIcon from "../images/phone-call.svg";
 import EmailIcon from "../images/email.svg";
 import GenderIcon from "../images/genders.svg";
-import axios from "axios";
+import api from "utils/axios";
 
 const AboutMeBox = ({ userContext, onUpdateUser }) => {
 	const [isEdit, setIsEdit] = useState(false);
@@ -32,13 +32,12 @@ const AboutMeBox = ({ userContext, onUpdateUser }) => {
 
 	const handleSave = async () => {
 		try {
-			const apiURL = `${process.env.EXPO_PUBLIC_API_URL}:5050/client/${userContext.username}`;
 			const updatedData = {
 				...fieldValues,
 				username: userContext.username,
 			};
 
-			await axios.put(apiURL, updatedData);
+			await api.put(`client/${userContext.username}`, updatedData);
 			console.log("Update successful");
 
 			onUpdateUser(updatedData); // Update the user context
