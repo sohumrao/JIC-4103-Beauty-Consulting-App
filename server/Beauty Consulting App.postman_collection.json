@@ -143,30 +143,6 @@
 			"response": []
 		},
 		{
-			"name": "Generate Dummy Data",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:5050/create-data/autogenerate-stylists",
-					"protocol": "http",
-					"host": ["localhost"],
-					"port": "5050",
-					"path": ["create-data", "autogenerate-stylists"]
-				}
-			},
-			"response": []
-		},
-		{
 			"name": "Create Account",
 			"request": {
 				"method": "POST",
