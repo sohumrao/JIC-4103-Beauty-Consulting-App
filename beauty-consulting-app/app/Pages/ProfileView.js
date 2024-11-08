@@ -1,24 +1,12 @@
 import React, { useContext, useState } from "react";
-import {
-	StyleSheet,
-	Text,
-	View,
-	TextInput,
-	TouchableOpacity,
-	ScrollView,
-	Modal,
-	Touchable,
-} from "react-native";
-import { Link, useNavigation } from "@react-navigation/native";
+import { StyleSheet, View, ScrollView } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 import { UserContext } from "../contexts/userContext";
 import SignupBackground from "../assets/components/SignupBackground";
-import globalStyles from "../assets/GlobalStyles";
 import axios from "axios";
 import AboutMeBox from "../assets/components/AboutMeBox";
 import AboutHairBox from "../assets/components/AboutHairBox";
 import ProfilePicture from "../assets/components/ProfilePicture";
-import ProfileImage from "../assets/components/ProfileImage";
-import handleHTTPError from "../errorHandling";
 
 const ProfileView = () => {
 	const navigation = useNavigation();

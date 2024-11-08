@@ -1,5 +1,5 @@
 import React from "react";
-import { ImageBackground, StyleSheet, View, Text } from "react-native";
+import { ImageBackground, StyleSheet, View } from "react-native";
 
 const SignupBackground = ({ children }) => {
 	return (

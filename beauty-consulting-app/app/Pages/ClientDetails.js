@@ -1,9 +1,6 @@
-import { StatusBar } from "expo-status-bar";
 import React, { useState, useContext } from "react";
 import { StyleSheet, Text, View } from "react-native";
-import { KeyboardAvoidingView } from "react-native";
 import { TextInput } from "react-native";
-import { TouchableOpacity } from "react-native";
 import { ScrollView } from "react-native";
 import { RadioButton } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";

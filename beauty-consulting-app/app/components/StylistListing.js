@@ -1,21 +1,7 @@
-import React, { useContext, useEffect, useState } from "react";
-import {
-	StyleSheet,
-	Text,
-	View,
-	TextInput,
-	TouchableOpacity,
-	Image,
-	Pressable,
-	Button,
-} from "react-native";
-import { Card } from "react-native-paper";
-import { Link, useNavigation } from "@react-navigation/native";
-import { UserContext } from "../contexts/userContext";
-import SignupBackground from "../assets/components/SignupBackground";
+import React from "react";
+import { Text, View, TouchableOpacity, Image } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 import globalStyles from "../assets/GlobalStyles";
-import axios from "axios";
-import ContinueButton from "../assets/components/ContinueButton";
 
 const StylistListing = ({
 	stylistName,

@@ -9,7 +9,6 @@ import {
 	ClientDetails2,
 	ClientDetails3,
 	ClientDetailsComplete,
-	ProfilePage,
 	SignInPage,
 	CreateAccountPage,
 	ProfileView,

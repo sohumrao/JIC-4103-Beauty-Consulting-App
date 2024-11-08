@@ -1,13 +1,8 @@
-import { StatusBar } from "expo-status-bar";
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
-import { Button } from "react-native";
-import { BrowserRouter, Route, Switch } from "react-router-dom";
+import { StyleSheet, View } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Image } from "react-native";
 
-import ClientDetails from "./ClientDetails";
-import StylistDetails from "./StylistDetails";
 import ContinueButton from "../assets/components/ContinueButton";
 import LandingPageImg from "../assets/images/LandingPageImg.png";
 import SignupBackground from "../assets/components/SignupBackground";
