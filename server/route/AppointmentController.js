@@ -64,8 +64,10 @@ router.post(
 
 		const savedAppointment = await newAppointment.save();
 
-		// Populate client and stylist details before sending the response
-		await savedAppointment
+		// Populate client and stylist details
+		const populatedAppointment = await Appointment.findById(
+			savedAppointment._id
+		)
 			.populate("client", "info.name")
 			.populate("stylist", "info.name");
 

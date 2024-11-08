@@ -1,6 +1,6 @@
 import React from "react";
 import { Image, View, StyleSheet } from "react-native";
-import DefaultProfilePicture from "../images/profile-user.svg";
+import DefaultProfilePicture from "../images/profile-user.svg"; // Ensure this path is correct
 
 const ProfilePicture = ({ picture }) => {
 	return (
@@ -24,14 +24,17 @@ const ProfilePicture = ({ picture }) => {
 
 const styles = StyleSheet.create({
 	container: {
-		position: "absolute",
+		// Adjust container styles as needed
 	},
 	profileImage: {
 		width: 160,
 		height: 160,
-		borderRadius: 90,
+		borderRadius: 80, // Make it circular
 		borderWidth: 2,
 		borderColor: "#000",
+	},
+	defaultProfileImage: {
+		// Styles for the default SVG if needed
 	},
 });
 

@@ -17,12 +17,7 @@ const ClientSchema = new mongoose.Schema({
 	},
 	allergies: String,
 	additionalConcerns: { type: String },
-	//TODO: refactor this with frontend
-	// hairDetails: {
-	//     type: { type: String, required: true },
-	//     texture: { type: String, required: true },
-	//     history: [TreatmentSchema],
-	// },
+	profilePhoto: { type: mongoose.Schema.Types.ObjectId, ref: "Photo" }, // Reference to Photo
 });
 
 const Client = Account.discriminator("Client", ClientSchema);
