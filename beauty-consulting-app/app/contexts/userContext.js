@@ -1,3 +1,4 @@
+// userContext.js
 import React, { useState } from "react";
 
 const UserContext = React.createContext();
@@ -45,6 +46,7 @@ const UserContextProvider = ({ children }) => {
 				Thick: false,
 			},
 		},
+		profilePhoto: null, // Add this field
 	});
 
 	const updateUserContext = (newContext) => {

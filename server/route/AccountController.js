@@ -8,6 +8,7 @@ import mongoose from "mongoose";
 import sharp from "sharp";
 import heicConvert from "heic-convert";
 import multer from "multer";
+import { Photo } from "../model/photo.js";
 
 import {
 	ConflictError,
@@ -269,15 +270,20 @@ router.post(
 			.jpeg({ quality: 50 }) // Adjust compression level
 			.toBuffer();
 
+		// Create a new Photo document
+		const newPhoto = new Photo({
+			data: compressedPhoto,
+			contentType: "image/jpeg",
+			uploadedAt: new Date(),
+		});
+
+		const savedPhoto = await newPhoto.save();
+
 		// Update the profilePhoto field in the Account schema
 		const updatedAccount = await Account.findOneAndUpdate(
 			{ username: req.body.username },
 			{
-				profilePhoto: {
-					data: compressedPhoto,
-					contentType: "image/jpeg",
-					uploadedAt: new Date(),
-				},
+				profilePhoto: savedPhoto._id, // Reference to Photo
 			},
 			{ new: true }
 		);
@@ -297,10 +303,10 @@ router.post(
 router.get(
 	"/:username/photo",
 	asyncHandler(async (req, res, next) => {
-		// Fetch the account from the database by username
+		// Fetch the account from the database by username and populate profilePhoto
 		const account = await Account.findOne({
 			username: req.params.username,
-		});
+		}).populate("profilePhoto");
 
 		if (!account || !account.profilePhoto || !account.profilePhoto.data) {
 			return next(

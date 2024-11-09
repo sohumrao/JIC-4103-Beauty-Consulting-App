@@ -16,7 +16,7 @@ const AccountSchema = new Schema({
 		gender: String,
 		phoneNumber: String,
 	},
-	profilePhoto: PhotoSchema,
+	profilePhoto: { type: mongoose.Schema.Types.ObjectId, ref: "Photo" },
 	// authToken: JWT token
 	// resetToken: JWT token
 });

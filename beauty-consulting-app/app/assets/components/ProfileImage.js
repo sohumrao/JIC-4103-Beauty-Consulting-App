@@ -1,10 +1,19 @@
-import React, { useState } from "react";
-import { View, Button, Image, Alert } from "react-native";
+import React, { useState, useContext } from "react";
+import {
+	View,
+	TouchableOpacity,
+	Text,
+	Image,
+	Alert,
+	StyleSheet,
+} from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import api from "utils/axios";
+import { UserContext } from "../../contexts/userContext"; // Adjust the path as necessary
 
 const ProfileImage = ({ username }) => {
 	const [imageUri, setImageUri] = useState(null);
+	const userContext = useContext(UserContext); // Access UserContext
 
 	const pickImage = async () => {
 		const permissionResult =
@@ -22,8 +31,9 @@ const ProfileImage = ({ username }) => {
 		});
 
 		if (!result.canceled) {
-			setImageUri(result.assets[0].uri);
-			uploadImage(result.assets[0].uri);
+			const selectedUri = result.assets[0].uri;
+			setImageUri(selectedUri);
+			uploadImage(selectedUri);
 		}
 	};
 
@@ -33,7 +43,7 @@ const ProfileImage = ({ username }) => {
 			formData.append("username", username);
 			formData.append("photo", {
 				uri: uri,
-				type: "image/jpeg", // Use the correct MIME type if known
+				type: "image/jpeg",
 				name: "profile_photo.jpg",
 			});
 
@@ -43,7 +53,7 @@ const ProfileImage = ({ username }) => {
 				},
 			});
 
-			Alert.alert("Success", "Photo uploaded successfully!");
+			fetchProfilePicture();
 		} catch (error) {
 			console.error(
 				"Error uploading image: ",
@@ -56,22 +66,64 @@ const ProfileImage = ({ username }) => {
 		}
 	};
 
+	const fetchProfilePicture = async () => {
+		try {
+			const response = await api.get(`/account/${username}/photo`, {
+				responseType: "arraybuffer",
+			});
+
+			const base64 = Buffer.from(response.data, "binary").toString(
+				"base64"
+			);
+			const contentType = response.headers["content-type"];
+			const dataUri = `data:${contentType};base64,${base64}`;
+
+			userContext.updateUserContext({
+				profilePhoto: dataUri,
+			});
+		} catch (error) {
+			// console.error("Error fetching updated profile picture:", error);
+		}
+	};
+
 	return (
-		<View style={{ alignItems: "center", justifyContent: "center" }}>
-			<Button title="Upload Profile Picture" onPress={pickImage} />
+		<View style={styles.container}>
+			<TouchableOpacity style={styles.uploadButton} onPress={pickImage}>
+				<Text style={styles.uploadButtonText}>
+					Upload Profile Picture
+				</Text>
+			</TouchableOpacity>
 			{imageUri && (
-				<Image
-					source={{ uri: imageUri }}
-					style={{
-						width: 200,
-						height: 200,
-						borderRadius: 100,
-						marginTop: 20,
-					}}
-				/>
+				<Image source={{ uri: imageUri }} style={styles.image} />
 			)}
 		</View>
 	);
 };
+
+const styles = StyleSheet.create({
+	container: {
+		marginTop: -200,
+		alignItems: "center",
+	},
+	image: {
+		width: 200,
+		height: 200,
+		borderRadius: 100,
+		marginTop: 20,
+	},
+	uploadButton: {
+		backgroundColor: "#2196F3", // Blue color
+		padding: 10,
+		borderRadius: 5,
+		marginTop: 10,
+		alignItems: "center",
+		width: "80%", // Make button uniform in width
+	},
+	uploadButtonText: {
+		color: "#FFFFFF",
+		fontSize: 16,
+		fontWeight: "bold",
+	},
+});
 
 export default ProfileImage;

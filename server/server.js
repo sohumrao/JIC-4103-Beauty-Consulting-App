@@ -1,3 +1,4 @@
+// server.js
 import express from "express";
 import cors from "cors";
 
@@ -28,7 +29,6 @@ app.use("/create-data", createDataController);
 app.use("/appointment", appointmentController);
 
 // Throw 404 if no routes were visited
-// Any forwarded errors won't visit this function this function only has 3 arguments
 app.use(function (req, res, next) {
 	var err = new Error("Not Found");
 	err.status = 404;

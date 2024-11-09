@@ -75,10 +75,10 @@ router.get(
 			);
 		}
 
-		// Find user data for username
+		// Find user data for username and populate profilePhoto
 		const user = await Stylist.findOne({
 			username: req.params.username,
-		});
+		}).populate("profilePhoto"); // Add populate
 
 		// Check if user exists
 		if (!user) {

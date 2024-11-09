@@ -86,10 +86,10 @@ router.get(
 			);
 		}
 
-		// Find user data for usernameg
+		// Find user data for username and populate profilePhoto
 		const user = await Client.findOne({
 			username: req.params.username,
-		});
+		}).populate("profilePhoto"); // Add populate
 
 		// Check if user exists
 		if (!user) {
