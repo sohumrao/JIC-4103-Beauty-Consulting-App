@@ -12,6 +12,7 @@ import api from "utils/axios";
 import handleHTTPError from "utils/errorHandling";
 import ErrorMessage from "../components/ErrorMessage";
 import { formatDate, formatTime } from "utils/utils";
+import AppointmentBlock from "../components/appointmentBlock";
 
 function AppointmentsPage() {
 	const userContext = useContext(UserContext);
@@ -45,22 +46,18 @@ function AppointmentsPage() {
 				<ScrollView contentContainerStyle={styles.scrollContainer}>
 					<ErrorMessage message={errorMessage} />
 					{appointments.map((appointment) => (
-						<TouchableOpacity
-							key={appointment._id}
-							style={styles.appointmentBox}
-						>
-							<Text style={styles.name}>
-								{userContext.role === "stylist"
-									? appointment.clientUsername
-									: appointment.stylistUsername}
-							</Text>
-							<Text style={styles.details}>
-								Date: {formatDate(appointment.appointmentDate)}
-							</Text>
-							<Text style={styles.details}>
-								Time: {formatTime(appointment.appointmentDate)}
-							</Text>
-						</TouchableOpacity>
+						<View key={appointment._id}>
+							<AppointmentBlock
+								name={
+									userContext.role === "stylist"
+										? appointment.clientUsername
+										: appointment.stylistUsername
+								}
+								date={formatDate(appointment.appointmentDate)}
+								time={formatTime(appointment.appointmentDate)}
+								cancelAppointment={null}
+							/>
+						</View>
 					))}
 				</ScrollView>
 			</View>
