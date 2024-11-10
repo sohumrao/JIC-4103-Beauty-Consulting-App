@@ -288,9 +288,9 @@ router.post(
 		const savedAppointment = await newAppointment.save();
 
 		// Populate client and stylist details before sending the response
-		await savedAppointment
-			.populate("client", "info.name")
-			.populate("stylist", "info.name");
+		// await savedAppointment
+		// 	.populate("client", "info.name")
+		// 	.populate("stylist", "info.name");
 
 		res.status(201).json(savedAppointment);
 	})
@@ -346,8 +346,8 @@ router.get(
 			stylist: stylist._id,
 			status: "Scheduled",
 		})
-			.populate("client", "info.name") // Populate client name
-			.populate("stylist", "info.name"); // Populate stylist name
+			.populate("client", ["info.name", "username"]) // Populate client name
+			.populate("stylist", ["info.name", "username"]); // Populate stylist name
 
 		// Remove the ConflictError for no appointments
 		// if (appointments.length === 0) {
