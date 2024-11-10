@@ -71,7 +71,9 @@ function MainTabNavigator() {
 					component={BusinessInfoPage}
 				/>
 			)}
-			<Tab.Screen name="Directory" component={Directory} />
+			{role === "client" && (
+				<Tab.Screen name="Directory" component={Directory} />
+			)}
 			<Tab.Screen name="Appointments" component={AppointmentsPage} />
 			<Tab.Screen
 				name="Logout"
