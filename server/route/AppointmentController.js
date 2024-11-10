@@ -67,44 +67,37 @@ router.post(
 	})
 );
 
-// Endpoint to get appointments for a client (only scheduled)
+// Endpoint to get appointments for clients/stylists
 router.get(
-	"/client/:username",
+	"/scheduled",
 	asyncHandler(async (req, res, next) => {
-		const { username } = req.params;
+		console.log(req.query);
+		const { username } = req.query;
+		const client = await Client.findOne({ username });
+		const stylist = await Stylist.findOne({ username });
 
-		const appointments = await Appointment.find({
-			clientUsername: username,
-			status: "Scheduled",
-		});
+		let appointments;
 
-		if (appointments.length === 0) {
+		if (client) {
+			appointments = await Appointment.find({
+				clientUsername: username,
+				status: "Scheduled",
+			});
+		} else if (stylist) {
+			appointments = await Appointment.find({
+				stylistUsername: username,
+				status: "Scheduled",
+			});
+		} else {
 			return next(
-				new ConflictError(
-					`No scheduled appointments found for client with username ${username}.`
-				)
+				new ConflictError(`User with username ${username} not found.`)
 			);
 		}
 
-		res.json(appointments);
-	})
-);
-
-// Endpoint to get appointments for a stylist (only scheduled)
-router.get(
-	"/stylist/:username",
-	asyncHandler(async (req, res, next) => {
-		const { username } = req.params;
-
-		const appointments = await Appointment.find({
-			stylistUsername: username,
-			status: "Scheduled",
-		});
-
 		if (appointments.length === 0) {
 			return next(
 				new ConflictError(
-					`No scheduled appointments found for stylist with username ${username}.`
+					`No scheduled appointments found for user with username ${username}.`
 				)
 			);
 		}
