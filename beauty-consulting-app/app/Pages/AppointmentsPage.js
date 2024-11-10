@@ -4,6 +4,7 @@ import {
 	Text,
 	ScrollView,
 	StyleSheet,
+	Modal,
 	TouchableOpacity,
 } from "react-native";
 import SignupBackground from "../assets/components/SignupBackground";
@@ -13,11 +14,17 @@ import handleHTTPError from "utils/errorHandling";
 import ErrorMessage from "../components/ErrorMessage";
 import { formatDate, formatTime } from "utils/utils";
 import AppointmentBlock from "../components/appointmentBlock";
+import globalStyles from "../assets/GlobalStyles";
 
 function AppointmentsPage() {
 	const userContext = useContext(UserContext);
 	const [appointments, setAppointments] = useState([]);
 	const [errorMessage, setErrorMessage] = useState("");
+	const [modalVisible, setModalVisible] = useState(false);
+
+	const [cancelUsername, setCancelUsername] = useState("");
+	const [cancelTime, setCancelTime] = useState("");
+	const [cancelID, setCancelID] = useState("");
 
 	useEffect(() => {
 		const fetchAppointments = async () => {
@@ -35,10 +42,34 @@ function AppointmentsPage() {
 				handleHTTPError(error, setErrorMessage);
 			}
 		};
-
 		fetchAppointments();
 	}, [userContext.username]);
 
+	handleCancelPress = (username, dateString, id) => {
+		setCancelUsername(username);
+		setCancelTime(dateString);
+		setCancelID(id);
+		console.log(username);
+		console.log(dateString);
+		console.log(id);
+		setModalVisible(true);
+	};
+
+	const confirmCancel = async () => {
+		try {
+			console.log("pressed!");
+			const response = await api.put("/appointment/:id/cancel", {
+				params: {
+					id: cancelID,
+				},
+			});
+			console.log("Cancelled!");
+		} catch (error) {
+			handleHTTPError(error, setErrorMessage);
+		}
+	};
+
+	// TODO: would be nice to display actual names rather than username
 	return (
 		<SignupBackground>
 			<View style={styles.container}>
@@ -55,11 +86,62 @@ function AppointmentsPage() {
 								}
 								date={formatDate(appointment.appointmentDate)}
 								time={formatTime(appointment.appointmentDate)}
-								cancelAppointment={null}
+								cancelAppointment={() => {
+									handleCancelPress(
+										userContext.role === "stylist"
+											? appointment.clientUsername
+											: appointment.stylistUsername,
+										appointment.appointmentDate,
+										appointment._id
+									);
+								}}
 							/>
 						</View>
 					))}
 				</ScrollView>
+				<Modal
+					visible={modalVisible}
+					transparent={false}
+					animationType="slide"
+				>
+					<SignupBackground>
+						<View style={globalStyles.box}>
+							<Text style={globalStyles.title}>
+								Cancel Appointment
+							</Text>
+							<Text
+								style={[
+									globalStyles.promptText,
+									{ marginBottom: 10 },
+								]}
+							>
+								Cancel your appointment with {cancelUsername} at{" "}
+								{formatTime(cancelTime)} on{" "}
+								{formatDate(cancelTime)}?
+							</Text>
+							<TouchableOpacity
+								style={[globalStyles.button, { marginTop: 10 }]}
+								onPress={confirmCancel}
+							>
+								<Text style={globalStyles.buttonText}>
+									Confirm Cancel
+								</Text>
+							</TouchableOpacity>
+							<TouchableOpacity
+								style={[globalStyles.button, { marginTop: 10 }]}
+								onPress={() => {
+									setModalVisible(false);
+									setErrorMessage(null);
+								}}
+							>
+								<Text style={globalStyles.buttonText}>
+									Go Back
+								</Text>
+							</TouchableOpacity>
+							<ErrorMessage message={errorMessage} />
+						</View>
+					</SignupBackground>
+				</Modal>
 			</View>
 		</SignupBackground>
 	);
