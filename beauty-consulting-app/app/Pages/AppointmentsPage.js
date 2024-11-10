@@ -5,6 +5,7 @@ import {
 	ScrollView,
 	StyleSheet,
 	TouchableOpacity,
+	RefreshControl,
 } from "react-native";
 import SignupBackground from "../assets/components/SignupBackground";
 import { UserContext } from "../contexts/userContext";
@@ -14,35 +15,51 @@ import ErrorMessage from "../components/ErrorMessage";
 import { formatDate, formatTime } from "utils/utils";
 
 function AppointmentsPage() {
-	const userContext = useContext(UserContext);
+	const { username, role } = useContext(UserContext);
 	const [appointments, setAppointments] = useState([]);
 	const [errorMessage, setErrorMessage] = useState("");
+	const [refreshing, setRefreshing] = useState(false); // Add this state
+
+	const fetchAppointments = async () => {
+		try {
+			const response = await api.get("/appointment/scheduled", {
+				params: {
+					username: username,
+				},
+			});
+
+			console.log(response);
+
+			setAppointments(response.data);
+		} catch (error) {
+			handleHTTPError(error, setErrorMessage);
+		}
+	};
 
 	useEffect(() => {
-		const fetchAppointments = async () => {
-			try {
-				const response = await api.get("/appointment/scheduled", {
-					params: {
-						username: userContext.username,
-					},
-				});
-
-				console.log(response);
-
-				setAppointments(response.data);
-			} catch (error) {
-				handleHTTPError(error, setErrorMessage);
-			}
-		};
-
 		fetchAppointments();
-	}, [userContext.username]);
+	}, [username]);
+
+	const onRefresh = React.useCallback(() => {
+		setRefreshing(true);
+		fetchAppointments().then(() => setRefreshing(false));
+	}, [username]);
 
 	return (
 		<SignupBackground>
 			<View style={styles.container}>
 				<Text style={styles.header}>Appointments</Text>
-				<ScrollView contentContainerStyle={styles.scrollContainer}>
+				<ScrollView
+					contentContainerStyle={styles.scrollContainer}
+					refreshControl={
+						<RefreshControl
+							refreshing={refreshing}
+							onRefresh={onRefresh}
+							colors={["#000"]} // Android
+							tintColor="#000" // iOS
+						/>
+					}
+				>
 					<ErrorMessage message={errorMessage} />
 					{appointments.map((appointment) => (
 						<TouchableOpacity
@@ -50,7 +67,7 @@ function AppointmentsPage() {
 							style={styles.appointmentBox}
 						>
 							<Text style={styles.name}>
-								{userContext.role === "stylist"
+								{role === "stylist"
 									? appointment.clientUsername
 									: appointment.stylistUsername}
 							</Text>
