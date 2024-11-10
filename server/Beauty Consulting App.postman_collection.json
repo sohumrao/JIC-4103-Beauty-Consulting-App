@@ -256,7 +256,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"clientUsername\": \"client1\",\r\n    \"stylistUsername\": \"stylist1\",\r\n    \"appointmentDate\": \"2024-11-01\",\r\n    \"duration\": 60,\r\n    \"notes\": \"Looking for a haircut and color\"\r\n}\r\n",
+					"raw": "{\r\n    \"clientUsername\": \"Eleanore24\",\r\n    \"stylistUsername\": \"Antonia_Hane\",\r\n    \"appointmentDate\": \"2024-11-02\",\r\n    \"duration\": 60,\r\n    \"notes\": \"Looking for a haircut and color\"\r\n}\r\n",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -268,22 +268,35 @@
 					"protocol": "http",
 					"host": ["localhost"],
 					"port": "5050",
-					"path": ["appointment", "create"]
+					"path": ["appointment", "create"],
+					"query": [
+						{
+							"key": "",
+							"value": null,
+							"disabled": true
+						}
+					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "Get All Appointments for Client",
+			"name": "Get Scheduled Appointments",
 			"request": {
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:5050/appointment/client/client1",
+					"raw": "http://localhost:5050/appointment/scheduled?username=Eleanore24",
 					"protocol": "http",
 					"host": ["localhost"],
 					"port": "5050",
-					"path": ["appointment", "client", "client1"]
+					"path": ["appointment", "scheduled"],
+					"query": [
+						{
+							"key": "username",
+							"value": "Eleanore24"
+						}
+					]
 				}
 			},
 			"response": []
