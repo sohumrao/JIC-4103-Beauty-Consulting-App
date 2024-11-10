@@ -6,4 +6,11 @@ function formatDate(date) {
 	});
 }
 
-export { formatDate };
+function formatTime(date) {
+	return new Date(date).toLocaleTimeString("en-US", {
+		hour: "numeric",
+		minute: "numeric",
+	});
+}
+
+export { formatDate, formatTime };

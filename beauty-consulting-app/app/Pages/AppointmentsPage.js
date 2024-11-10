@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import {
 	View,
 	Text,
@@ -7,53 +7,58 @@ import {
 	TouchableOpacity,
 } from "react-native";
 import SignupBackground from "../assets/components/SignupBackground";
+import { UserContext } from "../contexts/userContext";
+import api from "utils/axios";
+import handleHTTPError from "utils/errorHandling";
+import ErrorMessage from "../components/ErrorMessage";
+import { formatDate, formatTime } from "utils/utils";
 
 function AppointmentsPage() {
-	const [appointments, setAppointments] = useState([
-		{
-			id: 1,
-			clientName: "John Doe",
-			date: "2024-10-10",
-			time: "10:00 AM",
-			service: "Haircut",
-		},
-		{
-			id: 2,
-			clientName: "Jane Smith",
-			date: "2024-10-11",
-			time: "12:00 PM",
-			service: "Hair Coloring",
-		},
-		{
-			id: 3,
-			clientName: "Alex Johnson",
-			date: "2024-10-12",
-			time: "02:30 PM",
-			service: "Nail Care",
-		},
-	]);
+	const userContext = useContext(UserContext);
+	const [appointments, setAppointments] = useState([]);
+	const [errorMessage, setErrorMessage] = useState("");
+
+	useEffect(() => {
+		const fetchAppointments = async () => {
+			try {
+				const response = await api.get("/appointment/scheduled", {
+					params: {
+						username: userContext.username,
+					},
+				});
+
+				console.log(response);
+
+				setAppointments(response.data);
+			} catch (error) {
+				handleHTTPError(error, setErrorMessage);
+			}
+		};
+
+		fetchAppointments();
+	}, [userContext.username]);
 
 	return (
 		<SignupBackground>
 			<View style={styles.container}>
 				<Text style={styles.header}>Appointments</Text>
 				<ScrollView contentContainerStyle={styles.scrollContainer}>
+					<ErrorMessage message={errorMessage} />
 					{appointments.map((appointment) => (
 						<TouchableOpacity
-							key={appointment.id}
+							key={appointment._id}
 							style={styles.appointmentBox}
 						>
-							<Text style={styles.clientName}>
-								{appointment.clientName}
+							<Text style={styles.name}>
+								{userContext.role === "stylist"
+									? appointment.clientUsername
+									: appointment.stylistUsername}
 							</Text>
 							<Text style={styles.details}>
-								Date: {appointment.date}
+								Date: {formatDate(appointment.appointmentDate)}
 							</Text>
 							<Text style={styles.details}>
-								Time: {appointment.time}
-							</Text>
-							<Text style={styles.details}>
-								Service: {appointment.service}
+								Time: {formatTime(appointment.appointmentDate)}
 							</Text>
 						</TouchableOpacity>
 					))}
@@ -94,7 +99,7 @@ const styles = StyleSheet.create({
 		width: "90%",
 		alignSelf: "center",
 	},
-	clientName: {
+	name: {
 		fontSize: 18,
 		fontWeight: "bold",
 		marginBottom: 5,
