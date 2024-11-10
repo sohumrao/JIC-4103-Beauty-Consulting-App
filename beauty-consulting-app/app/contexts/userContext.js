@@ -44,6 +44,7 @@ const UserContextProvider = ({ children }) => {
 				Medium: false,
 				Thick: false,
 			},
+			profilePhoto: null, // URL or data URI of the profile photo
 		},
 	});
 

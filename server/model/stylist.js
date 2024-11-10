@@ -17,7 +17,7 @@ const StylistSchema = new mongoose.Schema({
 	business: {
 		name: String,
 		address: String,
-		city: String, //TODO: remove after location-based search is implemented
+		city: String, // TODO: remove after location-based search is implemented
 		experience: String,
 		specialty: String,
 		additionalInfo: String,
@@ -34,10 +34,8 @@ const StylistSchema = new mongoose.Schema({
 			Medium: Boolean,
 			Thick: Boolean,
 		},
-		// TODO: refactor Business Schema
-		// hours: { type: HoursSchema, required: true },
 		services: [ServiceSchema],
-		// gallery: [{ type: Schema.Types.ObjectId, ref: "Photo" }],
+		profilePhoto: { type: mongoose.Schema.Types.ObjectId, ref: "Photo" }, // Reference to Photo
 	},
 });
 

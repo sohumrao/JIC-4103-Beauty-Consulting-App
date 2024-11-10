@@ -1,118 +1,132 @@
+// ProfileView.js
 import React, { useContext, useState } from "react";
 import {
 	StyleSheet,
 	Text,
 	View,
-	TextInput,
-	TouchableOpacity,
 	ScrollView,
+	TouchableOpacity,
 	Modal,
-	Touchable,
+	TextInput,
+	Alert,
+	ActivityIndicator,
 } from "react-native";
-import { Link, useNavigation } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import { UserContext } from "../contexts/userContext";
 import SignupBackground from "../assets/components/SignupBackground";
-import globalStyles from "../assets/GlobalStyles";
-import axios from "axios";
 import AboutMeBox from "../assets/components/AboutMeBox";
 import AboutHairBox from "../assets/components/AboutHairBox";
 import ProfilePicture from "../assets/components/ProfilePicture";
 import ProfileImage from "../assets/components/ProfileImage";
-import handleHTTPError from "../errorHandling";
+import axios from "axios";
+import Constants from "expo-constants";
 
 const ProfileView = () => {
 	const navigation = useNavigation();
+	const userContext = useContext(UserContext);
 
-	var userContext = useContext(UserContext);
-	var [name, setName] = useState("");
-	var [age, setAge] = useState("");
-	var [gender, setGender] = useState("");
-	var [phoneNumber, setPhoneNumber] = useState("");
-	var [allergies, setAllergies] = useState("");
-	var [concerns, setConcerns] = useState("");
-	var [isEdit, setIsEdit] = useState(false);
-	// const [modalVisible, setModalVisible] = useState(false);
-	// var [password, setPassword] = useState("");
-	// const [errorMessage, setErrorMessage] = useState("");
+	// State variables for editing user information
+	const [isEdit, setIsEdit] = useState(false);
+	const [name, setName] = useState("");
+	const [age, setAge] = useState("");
+	const [gender, setGender] = useState("");
+	const [phoneNumber, setPhoneNumber] = useState("");
+	const [allergies, setAllergies] = useState("");
+	const [concerns, setConcerns] = useState("");
+	const [loading, setLoading] = useState(false);
 
-	// useEffect(() => {
-	// 	populateClientData(userContext.username);
-	// }, [userContext.username]);
+	// State for Delete Account Confirmation Modal
+	const [modalVisible, setModalVisible] = useState(false);
 
-	// const populateClientData = async (username) => {
-	// 	try {
-	// 		const apiURL =
-	// 			process.env.EXPO_PUBLIC_API_URL + ":5050/client/" + username;
-	// 		if (!apiURL) {
-	// 			console.error("apiURL not defined");
-	// 			return;
-	// 		}
-
-	// 		const res = await axios.get(apiURL);
-	// 		setClientData(res.data);
-	// 		setGender(res.data.info.gender);
-	// 		setName(res.data.info.name);
-	// 		setAllergies(res.data.allergies);
-	// 		setConcerns(res.data.additionalConcerns);
-	// 	} catch (error) {
-	// 		handleHTTPError(error);
-	// 	}
-	// };
-
-	const { profilePicture } = useContext(UserContext);
-
+	// Function to handle editing user information
 	const handleEdit = async () => {
-		name = name != "" ? name : userContext.name;
-		gender = gender != "" ? gender : userContext.gender;
-		allergies = allergies != "" ? allergies : userContext.allergies;
-		concerns = concerns != "" ? concerns : userContext.concerns;
+		// Initialize fields with current user data if entering edit mode
+		if (!isEdit) {
+			setName(userContext.name);
+			setAge(userContext.age ? userContext.age.toString() : "");
+			setGender(userContext.gender);
+			setPhoneNumber(userContext.phoneNumber);
+			setAllergies(userContext.allergies);
+			setConcerns(userContext.concerns);
+		}
+
+		// Toggle edit mode
+		setIsEdit(!isEdit);
 
 		if (isEdit) {
-			req = {
-				username: userContext.username,
-				name: name,
-				age: userContext.age,
-				gender: gender,
-				phoneNumber: userContext.phoneNumber,
-				email: userContext.email,
-				hairDetails: userContext.hairDetails,
-				allergies: allergies,
-				concerns: concerns,
-			};
-			try {
-				const apiURL =
-					process.env.EXPO_PUBLIC_API_URL +
-					":5050/client/" +
-					userContext.username;
-				if (!apiURL) {
-					console.error("apiURL not defined");
-					return;
-				}
-				const res = await axios.put(apiURL, req);
-				console.log("update successful: ", res.data);
-			} catch (error) {
-				console.error("Error with request: ", error);
-			}
-
-			// update user context for rest of session
-			userContext = userContext.updateUserContext({
-				username: userContext.username,
-				name: name,
-				age: age,
-				gender: gender,
-				phoneNumber: userContext.phoneNumber,
-				email: userContext.email,
-				hairDetails: userContext.hairDetails,
-				allergies: allergies,
-				concerns: concerns,
-				updateUserContext: userContext.updateUserContext,
-			});
+			// When exiting edit mode, submit the changes
+			await submitEdit();
 		}
-		setIsEdit(!isEdit);
 	};
 
+	// Function to submit the edited user information
+	const submitEdit = async () => {
+		// Preserve existing values if new values are empty
+		const updatedName = name !== "" ? name : userContext.name;
+		const updatedGender = gender !== "" ? gender : userContext.gender;
+		const updatedAllergies =
+			allergies !== "" ? allergies : userContext.allergies;
+		const updatedConcerns =
+			concerns !== "" ? concerns : userContext.concerns;
+
+		setLoading(true);
+
+		const req = {
+			username: userContext.username,
+			name: updatedName,
+			age: userContext.age, // Assuming age is not editable here
+			gender: updatedGender,
+			phoneNumber: userContext.phoneNumber, // Assuming phoneNumber is not editable here
+			email: userContext.email, // Assuming email is not editable here
+			hairDetails: userContext.hairDetails, // Assuming hairDetails are handled elsewhere
+			allergies: updatedAllergies,
+			concerns: updatedConcerns,
+		};
+
+		try {
+			const apiURL =
+				process.env.EXPO_PUBLIC_API_URL +
+				":5050/client/" +
+				userContext.username;
+			if (!apiURL) {
+				console.error("apiURL not defined");
+				Alert.alert("Error", "API URL is not defined.");
+				setLoading(false);
+				return;
+			}
+			const res = await axios.put(apiURL, req);
+			console.log("update successful: ", res.data);
+
+			// Update UserContext with the new information
+			userContext.updateUserContext({
+				username: userContext.username,
+				name: updatedName,
+				age: userContext.age,
+				gender: updatedGender,
+				phoneNumber: userContext.phoneNumber,
+				email: userContext.email,
+				hairDetails: userContext.hairDetails,
+				allergies: updatedAllergies,
+				concerns: updatedConcerns,
+			});
+
+			Alert.alert("Success", "Profile updated successfully.");
+		} catch (error) {
+			console.error("Error with request: ", error);
+			Alert.alert(
+				"Error",
+				"Failed to update profile. Please try again later."
+			);
+		} finally {
+			setLoading(false);
+		}
+	};
+
+	// Function to handle account deletion
 	const deleteAccount = async () => {
 		// TODO: update with a separate flow for password validation after backend rework
+
+		setLoading(true);
 
 		try {
 			console.log(userContext);
@@ -122,104 +136,154 @@ const ProfileView = () => {
 				userContext.username;
 			if (!apiURL) {
 				console.error("apiURL not defined");
+				Alert.alert("Error", "API URL is not defined.");
+				setLoading(false);
+				return;
 			}
-			const res = axios.delete(apiURL);
+			const res = await axios.delete(apiURL);
 			console.log(res.message);
+			Alert.alert(
+				"Account Deleted",
+				"Your account has been successfully deleted.",
+				[
+					{
+						text: "OK",
+						onPress: () => navigation.navigate("Sign In"),
+					},
+				]
+			);
 		} catch (error) {
 			console.error("Error with request: ", error);
-			return;
+			Alert.alert(
+				"Error",
+				"Failed to delete account. Please try again later."
+			);
+		} finally {
+			setLoading(false);
+			setModalVisible(false);
 		}
-		navigation.navigate("Sign In");
 	};
 
 	const styles = StyleSheet.create({
-		inputContainer: {
-			marginBottom: 10,
+		container: {
+			flex: 1,
+			padding: 20,
+			width: "100%",
+		},
+		header: {
+			fontSize: 24,
+			fontWeight: "bold",
+			textAlign: "center",
+			marginBottom: 30,
+			marginTop: 40,
+		},
+		scrollContainer: {
+			paddingBottom: 20,
+		},
+		profilePictureContainer: {
+			alignItems: "center",
+			marginTop: 40,
+		},
+		aboutMeContainer: {
+			marginTop: 20,
+		},
+		aboutHairContainer: {
+			marginTop: 20,
+		},
+		editButton: {
+			backgroundColor: "#4CAF50",
+			padding: 10,
+			borderRadius: 5,
+			marginTop: 10,
+			alignItems: "center",
+		},
+		editButtonText: {
+			color: "#fff",
+			fontSize: 16,
+			fontWeight: "bold",
+		},
+		saveButton: {
+			backgroundColor: "#2196F3",
+			padding: 10,
+			borderRadius: 5,
+			marginTop: 10,
+			alignItems: "center",
+		},
+		saveButtonText: {
+			color: "#fff",
+			fontSize: 16,
+			fontWeight: "bold",
+		},
+		deleteButton: {
+			backgroundColor: "#f44336",
+			padding: 10,
+			borderRadius: 5,
+			marginTop: 20,
+			alignItems: "center",
+		},
+		deleteButtonText: {
+			color: "#fff",
+			fontSize: 16,
+			fontWeight: "bold",
+		},
+		modalContainer: {
+			flex: 1,
+			justifyContent: "center",
+			alignItems: "center",
+			backgroundColor: "rgba(0,0,0,0.5)",
+		},
+		modalContent: {
+			width: "80%",
+			backgroundColor: "#fff",
+			padding: 20,
+			borderRadius: 10,
+			alignItems: "center",
+		},
+		modalText: {
+			fontSize: 18,
+			marginBottom: 20,
+			textAlign: "center",
+		},
+		modalButtons: {
+			flexDirection: "row",
+			justifyContent: "space-between",
+			width: "100%",
+		},
+		modalButton: {
+			flex: 1,
+			padding: 10,
+			marginHorizontal: 5,
+			borderRadius: 5,
+			alignItems: "center",
+		},
+		modalButtonCancel: {
+			backgroundColor: "#9E9E9E",
+		},
+		modalButtonDelete: {
+			backgroundColor: "#f44336",
+		},
+		modalButtonText: {
+			color: "#fff",
+			fontSize: 16,
+			fontWeight: "bold",
+		},
+		loader: {
+			marginTop: 20,
 		},
 	});
-
-	/* return (
-    <SignupBackground>
-    <View style={globalStyles.box}>
-          <View style={styles.inputContainer}>
-            <Text style={globalStyles.inputHeaderText}>Name</Text>
-            <TextInput
-              style={globalStyles.input}
-              placeholder={userContext.name}
-              placeholderTextColor={"#000"}
-              value={name}
-              onChangeText={setName}
-              editable={isEdit}
-            />
-          </View>
-
-          <View style={styles.inputContainer}>
-            <Text style={globalStyles.inputHeaderText}>Gender</Text>
-            <TextInput
-              style={globalStyles.input}
-              placeholder={userContext.gender}
-              placeholderTextColor={"#000"}
-              value={gender}
-              onChangeText={setGender}
-              editable={isEdit}
-            />
-          </View>
-
-          <View style={styles.inputContainer}>
-            <Text style={globalStyles.inputHeaderText}>Allergies</Text>
-            <TextInput
-              style={globalStyles.input}
-              placeholder={userContext.allergies}
-              placeholderTextColor={"#000"}
-              value={allergies}
-              onChangeText={setAllergies}
-              editable={isEdit}
-            />
-          </View>
-
-          <View style={styles.inputContainer}>
-            <Text style={globalStyles.inputHeaderText}>Concerns</Text>
-            <TextInput
-              style={globalStyles.input}
-              placeholder={userContext.concerns}
-              placeholderTextColor={"#000"}
-              value={concerns}
-              onChangeText={setConcerns}
-              editable={isEdit}
-            />
-          </View>
-
-        <TouchableOpacity
-          style={[globalStyles.button, { marginBottom: 15 }]}
-          onPress={handleEdit}
-        >
-          <Text style={globalStyles.buttonText}>
-            {isEdit ? "Update" : "Edit"}
-          </Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={globalStyles.button} onPress={deleteAccount}>
-          <Text style={globalStyles.buttonText}>Delete Account</Text>
-        </TouchableOpacity>
-      </View>
-    </SignupBackground>
-  ); */
 
 	return (
 		<SignupBackground>
 			<ScrollView>
-				<View style={{ flex: 1 }}>
-					<View
-						style={{
-							flexDirection: "row",
-							alignItems: "flex-start",
-							marginTop: 100,
-							marginLeft: 20,
-						}}
-					>
-						<ProfilePicture picture={profilePicture} />
+				<View style={styles.container}>
+					{/* Profile Picture and Image Upload */}
+					<View style={styles.profilePictureContainer}>
+						{/* <ProfilePicture picture={userContext.business.profilePhoto} /> */}
+						<ProfileImage username={userContext.username} />
 					</View>
-					<View style={{ marginTop: 180 }}>
+
+					{/* About Me Section */}
+					<View style={styles.aboutMeContainer}>
 						<AboutMeBox
 							userContext={userContext}
 							onUpdateUser={(updatedUser) =>
@@ -227,13 +291,103 @@ const ProfileView = () => {
 							}
 						/>
 					</View>
-					<View>
+
+					{/* About Hair Section */}
+					<View style={styles.aboutHairContainer}>
 						<AboutHairBox
 							hairDetails={userContext.hairDetails}
 							allergies={userContext.allergies}
 							concerns={userContext.concerns}
 						/>
 					</View>
+
+					{/* Edit and Delete Buttons */}
+					<View style={{ alignItems: "center" }}>
+						{/* Edit Profile Button */}
+						<TouchableOpacity
+							style={styles.editButton}
+							onPress={handleEdit}
+						>
+							<Text style={styles.editButtonText}>
+								{isEdit ? "Save Changes" : "Edit Profile"}
+							</Text>
+						</TouchableOpacity>
+
+						{/* Show Cancel Button in Edit Mode */}
+						{isEdit && (
+							<TouchableOpacity
+								style={[
+									styles.editButton,
+									{ backgroundColor: "#9E9E9E" },
+								]}
+								onPress={() => setIsEdit(false)}
+							>
+								<Text style={styles.editButtonText}>
+									Cancel
+								</Text>
+							</TouchableOpacity>
+						)}
+
+						{/* Delete Account Button */}
+						<TouchableOpacity
+							style={styles.deleteButton}
+							onPress={() => setModalVisible(true)}
+						>
+							<Text style={styles.deleteButtonText}>
+								Delete Account
+							</Text>
+						</TouchableOpacity>
+					</View>
+
+					{/* Loading Indicator */}
+					{loading && (
+						<View style={styles.loader}>
+							<ActivityIndicator size="large" color="#0000ff" />
+						</View>
+					)}
+
+					{/* Delete Confirmation Modal */}
+					<Modal
+						animationType="slide"
+						transparent={true}
+						visible={modalVisible}
+						onRequestClose={() => {
+							setModalVisible(!modalVisible);
+						}}
+					>
+						<View style={styles.modalContainer}>
+							<View style={styles.modalContent}>
+								<Text style={styles.modalText}>
+									Are you sure you want to delete your
+									account? This action cannot be undone.
+								</Text>
+								<View style={styles.modalButtons}>
+									<TouchableOpacity
+										style={[
+											styles.modalButton,
+											styles.modalButtonCancel,
+										]}
+										onPress={() => setModalVisible(false)}
+									>
+										<Text style={styles.modalButtonText}>
+											Cancel
+										</Text>
+									</TouchableOpacity>
+									<TouchableOpacity
+										style={[
+											styles.modalButton,
+											styles.modalButtonDelete,
+										]}
+										onPress={deleteAccount}
+									>
+										<Text style={styles.modalButtonText}>
+											Delete
+										</Text>
+									</TouchableOpacity>
+								</View>
+							</View>
+						</View>
+					</Modal>
 				</View>
 			</ScrollView>
 		</SignupBackground>
