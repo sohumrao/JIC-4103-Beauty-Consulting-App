@@ -23,6 +23,7 @@ import {
 	Directory,
 } from "./Pages";
 import { UserContext, UserContextProvider } from "./contexts/userContext";
+import { useNavigation } from "@react-navigation/native";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -56,8 +57,9 @@ function StylistDetailsStack() {
 }
 
 function MainTabNavigator() {
-	const { role } = useContext(UserContext);
-
+	const { role, updateUserContext } = useContext(UserContext);
+	const navigation = useNavigation();
+	const LogoutComponent = () => null;
 	return (
 		<Tab.Navigator screenOptions={{ headerShown: false }}>
 			{role === "client" || role === "stylist" ? (
@@ -71,6 +73,21 @@ function MainTabNavigator() {
 			)}
 			<Tab.Screen name="Directory" component={Directory} />
 			<Tab.Screen name="Appointments" component={AppointmentsPage} />
+			<Tab.Screen
+				name="Logout"
+				component={LogoutComponent}
+				listeners={{
+					tabPress: (e) => {
+						// Prevent default action
+						e.preventDefault();
+						updateUserContext(null);
+						navigation.reset({
+							index: 0,
+							routes: [{ name: "Sign In" }],
+						});
+					},
+				}}
+			/>
 		</Tab.Navigator>
 	);
 }
