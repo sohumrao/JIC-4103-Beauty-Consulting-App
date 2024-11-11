@@ -40,7 +40,7 @@ const StylistListing = ({
 				source={
 					profilePicture?.data
 						? {
-								uri: `data:${profilePicture?.contentType};base64,${arrayToBase64(profilePicture?.data)}`,
+								uri: `data:${profilePicture?.contentType};base64,${arrayToBase64(profilePicture?.data.data)}`,
 							}
 						: require("../assets/images/placeholder.png")
 				}

@@ -95,7 +95,10 @@ const BusinessInfoPage = (routeObject) => {
 				editable={editable}
 			/>
 			{userContext.role === "client" ? (
-				<Button onPress={() => navigation.goBack()}>
+				<Button
+					style={{ marginBottom: 50 }}
+					onPress={() => navigation.goBack()}
+				>
 					Back to Directory
 				</Button>
 			) : null}
