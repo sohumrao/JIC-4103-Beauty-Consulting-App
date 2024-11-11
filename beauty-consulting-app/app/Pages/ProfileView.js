@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { View, ScrollView } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { UserContext } from "../contexts/userContext";
@@ -7,6 +7,7 @@ import api from "utils/axios";
 import AboutMeBox from "../assets/components/AboutMeBox";
 import AboutHairBox from "../assets/components/AboutHairBox";
 import ProfilePicture from "../assets/components/ProfilePicture";
+import handleHTTPError from "utils/errorHandling";
 
 const ProfileView = () => {
 	const navigation = useNavigation();
@@ -21,6 +22,24 @@ const ProfileView = () => {
 	var [isEdit, setIsEdit] = useState(false);
 
 	const { profilePicture } = useContext(UserContext);
+
+	const fetchDetails = async () => {
+		try {
+			const res = await api.get(`/client/${userContext.username}`);
+			const data = res.data;
+			userContext = userContext.updateUserContext({
+				...userContext,
+				...data,
+			});
+		} catch (error) {
+			handleHTTPError(error);
+			console.error("Error with request: ", error);
+		}
+	};
+
+	useEffect(() => {
+		fetchDetails();
+	}, []);
 
 	const handleEdit = async () => {
 		name = name != "" ? name : userContext.name;
@@ -104,11 +123,7 @@ const ProfileView = () => {
 						/>
 					</View>
 					<View>
-						<AboutHairBox
-							hairDetails={userContext.hairDetails}
-							allergies={userContext.allergies}
-							concerns={userContext.concerns}
-						/>
+						<AboutHairBox />
 					</View>
 				</View>
 			</ScrollView>
