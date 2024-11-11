@@ -6,7 +6,7 @@ This product is a mobile app for beauty consultations. The current product inclu
 
 ## Version 0.4.0
 
-### New Features:
+### New Features
 
 -   Appointment booking with dynamic calendar element
 -   Appointment cancellation
@@ -14,7 +14,7 @@ This product is a mobile app for beauty consultations. The current product inclu
 -   Directory filtering for stylists in area
 -   View stylist's offered services before booking appointment
 
-### Bug Fixes:
+### Bug Fixes
 
 -   Logout button
 -   Profile pictures functional
@@ -22,7 +22,7 @@ This product is a mobile app for beauty consultations. The current product inclu
 -   Keyboards are easily dismissible and do not obstruct input fields
 -   Age inputs refactored into D.O.B. input
 
-### Known Issues:
+### Known Issues
 
 -   Different users can book appointments with the same stylist at the same time
 -   Some fields and pieces of text difficult to read
