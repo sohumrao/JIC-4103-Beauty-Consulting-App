@@ -35,9 +35,8 @@ function AppointmentsPage() {
 				},
 			});
 
-			console.log(response);
-
 			setAppointments(response.data);
+			setErrorMessage(null);
 		} catch (error) {
 			handleHTTPError(error, setErrorMessage);
 		}
@@ -90,28 +89,38 @@ function AppointmentsPage() {
 					}
 				>
 					<ErrorMessage message={errorMessage} />
-					{appointments.map((appointment) => (
-						<View key={appointment._id}>
-							<AppointmentBlock
-								name={
-									role === "stylist"
-										? appointment.clientUsername
-										: appointment.stylistUsername
-								}
-								date={formatDate(appointment.appointmentDate)}
-								time={formatTime(appointment.appointmentDate)}
-								cancelAppointment={() => {
-									handleCancelPress(
+					{appointments.length === 0 ? (
+						<Text style={styles.details}>
+							No appointments booked
+						</Text>
+					) : (
+						appointments.map((appointment) => (
+							<View key={appointment._id}>
+								<AppointmentBlock
+									name={
 										role === "stylist"
 											? appointment.clientUsername
-											: appointment.stylistUsername,
-										appointment.appointmentDate,
-										appointment._id
-									);
-								}}
-							/>
-						</View>
-					))}
+											: appointment.stylistUsername
+									}
+									date={formatDate(
+										appointment.appointmentDate
+									)}
+									time={formatTime(
+										appointment.appointmentDate
+									)}
+									cancelAppointment={() => {
+										handleCancelPress(
+											role === "stylist"
+												? appointment.clientUsername
+												: appointment.stylistUsername,
+											appointment.appointmentDate,
+											appointment._id
+										);
+									}}
+								/>
+							</View>
+						))
+					)}
 				</ScrollView>
 				<Modal
 					visible={modalVisible}
