@@ -8,8 +8,8 @@ import fs from "fs";
 connectDB(process.env.MONGO_URI);
 
 // Tuneable constants
-const NUM_CLIENTS = 10;
-const NUM_STYLISTS = 50;
+const NUM_CLIENTS = 2;
+const NUM_STYLISTS = 10;
 
 // Helper function to generate random boolean
 const randomBoolean = () => Math.random() < 0.5;
@@ -56,18 +56,30 @@ const generateServices = () => {
 	return services;
 };
 
+const generatePerson = () => {
+	const sex = faker.person.sex();
+	const firstName = faker.person.firstName(sex);
+	const lastName = faker.person.lastName();
+	const fullName = firstName + " " + lastName;
+	const email = faker.internet.email({ firstName, lastName });
+	const username = faker.internet.username({ firstName, lastName });
+	return { sex, fullName, email, username };
+};
+
 // Create clients
 const createClients = async () => {
 	const clients = [];
 
 	for (let i = 0; i < NUM_CLIENTS; i++) {
+		const { sex, fullName, email, username } = generatePerson();
+
 		const client = new Client({
-			username: faker.internet.username(),
-			email: faker.internet.email(),
+			username: username,
+			email: email,
 			info: {
-				name: faker.person.fullName(),
+				name: fullName,
 				birthday: faker.date.past(30),
-				gender: faker.helpers.arrayElement(["Male", "Female", "Other"]),
+				gender: sex,
 				phoneNumber: faker.phone.number(),
 			},
 			profilePhoto: randomPhoto(),
@@ -88,13 +100,14 @@ const createStylists = async () => {
 	const stylists = [];
 
 	for (let i = 0; i < NUM_STYLISTS; i++) {
+		const { sex, fullName, email, username } = generatePerson();
 		const stylist = new Stylist({
-			username: faker.internet.username(),
-			email: faker.internet.email(),
+			username: username,
+			email: email,
 			info: {
-				name: faker.person.fullName(),
+				name: fullName,
 				birthday: faker.date.birthdate(),
-				gender: faker.helpers.arrayElement(["Male", "Female", "Other"]),
+				gender: sex,
 				phoneNumber: faker.phone.number(),
 			},
 			profilePhoto: randomPhoto(),
