@@ -27,6 +27,7 @@ function AppointmentsPage() {
 	const [cancelTime, setCancelTime] = useState("");
 	const [cancelID, setCancelID] = useState("");
 
+
 	const fetchAppointments = async () => {
 		try {
 			const response = await api.get("/appointment/scheduled", {
