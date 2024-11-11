@@ -1,13 +1,37 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Text, View, TouchableOpacity, Image, StyleSheet } from "react-native";
 import globalStyles from "../assets/GlobalStyles";
+import { UserContext } from "../contexts/userContext";
 
-const AppointmentBlock = ({ name, date, time, cancelAppointment }) => {
+const AppointmentBlock = ({
+	name,
+	date,
+	time,
+	cancelAppointment,
+	handleClientInfoPress,
+}) => {
+	const userContext = useContext(UserContext);
+
 	return (
 		<View style={styles.appointmentBox}>
 			<Text style={styles.name}> {name}</Text>
 			<Text style={styles.details}> {date}</Text>
 			<Text style={styles.details}> {time}</Text>
+			{userContext.role == "stylist" && (
+				<TouchableOpacity
+					style={[
+						globalStyles.button,
+						{
+							alignSelf: "flex-end",
+							width: "50%",
+							marginBottom: 5,
+						},
+					]}
+					onPress={handleClientInfoPress}
+				>
+					<Text style={globalStyles.buttonText}>Client Info</Text>
+				</TouchableOpacity>
+			)}
 			<TouchableOpacity
 				style={[
 					globalStyles.button,

@@ -7,6 +7,7 @@ import {
 	Modal,
 	TouchableOpacity,
 	RefreshControl,
+	Image,
 } from "react-native";
 import SignupBackground from "../assets/components/SignupBackground";
 import { UserContext } from "../contexts/userContext";
@@ -26,6 +27,8 @@ function AppointmentsPage() {
 	const [cancelUsername, setCancelUsername] = useState("");
 	const [cancelTime, setCancelTime] = useState("");
 	const [cancelID, setCancelID] = useState("");
+	const [currentlyViewedClient, setCurrentlyViewedClient] = useState(null);
+	const [viewedClientInfo, setViewedClientInfo] = useState(null);
 
 	const fetchAppointments = async () => {
 		try {
@@ -38,6 +41,28 @@ function AppointmentsPage() {
 			console.log(response);
 
 			setAppointments(response.data);
+		} catch (error) {
+			handleHTTPError(error, setErrorMessage);
+		}
+	};
+
+	const populateClientData = async (clientUsername) => {
+		try {
+			console.log(clientUsername);
+			const response = await api.get(`/client/${clientUsername}`, {
+				params: {
+					username: currentlyViewedClient,
+				},
+			});
+
+			const formattedHairDetails = Object.keys(response.data.hairDetails)
+				.filter((key) => response.data.hairDetails[key]) // Filters keys with `true` values
+				.join(", ");
+
+			setViewedClientInfo({
+				...response.data,
+				hairDetails: formattedHairDetails,
+			});
 		} catch (error) {
 			handleHTTPError(error, setErrorMessage);
 		}
@@ -109,10 +134,57 @@ function AppointmentsPage() {
 										appointment._id
 									);
 								}}
+								handleClientInfoPress={() => {
+									populateClientData(
+										appointment.clientUsername
+									);
+									setCurrentlyViewedClient(
+										appointment.clientUsername
+									);
+								}}
 							/>
 						</View>
 					))}
 				</ScrollView>
+				<Modal
+					visible={currentlyViewedClient != null}
+					transparent={false}
+					animationType="slide"
+				>
+					<SignupBackground>
+						<View style={styles.box}>
+							<Text
+								style={styles.modalTitle}
+							>{`${viewedClientInfo?.info.name ?? ""}\'s Info`}</Text>
+
+							<Text style={styles.profileDetail}>
+								<Text style={styles.label}>Gender:</Text>{" "}
+								{viewedClientInfo?.info.gender ?? ""}
+							</Text>
+							<Text style={styles.profileDetail}>
+								<Text style={styles.label}>Phone Number:</Text>{" "}
+								{viewedClientInfo?.info.phoneNumber ?? ""}
+							</Text>
+							<Text style={styles.profileDetail}>
+								<Text style={styles.label}>Hair Type: </Text>
+								{viewedClientInfo?.hairDetails ?? ""}
+							</Text>
+							<Text style={styles.profileDetail}>
+								<Text style={styles.label}>Allergies:</Text>{" "}
+								{viewedClientInfo?.allergies ?? ""}
+							</Text>
+
+							<TouchableOpacity
+								style={[globalStyles.button, { marginTop: 20 }]}
+								onPress={() => setCurrentlyViewedClient(null)}
+							>
+								<Text style={globalStyles.buttonText}>
+									Close
+								</Text>
+							</TouchableOpacity>
+						</View>
+					</SignupBackground>
+				</Modal>
 				<Modal
 					visible={modalVisible}
 					transparent={false}
@@ -200,6 +272,50 @@ const styles = StyleSheet.create({
 	details: {
 		fontSize: 16,
 		color: "#555",
+	},
+	modalOverlay: {
+		flex: 1,
+		justifyContent: "center",
+		alignSelf: "center",
+		backgroundColor: "rgba(0, 0, 0, 0.5)",
+	},
+	modalContent: {
+		width: "80%",
+		backgroundColor: "white",
+		borderRadius: 10,
+		padding: 20,
+		alignItems: "center",
+	},
+	modalTitle: {
+		fontSize: 30,
+		fontWeight: "bold",
+		marginBottom: 20,
+		alignItems: "center",
+		textAlign: "center",
+	},
+	profileDetail: {
+		fontSize: 24,
+		marginBottom: 10,
+	},
+	label: {
+		fontWeight: "bold",
+	},
+	closeButton: {
+		marginTop: 40,
+		backgroundColor: "#007bff",
+		paddingVertical: 20,
+		paddingHorizontal: 20,
+		borderRadius: 5,
+	},
+	closeButtonText: {
+		color: "white",
+		fontWeight: "bold",
+	},
+	clientPicture: {
+		width: 100, // Width of the image
+		height: 100, // Height of the image
+		borderRadius: 50, // Half of width/height for a circle
+		marginBottom: 15,
 	},
 });
 
