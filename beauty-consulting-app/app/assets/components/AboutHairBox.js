@@ -1,12 +1,33 @@
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import { View, Text, StyleSheet, ScrollView } from "react-native";
 import HairIcon from "../images/hair-icon.svg";
-import Comb from "../images/comb.svg";
 import Allergies from "../images/allergies.svg";
 import Concerns from "../images/concerns.svg";
 import EditImage from "../images/pen.svg";
+import { UserContext } from "../../contexts/userContext";
 
-const HairDetailsBox = ({ hairDetails, allergies, concerns }) => {
+const HairDetailsBox = () => {
+	const userContext = useContext(UserContext);
+
+	const [hairTypes, setHairTypes] = React.useState([]);
+	const [allergies, setAllergies] = React.useState("");
+	const [concerns, setConcerns] = React.useState("");
+
+	useEffect(() => {
+		console.log(userContext);
+		if (userContext?.hairDetails) {
+			const types = Object.entries(userContext.hairDetails || {})
+				.filter(([key, value]) => value === true)
+				.map(([key]) => key)
+				.join(", ");
+
+			setHairTypes(types);
+			setAllergies(userContext.allergies || "");
+			setConcerns(userContext.concerns || "");
+			console.log(hairTypes);
+		}
+	}, [userContext]);
+
 	return (
 		<View>
 			<View style={styles.headerRow}>
@@ -18,12 +39,7 @@ const HairDetailsBox = ({ hairDetails, allergies, concerns }) => {
 					<View style={styles.infoRow}>
 						<HairIcon width={20} height={20} style={styles.icon} />
 						<Text style={styles.label}>Hair Type:</Text>
-						<Text style={styles.value}>{hairDetails.type}</Text>
-					</View>
-					<View style={styles.infoRow}>
-						<Comb width={20} height={20} style={styles.icon} />
-						<Text style={styles.label}>Texture:</Text>
-						<Text style={styles.value}>{hairDetails.texture}</Text>
+						<Text style={styles.value}>{hairTypes}</Text>
 					</View>
 					<View style={styles.infoRow}>
 						<Allergies width={20} height={20} style={styles.icon} />

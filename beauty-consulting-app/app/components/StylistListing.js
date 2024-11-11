@@ -26,9 +26,7 @@ const StylistListing = ({
 	const navigation = useNavigation();
 
 	const handleMoreInfoPress = () => {
-		navigation.navigate("BusinessInfoPage", {
-			stylistUsername: username,
-		});
+		navigation.navigate("BusinessInfoPage", { username });
 	};
 	var bookedAlready = false;
 	if (booked) {

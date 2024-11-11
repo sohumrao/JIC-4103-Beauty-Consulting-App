@@ -94,14 +94,6 @@ router.get(
 			);
 		}
 
-		if (appointments.length === 0) {
-			return next(
-				new ConflictError(
-					`No scheduled appointments found for user with username ${username}.`
-				)
-			);
-		}
-
 		res.json(appointments);
 	})
 );

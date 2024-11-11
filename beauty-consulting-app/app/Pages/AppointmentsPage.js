@@ -7,7 +7,6 @@ import {
 	Modal,
 	TouchableOpacity,
 	RefreshControl,
-	Image,
 } from "react-native";
 import SignupBackground from "../assets/components/SignupBackground";
 import { UserContext } from "../contexts/userContext";
@@ -38,9 +37,8 @@ function AppointmentsPage() {
 				},
 			});
 
-			console.log(response);
-
 			setAppointments(response.data);
+			setErrorMessage(null);
 		} catch (error) {
 			handleHTTPError(error, setErrorMessage);
 		}
@@ -77,7 +75,7 @@ function AppointmentsPage() {
 		fetchAppointments().then(() => setRefreshing(false));
 	}, [username]);
 
-	handleCancelPress = (username, dateString, id) => {
+	const handleCancelPress = (username, dateString, id) => {
 		setCancelUsername(username);
 		setCancelTime(dateString);
 		setCancelID(id);
@@ -86,11 +84,8 @@ function AppointmentsPage() {
 
 	const confirmCancel = async () => {
 		try {
-			req = { id: cancelID };
-			const response = await api.put(
-				"appointment/" + cancelID + "/cancel",
-				req
-			);
+			const req = { id: cancelID };
+			await api.put("appointment/" + cancelID + "/cancel", req);
 			setModalVisible(false);
 			fetchAppointments();
 		} catch (error) {
@@ -115,36 +110,46 @@ function AppointmentsPage() {
 					}
 				>
 					<ErrorMessage message={errorMessage} />
-					{appointments.map((appointment) => (
-						<View key={appointment._id}>
-							<AppointmentBlock
-								name={
-									role === "stylist"
-										? appointment.clientUsername
-										: appointment.stylistUsername
-								}
-								date={formatDate(appointment.appointmentDate)}
-								time={formatTime(appointment.appointmentDate)}
-								cancelAppointment={() => {
-									handleCancelPress(
+					{appointments.length === 0 ? (
+						<Text style={styles.details}>
+							No appointments booked
+						</Text>
+					) : (
+						appointments.map((appointment) => (
+							<View key={appointment._id}>
+								<AppointmentBlock
+									name={
 										role === "stylist"
 											? appointment.clientUsername
-											: appointment.stylistUsername,
-										appointment.appointmentDate,
-										appointment._id
-									);
-								}}
-								handleClientInfoPress={() => {
-									populateClientData(
-										appointment.clientUsername
-									);
-									setCurrentlyViewedClient(
-										appointment.clientUsername
-									);
-								}}
-							/>
-						</View>
-					))}
+											: appointment.stylistUsername
+									}
+									date={formatDate(
+										appointment.appointmentDate
+									)}
+									time={formatTime(
+										appointment.appointmentDate
+									)}
+									cancelAppointment={() => {
+										handleCancelPress(
+											role === "stylist"
+												? appointment.clientUsername
+												: appointment.stylistUsername,
+											appointment.appointmentDate,
+											appointment._id
+										);
+									}}
+									handleClientInfoPress={() => {
+										populateClientData(
+											appointment.clientUsername
+										);
+										setCurrentlyViewedClient(
+											appointment.clientUsername
+										);
+									}}
+								/>
+							</View>
+						))
+					)}
 				</ScrollView>
 				<Modal
 					visible={currentlyViewedClient != null}
