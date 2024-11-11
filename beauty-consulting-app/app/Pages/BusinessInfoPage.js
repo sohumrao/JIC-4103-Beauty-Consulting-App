@@ -14,17 +14,11 @@ const BusinessInfoPage = (routeObject) => {
 	const userContext = useContext(UserContext);
 	const navigation = useNavigation();
 	const [stylistData, setStylistData] = useState(null);
-
-	//TODO: make BusinessInfo take in stylist_id as a prop, and set editable as whether or not stylist_id is equal to usercontext_id
-	const editable = true;
+	const [editable, setEditable] = useState(true);
 
 	useEffect(() => {
-		console.log(routeObject);
-		if (userContext.role == "client") {
-			populateStylistData(routeObject.route.params.stylistUsername);
-		} else {
-			populateStylistData(userContext.username);
-		}
+		setEditable(userContext.username == routeObject.route.params.username);
+		populateStylistData(routeObject.route.params.username);
 	}, [routeObject]);
 
 	const populateStylistData = async (username) => {

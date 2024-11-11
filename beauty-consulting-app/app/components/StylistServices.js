@@ -115,12 +115,14 @@ const StylistServices = ({ stylistData, setStylistData, editable }) => {
 		<View style={styles.servicesContainer}>
 			<View style={styles.serviceHeader}>
 				<Text style={styles.label}>Services</Text>
-				<TouchableOpacity
-					style={styles.addButton}
-					onPress={() => setAddModalVisible(true)}
-				>
-					<Feather name="plus" size={24} color="#3498db" />
-				</TouchableOpacity>
+				{editable && (
+					<TouchableOpacity
+						style={styles.addButton}
+						onPress={() => setAddModalVisible(true)}
+					>
+						<Feather name="plus" size={24} color="#3498db" />
+					</TouchableOpacity>
+				)}
 			</View>
 			{stylistData.business.services.map((service) => (
 				<View key={service._id} style={styles.serviceItem}>
@@ -133,28 +135,30 @@ const StylistServices = ({ stylistData, setStylistData, editable }) => {
 								${service.price.toFixed(2)}
 							</Text>
 						</View>
-						<View style={styles.serviceActions}>
-							<TouchableOpacity
-								style={styles.actionButton}
-								onPress={() => handleEditService(service)}
-							>
-								<Feather
-									name="edit-2"
-									size={20}
-									color="#3498db"
-								/>
-							</TouchableOpacity>
-							<TouchableOpacity
-								style={styles.actionButton}
-								onPress={() => handleDeleteService(service)}
-							>
-								<Feather
-									name="trash-2"
-									size={20}
-									color="#e74c3c"
-								/>
-							</TouchableOpacity>
-						</View>
+						{editable && (
+							<View style={styles.serviceActions}>
+								<TouchableOpacity
+									style={styles.actionButton}
+									onPress={() => handleEditService(service)}
+								>
+									<Feather
+										name="edit-2"
+										size={20}
+										color="#3498db"
+									/>
+								</TouchableOpacity>
+								<TouchableOpacity
+									style={styles.actionButton}
+									onPress={() => handleDeleteService(service)}
+								>
+									<Feather
+										name="trash-2"
+										size={20}
+										color="#e74c3c"
+									/>
+								</TouchableOpacity>
+							</View>
+						)}
 					</View>
 					{service.description && (
 						<Text style={styles.serviceDescription}>

@@ -57,18 +57,20 @@ function StylistDetailsStack() {
 }
 
 function MainTabNavigator() {
-	const { role, updateUserContext } = useContext(UserContext);
+	const { username, role, updateUserContext } = useContext(UserContext);
 	const navigation = useNavigation();
 	const LogoutComponent = () => null;
 	return (
 		<Tab.Navigator screenOptions={{ headerShown: false }}>
-			{role === "client" || role === "stylist" ? (
+			{role === "client" ? (
 				// Navigate to ProfileView for both clients and stylists
 				<Tab.Screen name="ProfileView" component={ProfileView} />
 			) : (
 				<Tab.Screen
 					name="BusinessInfoPage"
 					component={BusinessInfoPage}
+					// FIXME: hack to pass username as a prop
+					initialParams={{ username }}
 				/>
 			)}
 			{role === "client" && (
