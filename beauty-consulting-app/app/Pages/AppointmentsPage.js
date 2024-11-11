@@ -6,6 +6,7 @@ import {
 	StyleSheet,
 	Modal,
 	TouchableOpacity,
+	RefreshControl,
 } from "react-native";
 import SignupBackground from "../assets/components/SignupBackground";
 import { UserContext } from "../contexts/userContext";
@@ -17,11 +18,11 @@ import AppointmentBlock from "../components/appointmentBlock";
 import globalStyles from "../assets/GlobalStyles";
 
 function AppointmentsPage() {
-	const userContext = useContext(UserContext);
+	const { username, role } = useContext(UserContext);
 	const [appointments, setAppointments] = useState([]);
 	const [errorMessage, setErrorMessage] = useState("");
 	const [modalVisible, setModalVisible] = useState(false);
-
+	const [refreshing, setRefreshing] = useState(false);
 	const [cancelUsername, setCancelUsername] = useState("");
 	const [cancelTime, setCancelTime] = useState("");
 	const [cancelID, setCancelID] = useState("");
@@ -30,7 +31,7 @@ function AppointmentsPage() {
 		try {
 			const response = await api.get("/appointment/scheduled", {
 				params: {
-					username: userContext.username,
+					username: username,
 				},
 			});
 
@@ -44,7 +45,12 @@ function AppointmentsPage() {
 
 	useEffect(() => {
 		fetchAppointments();
-	}, [userContext.username]);
+	}, [username]);
+
+	const onRefresh = React.useCallback(() => {
+		setRefreshing(true);
+		fetchAppointments().then(() => setRefreshing(false));
+	}, [username]);
 
 	handleCancelPress = (username, dateString, id) => {
 		setCancelUsername(username);
@@ -72,13 +78,23 @@ function AppointmentsPage() {
 		<SignupBackground>
 			<View style={styles.container}>
 				<Text style={styles.header}>Appointments</Text>
-				<ScrollView contentContainerStyle={styles.scrollContainer}>
+				<ScrollView
+					contentContainerStyle={styles.scrollContainer}
+					refreshControl={
+						<RefreshControl
+							refreshing={refreshing}
+							onRefresh={onRefresh}
+							colors={["#000"]} // Android
+							tintColor="#000" // iOS
+						/>
+					}
+				>
 					<ErrorMessage message={errorMessage} />
 					{appointments.map((appointment) => (
 						<View key={appointment._id}>
 							<AppointmentBlock
 								name={
-									userContext.role === "stylist"
+									role === "stylist"
 										? appointment.clientUsername
 										: appointment.stylistUsername
 								}
@@ -86,7 +102,7 @@ function AppointmentsPage() {
 								time={formatTime(appointment.appointmentDate)}
 								cancelAppointment={() => {
 									handleCancelPress(
-										userContext.role === "stylist"
+										role === "stylist"
 											? appointment.clientUsername
 											: appointment.stylistUsername,
 										appointment.appointmentDate,
