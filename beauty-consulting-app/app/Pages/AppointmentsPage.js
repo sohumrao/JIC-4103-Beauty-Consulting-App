@@ -26,22 +26,23 @@ function AppointmentsPage() {
 	const [cancelTime, setCancelTime] = useState("");
 	const [cancelID, setCancelID] = useState("");
 
+	const fetchAppointments = async () => {
+		try {
+			const response = await api.get("/appointment/scheduled", {
+				params: {
+					username: userContext.username,
+				},
+			});
+
+			console.log(response);
+
+			setAppointments(response.data);
+		} catch (error) {
+			handleHTTPError(error, setErrorMessage);
+		}
+	};
+
 	useEffect(() => {
-		const fetchAppointments = async () => {
-			try {
-				const response = await api.get("/appointment/scheduled", {
-					params: {
-						username: userContext.username,
-					},
-				});
-
-				console.log(response);
-
-				setAppointments(response.data);
-			} catch (error) {
-				handleHTTPError(error, setErrorMessage);
-			}
-		};
 		fetchAppointments();
 	}, [userContext.username]);
 
@@ -49,21 +50,18 @@ function AppointmentsPage() {
 		setCancelUsername(username);
 		setCancelTime(dateString);
 		setCancelID(id);
-		console.log(username);
-		console.log(dateString);
-		console.log(id);
 		setModalVisible(true);
 	};
 
 	const confirmCancel = async () => {
 		try {
-			console.log("pressed!");
-			const response = await api.put("/appointment/:id/cancel", {
-				params: {
-					id: cancelID,
-				},
-			});
-			console.log("Cancelled!");
+			req = { id: cancelID };
+			const response = await api.put(
+				"appointment/" + cancelID + "/cancel",
+				req
+			);
+			setModalVisible(false);
+			fetchAppointments();
 		} catch (error) {
 			handleHTTPError(error, setErrorMessage);
 		}
