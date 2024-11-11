@@ -27,7 +27,7 @@ const ProfileView = () => {
 		try {
 			const res = await api.get(`/client/${userContext.username}`);
 			const data = res.data;
-			userContext = userContext.updateUserContext({
+			userContext.updateUserContext({
 				...userContext,
 				...data,
 			});

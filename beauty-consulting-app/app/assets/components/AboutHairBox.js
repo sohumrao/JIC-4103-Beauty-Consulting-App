@@ -8,13 +8,12 @@ import { UserContext } from "../../contexts/userContext";
 
 const HairDetailsBox = () => {
 	const userContext = useContext(UserContext);
-
 	const [hairTypes, setHairTypes] = React.useState([]);
 	const [allergies, setAllergies] = React.useState("");
 	const [concerns, setConcerns] = React.useState("");
 
 	useEffect(() => {
-		console.log(userContext);
+		// console.log(userContext);
 		if (userContext?.hairDetails) {
 			const types = Object.entries(userContext.hairDetails || {})
 				.filter(([key, value]) => value === true)

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import {
 	View,
 	Text,
@@ -13,23 +13,26 @@ import PhoneIcon from "../images/phone-call.svg";
 import EmailIcon from "../images/email.svg";
 import GenderIcon from "../images/genders.svg";
 import api from "utils/axios";
+import { UserContext } from "../../contexts/userContext";
 
-const AboutMeBox = ({ userContext, onUpdateUser }) => {
+const AboutMeBox = ({}) => {
+	const userContext = useContext(UserContext);
 	const [isEdit, setIsEdit] = useState(false);
 	const [fieldValues, setFieldValues] = useState({
-		age: userContext.age,
-		gender: userContext.gender,
-		phoneNumber: userContext.phoneNumber,
+		age: userContext.info.birthday?.slice(0, 10) || "",
+		gender: userContext.info.gender,
+		phoneNumber: userContext.info.phoneNumber,
 		email: userContext.email,
 	});
-
 	const handleInputChange = (field, value) => {
 		setFieldValues((prev) => ({
 			...prev,
 			[field]: value,
 		}));
 	};
-
+	useEffect(() => {
+		console.log(userContext);
+	}, [userContext]);
 	const handleSave = async () => {
 		try {
 			const updatedData = {
@@ -78,7 +81,7 @@ const AboutMeBox = ({ userContext, onUpdateUser }) => {
 			<View style={styles.container}>
 				<View style={styles.infoRow}>
 					<AgeIcon width={20} height={20} style={styles.icon} />
-					<Text style={styles.label}>Age:</Text>
+					<Text style={styles.label}>Birthday:</Text>
 					{isEdit ? (
 						<TextInput
 							style={[styles.input, styles.value]}
