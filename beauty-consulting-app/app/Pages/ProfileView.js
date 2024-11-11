@@ -20,7 +20,6 @@ import AboutHairBox from "../assets/components/AboutHairBox";
 import ProfileImage from "../assets/components/ProfileImage";
 import axios from "axios";
 import Constants from "expo-constants";
-import api from "utils/axios";
 
 const ProfileView = () => {
 	const navigation = useNavigation();
@@ -39,64 +38,133 @@ const ProfileView = () => {
 	// State for Delete Account Confirmation Modal
 	const [modalVisible, setModalVisible] = useState(false);
 
+	// Function to handle editing user information
 	const handleEdit = async () => {
-		name = name != "" ? name : userContext.name;
-		gender = gender != "" ? gender : userContext.gender;
-		allergies = allergies != "" ? allergies : userContext.allergies;
-		concerns = concerns != "" ? concerns : userContext.concerns;
+		// Initialize fields with current user data if entering edit mode
+		if (!isEdit) {
+			setName(userContext.name);
+			setAge(userContext.age ? userContext.age.toString() : "");
+			setGender(userContext.gender);
+			setPhoneNumber(userContext.phoneNumber);
+			setAllergies(userContext.allergies);
+			setConcerns(userContext.concerns);
+		}
+
+		// Toggle edit mode
+		setIsEdit(!isEdit);
 
 		if (isEdit) {
-			try {
-				const req = {
-					username: userContext.username,
-					name: name,
-					age: userContext.age,
-					gender: gender,
-					phoneNumber: userContext.phoneNumber,
-					email: userContext.email,
-					hairDetails: userContext.hairDetails,
-					allergies: allergies,
-					concerns: concerns,
-				};
-				const res = await api.put(
-					`/client/${userContext.username}`,
-					req
-				);
-				console.log("update successful: ", res.data);
-			} catch (error) {
-				console.error("Error with request: ", error);
-			}
+			// When exiting edit mode, submit the changes
+			await submitEdit();
+		}
+	};
 
-			// update user context for rest of session
-			userContext = userContext.updateUserContext({
+	// Function to submit the edited user information
+	const submitEdit = async () => {
+		// Preserve existing values if new values are empty
+		const updatedName = name !== "" ? name : userContext.name;
+		const updatedGender = gender !== "" ? gender : userContext.gender;
+		const updatedAllergies =
+			allergies !== "" ? allergies : userContext.allergies;
+		const updatedConcerns =
+			concerns !== "" ? concerns : userContext.concerns;
+
+		setLoading(true);
+
+		const req = {
+			username: userContext.username,
+			name: updatedName,
+			age: userContext.age, // Assuming age is not editable here
+			gender: updatedGender,
+			phoneNumber: userContext.phoneNumber, // Assuming phoneNumber is not editable here
+			email: userContext.email, // Assuming email is not editable here
+			hairDetails: userContext.hairDetails, // Assuming hairDetails are handled elsewhere
+			allergies: updatedAllergies,
+			concerns: updatedConcerns,
+		};
+
+		try {
+			const apiURL =
+				Constants.manifest?.extra?.apiUrl ||
+				process.env.EXPO_PUBLIC_API_URL;
+			if (!apiURL) {
+				console.error("apiURL not defined");
+				Alert.alert("Error", "API URL is not defined.");
+				setLoading(false);
+				return;
+			}
+			const res = await axios.put(
+				`${apiURL}/client/${userContext.username}`,
+				req
+			);
+			console.log("update successful: ", res.data);
+
+			// Update UserContext with the new information
+			userContext.updateUserContext({
 				username: userContext.username,
-				name: name,
-				age: age,
-				gender: gender,
+				name: updatedName,
+				age: userContext.age,
+				gender: updatedGender,
 				phoneNumber: userContext.phoneNumber,
 				email: userContext.email,
 				hairDetails: userContext.hairDetails,
-				allergies: allergies,
-				concerns: concerns,
-				updateUserContext: userContext.updateUserContext,
+				allergies: updatedAllergies,
+				concerns: updatedConcerns,
 			});
+
+			Alert.alert("Success", "Profile updated successfully.");
+		} catch (error) {
+			console.error("Error with request: ", error);
+			Alert.alert(
+				"Error",
+				"Failed to update profile. Please try again later."
+			);
+		} finally {
+			setLoading(false);
 		}
-		setIsEdit(!isEdit);
 	};
 
 	// Function to handle account deletion
 	const deleteAccount = async () => {
 		// TODO: update with a separate flow for password validation after backend rework
 
+		setLoading(true);
+
 		try {
 			console.log(userContext);
-			const res = api.delete(`/client/${userContext.username}`);
+			const apiURL =
+				Constants.manifest?.extra?.apiUrl ||
+				process.env.EXPO_PUBLIC_API_URL;
+			if (!apiURL) {
+				console.error("apiURL not defined");
+				Alert.alert("Error", "API URL is not defined.");
+				setLoading(false);
+				return;
+			}
+			const res = await axios.delete(
+				`${apiURL}/client/${userContext.username}`
+			);
 			console.log(res.message);
+			Alert.alert(
+				"Account Deleted",
+				"Your account has been successfully deleted.",
+				[
+					{
+						text: "OK",
+						onPress: () => navigation.navigate("Sign In"),
+					},
+				]
+			);
 		} catch (error) {
 			console.error("Error with request: ", error);
-			return;
+			Alert.alert(
+				"Error",
+				"Failed to delete account. Please try again later."
+			);
+		} finally {
+			setLoading(false);
+			setModalVisible(false);
 		}
-		navigation.navigate("Sign In");
 	};
 
 	// Function to fetch user data on component mount (optional)
