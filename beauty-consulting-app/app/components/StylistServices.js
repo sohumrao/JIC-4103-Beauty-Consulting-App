@@ -462,6 +462,7 @@ const styles = StyleSheet.create({
 		padding: 10,
 		elevation: 2,
 		minWidth: 100,
+		backgroundColor: "#FF5252",
 	},
 	buttonCancel: {
 		backgroundColor: "#2196F3",
