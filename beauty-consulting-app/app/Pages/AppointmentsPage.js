@@ -4,6 +4,7 @@ import {
 	Text,
 	ScrollView,
 	StyleSheet,
+	Modal,
 	TouchableOpacity,
 	RefreshControl,
 } from "react-native";
@@ -13,12 +14,18 @@ import api from "utils/axios";
 import handleHTTPError from "utils/errorHandling";
 import ErrorMessage from "../components/ErrorMessage";
 import { formatDate, formatTime } from "utils/utils";
+import AppointmentBlock from "../components/appointmentBlock";
+import globalStyles from "../assets/GlobalStyles";
 
 function AppointmentsPage() {
 	const { username, role } = useContext(UserContext);
 	const [appointments, setAppointments] = useState([]);
 	const [errorMessage, setErrorMessage] = useState("");
-	const [refreshing, setRefreshing] = useState(false); // Add this state
+	const [modalVisible, setModalVisible] = useState(false);
+	const [refreshing, setRefreshing] = useState(false);
+	const [cancelUsername, setCancelUsername] = useState("");
+	const [cancelTime, setCancelTime] = useState("");
+	const [cancelID, setCancelID] = useState("");
 
 	const fetchAppointments = async () => {
 		try {
@@ -45,6 +52,28 @@ function AppointmentsPage() {
 		fetchAppointments().then(() => setRefreshing(false));
 	}, [username]);
 
+	handleCancelPress = (username, dateString, id) => {
+		setCancelUsername(username);
+		setCancelTime(dateString);
+		setCancelID(id);
+		setModalVisible(true);
+	};
+
+	const confirmCancel = async () => {
+		try {
+			req = { id: cancelID };
+			const response = await api.put(
+				"appointment/" + cancelID + "/cancel",
+				req
+			);
+			setModalVisible(false);
+			fetchAppointments();
+		} catch (error) {
+			handleHTTPError(error, setErrorMessage);
+		}
+	};
+
+	// TODO: would be nice to display actual names rather than username
 	return (
 		<SignupBackground>
 			<View style={styles.container}>
@@ -62,24 +91,71 @@ function AppointmentsPage() {
 				>
 					<ErrorMessage message={errorMessage} />
 					{appointments.map((appointment) => (
-						<TouchableOpacity
-							key={appointment._id}
-							style={styles.appointmentBox}
-						>
-							<Text style={styles.name}>
-								{role === "stylist"
-									? appointment.clientUsername
-									: appointment.stylistUsername}
-							</Text>
-							<Text style={styles.details}>
-								Date: {formatDate(appointment.appointmentDate)}
-							</Text>
-							<Text style={styles.details}>
-								Time: {formatTime(appointment.appointmentDate)}
-							</Text>
-						</TouchableOpacity>
+						<View key={appointment._id}>
+							<AppointmentBlock
+								name={
+									role === "stylist"
+										? appointment.clientUsername
+										: appointment.stylistUsername
+								}
+								date={formatDate(appointment.appointmentDate)}
+								time={formatTime(appointment.appointmentDate)}
+								cancelAppointment={() => {
+									handleCancelPress(
+										role === "stylist"
+											? appointment.clientUsername
+											: appointment.stylistUsername,
+										appointment.appointmentDate,
+										appointment._id
+									);
+								}}
+							/>
+						</View>
 					))}
 				</ScrollView>
+				<Modal
+					visible={modalVisible}
+					transparent={false}
+					animationType="slide"
+				>
+					<SignupBackground>
+						<View style={globalStyles.box}>
+							<Text style={globalStyles.title}>
+								Cancel Appointment
+							</Text>
+							<Text
+								style={[
+									globalStyles.promptText,
+									{ marginBottom: 10 },
+								]}
+							>
+								Cancel your appointment with {cancelUsername} at{" "}
+								{formatTime(cancelTime)} on{" "}
+								{formatDate(cancelTime)}?
+							</Text>
+							<TouchableOpacity
+								style={[globalStyles.button, { marginTop: 10 }]}
+								onPress={confirmCancel}
+							>
+								<Text style={globalStyles.buttonText}>
+									Confirm Cancel
+								</Text>
+							</TouchableOpacity>
+							<TouchableOpacity
+								style={[globalStyles.button, { marginTop: 10 }]}
+								onPress={() => {
+									setModalVisible(false);
+									setErrorMessage(null);
+								}}
+							>
+								<Text style={globalStyles.buttonText}>
+									Go Back
+								</Text>
+							</TouchableOpacity>
+							<ErrorMessage message={errorMessage} />
+						</View>
+					</SignupBackground>
+				</Modal>
 			</View>
 		</SignupBackground>
 	);
