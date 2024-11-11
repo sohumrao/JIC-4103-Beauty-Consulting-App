@@ -7,7 +7,6 @@ import {
 	Modal,
 	TouchableOpacity,
 	RefreshControl,
-	Image,
 } from "react-native";
 import SignupBackground from "../assets/components/SignupBackground";
 import { UserContext } from "../contexts/userContext";
@@ -76,7 +75,7 @@ function AppointmentsPage() {
 		fetchAppointments().then(() => setRefreshing(false));
 	}, [username]);
 
-	handleCancelPress = (username, dateString, id) => {
+	const handleCancelPress = (username, dateString, id) => {
 		setCancelUsername(username);
 		setCancelTime(dateString);
 		setCancelID(id);
@@ -85,11 +84,8 @@ function AppointmentsPage() {
 
 	const confirmCancel = async () => {
 		try {
-			req = { id: cancelID };
-			const response = await api.put(
-				"appointment/" + cancelID + "/cancel",
-				req
-			);
+			const req = { id: cancelID };
+			await api.put("appointment/" + cancelID + "/cancel", req);
 			setModalVisible(false);
 			fetchAppointments();
 		} catch (error) {
