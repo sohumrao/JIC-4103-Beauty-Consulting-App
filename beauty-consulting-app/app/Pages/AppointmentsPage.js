@@ -7,6 +7,7 @@ import {
 	Modal,
 	TouchableOpacity,
 	RefreshControl,
+	Image,
 } from "react-native";
 import SignupBackground from "../assets/components/SignupBackground";
 import { UserContext } from "../contexts/userContext";
@@ -93,6 +94,15 @@ function AppointmentsPage() {
 		}
 	};
 
+	const arrayToBase64 = (byteArray) => {
+		// Convert the array of integers to a Uint8Array
+		const uint8Array = new Uint8Array(byteArray);
+		// Create a binary string from the Uint8Array
+		const binaryString = String.fromCharCode(...uint8Array);
+		// Convert the binary string to base64
+		return btoa(binaryString);
+	};
+
 	// TODO: would be nice to display actual names rather than username
 	return (
 		<SignupBackground>
@@ -161,7 +171,20 @@ function AppointmentsPage() {
 							<Text
 								style={styles.modalTitle}
 							>{`${viewedClientInfo?.info.name ?? ""}\'s Info`}</Text>
-
+							<Image
+								style={[
+									globalStyles.stylistImage,
+									{ alignSelf: "center" },
+								]}
+								source={
+									viewedClientInfo?.profilePhoto?.data
+										? {
+												uri: `data:${viewedClientInfo.profilePhoto?.contentType};base64,${arrayToBase64(viewedClientInfo.profilePhoto?.data.data)}`,
+											}
+										: require("../assets/images/placeholder.png")
+								}
+								resizeMode="cover"
+							/>
 							<Text style={styles.profileDetail}>
 								<Text style={styles.label}>Gender:</Text>{" "}
 								{viewedClientInfo?.info.gender ?? ""}

@@ -97,8 +97,8 @@ const globalStyles = StyleSheet.create({
 	},
 	directoryContainer: {},
 	stylistImage: {
-		width: 80, // Fixed width for the image
-		height: 80, // Fixed height for the image
+		width: 120, // Fixed width for the image
+		height: 120, // Fixed height for the image
 		borderRadius: 40, // Make the image circular
 		marginRight: 15, // Spacing between image and text
 		backgroundColor: "#e0e0e0", // Fallback background color
