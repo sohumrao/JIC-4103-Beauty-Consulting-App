@@ -3,7 +3,7 @@ import { Image, Dimensions } from "react-native";
 import globalStyles from "../GlobalStyles";
 import { StyleSheet } from "react-native";
 
-const ProfilePhotoDisplay = ({ profilePhoto }) => {
+const ProfilePhotoDisplay = ({ profilePhoto, styleProp }) => {
 	// Method to convert profile data from byte array
 	const arrayToBase64 = (byteArray) => {
 		// Convert the array of integers to a Uint8Array
@@ -16,7 +16,7 @@ const ProfilePhotoDisplay = ({ profilePhoto }) => {
 
 	return (
 		<Image
-			style={styles.photo}
+			style={styleProp}
 			source={
 				profilePhoto?.data
 					? {
@@ -28,17 +28,5 @@ const ProfilePhotoDisplay = ({ profilePhoto }) => {
 		/>
 	);
 };
-
-// Default styling, dynamically allocates dimensions relative to screen size
-const screenWidth = Dimensions.get("window").width;
-const styles = StyleSheet.create({
-	photo: {
-		width: screenWidth * 0.5,
-		height: screenWidth * 0.5, // Ensures height is equal to width
-		borderRadius: (screenWidth * 0.5) / 2, // Half of the width for a perfect circle
-		backgroundColor: "#e0e0e0",
-		alignSelf: "center",
-	},
-});
 
 export default ProfilePhotoDisplay;

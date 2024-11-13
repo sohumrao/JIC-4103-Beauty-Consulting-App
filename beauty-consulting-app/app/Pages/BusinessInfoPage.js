@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { View, Text, StyleSheet, ScrollView } from "react-native";
+import { View, Text, StyleSheet, ScrollView, Dimensions } from "react-native";
 import { UserContext } from "../contexts/userContext";
 import globalStyles from "../assets/GlobalStyles";
 import api from "utils/axios";
@@ -47,6 +47,7 @@ const BusinessInfoPage = (routeObject) => {
 
 			<ProfilePhotoDisplay
 				profilePhoto={stylistData.profilePhoto}
+				styleProp={styles.photo}
 			></ProfilePhotoDisplay>
 
 			{stylistData.username == userContext.username && (
@@ -121,6 +122,7 @@ const BusinessInfoPage = (routeObject) => {
 	);
 };
 
+const screenWidth = Dimensions.get("window").width;
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
@@ -144,6 +146,13 @@ const styles = StyleSheet.create({
 	value: {
 		fontSize: 16,
 		color: "#555",
+	},
+	photo: {
+		width: screenWidth * 0.5,
+		height: screenWidth * 0.5, // Ensures height is equal to width
+		borderRadius: (screenWidth * 0.5) / 2, // Half of the width for a perfect circle
+		backgroundColor: "#e0e0e0",
+		alignSelf: "center",
 	},
 });
 
