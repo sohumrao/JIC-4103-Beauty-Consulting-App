@@ -1,9 +1,12 @@
 import React, { useState } from "react";
-import { View, Button, Image, Alert } from "react-native";
+import { View, Text, Alert, TouchableOpacity } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import api from "utils/axios";
+import globalStyles from "../GlobalStyles";
+import EditImage from "../images/pen.svg";
+import { StyleSheet } from "react-native";
 
-const ProfileImage = ({ username }) => {
+const ImageUploadButton = ({ username, photoChanged, setPhotoChanged }) => {
 	const [imageUri, setImageUri] = useState(null);
 
 	const pickImage = async () => {
@@ -43,6 +46,7 @@ const ProfileImage = ({ username }) => {
 				},
 			});
 
+			setPhotoChanged(!photoChanged);
 			Alert.alert("Success", "Photo uploaded successfully!");
 		} catch (error) {
 			console.error(
@@ -58,20 +62,39 @@ const ProfileImage = ({ username }) => {
 
 	return (
 		<View style={{ alignItems: "center", justifyContent: "center" }}>
-			<Button title="Upload Profile Picture" onPress={pickImage} />
-			{imageUri && (
-				<Image
-					source={{ uri: imageUri }}
-					style={{
-						width: 200,
-						height: 200,
-						borderRadius: 100,
-						marginTop: 20,
-					}}
+			<TouchableOpacity
+				style={[
+					globalStyles.button,
+					{
+						flex: 1,
+						flexDirection: "row",
+						marginTop: 10,
+						marginBottom: 10,
+						paddingLeft: 10,
+						paddingRight: 10,
+					},
+				]}
+				onPress={pickImage}
+			>
+				<Text style={[globalStyles.buttonText, { marginRight: 10 }]}>
+					Edit Profile Image
+				</Text>
+				<EditImage
+					width={12}
+					height={12}
+					fill={"white"}
+					style={styles.editIcon}
 				/>
-			)}
+			</TouchableOpacity>
 		</View>
 	);
 };
 
-export default ProfileImage;
+const styles = StyleSheet.create({
+	editIcon: {
+		height: 24,
+		width: 2,
+	},
+});
+
+export default ImageUploadButton;

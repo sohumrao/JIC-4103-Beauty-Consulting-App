@@ -8,6 +8,8 @@ import { useNavigation } from "@react-navigation/native";
 import handleHTTPError from "utils/errorHandling";
 import { formatDate } from "utils/utils";
 import StylistServices from "../components/StylistServices";
+import ImageUploadButton from "../assets/components/ImageUploadButton";
+import ProfilePhotoDisplay from "../assets/components/ProfilePhotoDisplay";
 
 const BusinessInfoPage = (routeObject) => {
 	// Access the user context
@@ -15,11 +17,12 @@ const BusinessInfoPage = (routeObject) => {
 	const navigation = useNavigation();
 	const [stylistData, setStylistData] = useState(null);
 	const [editable, setEditable] = useState(true);
+	const [photoChanged, setPhotoChanged] = useState(false);
 
 	useEffect(() => {
 		setEditable(userContext.username == routeObject.route.params.username);
 		populateStylistData(routeObject.route.params.username);
-	}, [routeObject]);
+	}, [routeObject, photoChanged]);
 
 	const populateStylistData = async (username) => {
 		try {
@@ -41,6 +44,18 @@ const BusinessInfoPage = (routeObject) => {
 	return (
 		<ScrollView style={styles.container}>
 			<Text style={styles.header}>{stylistData.business.name}</Text>
+
+			<ProfilePhotoDisplay
+				profilePhoto={stylistData.profilePhoto}
+			></ProfilePhotoDisplay>
+
+			{stylistData.username == userContext.username && (
+				<ImageUploadButton
+					username={userContext.username}
+					photoChanged={photoChanged}
+					setPhotoChanged={setPhotoChanged}
+				></ImageUploadButton>
+			)}
 
 			<View style={styles.infoContainer}>
 				<Text style={styles.label}>Stylist Name:</Text>

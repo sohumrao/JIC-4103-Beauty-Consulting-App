@@ -6,7 +6,6 @@ import SignupBackground from "../assets/components/SignupBackground";
 import api from "utils/axios";
 import AboutMeBox from "../assets/components/AboutMeBox";
 import AboutHairBox from "../assets/components/AboutHairBox";
-import ProfilePicture from "../assets/components/ProfilePicture";
 import handleHTTPError from "utils/errorHandling";
 
 const ProfileView = () => {
