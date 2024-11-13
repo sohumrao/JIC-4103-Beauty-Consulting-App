@@ -7,6 +7,7 @@ import {
 	Modal,
 	TouchableOpacity,
 	RefreshControl,
+	Dimensions,
 } from "react-native";
 import SignupBackground from "../assets/components/SignupBackground";
 import { UserContext } from "../contexts/userContext";
@@ -16,6 +17,7 @@ import ErrorMessage from "../components/ErrorMessage";
 import { formatDate, formatTime } from "utils/utils";
 import AppointmentBlock from "../components/appointmentBlock";
 import globalStyles from "../assets/GlobalStyles";
+import ProfilePhotoDisplay from "../assets/components/ProfilePhotoDisplay";
 
 function AppointmentsPage() {
 	const { username, role } = useContext(UserContext);
@@ -162,6 +164,13 @@ function AppointmentsPage() {
 								style={styles.modalTitle}
 							>{`${viewedClientInfo?.info.name ?? ""}\'s Info`}</Text>
 
+							<ProfilePhotoDisplay
+								profilePhoto={
+									viewedClientInfo?.profilePhoto ?? null
+								}
+								styleProp={styles.photo}
+							/>
+
 							<Text style={styles.profileDetail}>
 								<Text style={styles.label}>Gender:</Text>{" "}
 								{viewedClientInfo?.info.gender ?? ""}
@@ -238,6 +247,7 @@ function AppointmentsPage() {
 	);
 }
 
+const screenWidth = Dimensions.get("window").width;
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
@@ -316,11 +326,12 @@ const styles = StyleSheet.create({
 		color: "white",
 		fontWeight: "bold",
 	},
-	clientPicture: {
-		width: 100, // Width of the image
-		height: 100, // Height of the image
-		borderRadius: 50, // Half of width/height for a circle
-		marginBottom: 15,
+	photo: {
+		width: screenWidth * 0.5,
+		height: screenWidth * 0.5, // Ensures height is equal to width
+		borderRadius: (screenWidth * 0.5) / 2, // Half of the width for a perfect circle
+		backgroundColor: "#e0e0e0",
+		alignSelf: "center",
 	},
 });
 
