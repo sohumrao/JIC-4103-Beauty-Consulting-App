@@ -96,8 +96,6 @@ const Directory = () => {
 		setCurrentStylist(stylistUsername);
 	};
 
-	// TODO: prevent multiple appointments being created
-	// maybe blur button / make it non interactable for that session?
 	const createAppointment = async (date, time) => {
 		try {
 			if (!date || !time) {
@@ -113,7 +111,6 @@ const Directory = () => {
 			};
 			console.log(req);
 			await api.post("/appointment/create", req);
-			console.log("Appointment Created!");
 			setModalVisible(false);
 			setStylistsBooked([...stylistsBooked, currentStylist]);
 		} catch (error) {
