@@ -38,13 +38,13 @@ const Directory = () => {
 		refreshSearch().then(() => setIsLoading(false));
 	});
 
-	const retrieveStylistData = async () => {
+	const retrieveStylistData = async (queryCity) => {
 		try {
-			console.log(city);
+			setCity(queryCity);
 			const req = {
 				username: userContext.username,
 				distance: dropDownValue,
-				city: city,
+				city: queryCity,
 			};
 			setIsLoading(true);
 			const res = await api.post(
@@ -57,6 +57,21 @@ const Directory = () => {
 			handleHTTPError(error);
 			setIsLoading(false);
 			setStylistData(null);
+		}
+	};
+
+	const refreshSearch = async () => {
+		if (zipCode.length < 5) {
+			setMessageError("Input a full ZIP code.");
+			return;
+		}
+		try {
+			const locationResponse = await getCityFromZIP(zipCode);
+			setMessageError("");
+			retrieveStylistData(locationResponse.city);
+		} catch (error) {
+			setMessageError("Error Retrieving Results");
+			handleHTTPError(error);
 		}
 	};
 
@@ -96,24 +111,6 @@ const Directory = () => {
 
 	const hideModal = () => {
 		setModalVisible(false);
-	};
-
-	const refreshSearch = async () => {
-		if (zipCode.length < 5) {
-			setMessageError("Input a full ZIP code.");
-			return;
-		}
-		try {
-			const locationResponse = await getCityFromZIP(zipCode);
-			setMessageError("");
-			console.log("RETURNED: " + locationResponse.city);
-			setCity(locationResponse.city);
-			console.log("VALUE OF CITY IS: " + city);
-			retrieveStylistData();
-		} catch (error) {
-			setMessageError("Error Retrieving Results");
-			handleHTTPError(error);
-		}
 	};
 
 	const dropDownData = [
@@ -161,24 +158,14 @@ const Directory = () => {
 
 	if (isLoading) {
 		return (
-			<ScrollView>
-				<RefreshControl
-					refreshing={isLoading}
-					onRefresh={onRefresh}
-					colors={["#000"]}
-					tintColor="#000"
-				/>
-				<View style={globalStyles.container}>
-					{renderHeaderWithInputs()}
-					<View style={globalStyles.centeringContainer}>
-						<View style={globalStyles.box}>
-							<Text style={globalStyles.promptText}>
-								Loading...
-							</Text>
-						</View>
+			<View style={globalStyles.container}>
+				{renderHeaderWithInputs()}
+				<View style={globalStyles.centeringContainer}>
+					<View style={globalStyles.box}>
+						<Text style={globalStyles.promptText}>Loading...</Text>
 					</View>
 				</View>
-			</ScrollView>
+			</View>
 		);
 	}
 	return (
@@ -187,15 +174,12 @@ const Directory = () => {
 			{stylistData ? (
 				<View>
 					<ScrollView style={globalStyles.directoryContainer}>
-						refreshControl=
-						{
-							<RefreshControl
-								refreshing={isLoading}
-								onRefresh={onRefresh}
-								colors={["#000"]}
-								tintColor="#000"
-							/>
-						}
+						<RefreshControl
+							refreshing={isLoading}
+							onRefresh={onRefresh}
+							colors={["#000"]}
+							tintColor="#000"
+						/>
 						{stylistData.map((stylist) => (
 							<View key={stylist.username}>
 								<StylistListing
@@ -225,6 +209,12 @@ const Directory = () => {
 				</View>
 			) : (
 				<ScrollView>
+					<RefreshControl
+						refreshing={isLoading}
+						onRefresh={onRefresh}
+						colors={["#000"]}
+						tintColor="#000"
+					/>
 					<ErrorMessage
 						message={
 							"Could not find stylist in " +
