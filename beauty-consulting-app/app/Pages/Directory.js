@@ -6,6 +6,7 @@ import {
 	TextInput,
 	TouchableOpacity,
 	ScrollView,
+	RefreshControl,
 } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
 import globalStyles from "../assets/GlobalStyles";
@@ -32,8 +33,14 @@ const Directory = () => {
 		retrieveStylistData(city);
 	}, [userContext.username, city]);
 
-	const retrieveStylistData = async (city) => {
+	const onRefresh = React.useCallback(() => {
+		setIsLoading(true);
+		refreshSearch().then(() => setIsLoading(false));
+	});
+
+	const retrieveStylistData = async () => {
 		try {
+			console.log(city);
 			const req = {
 				username: userContext.username,
 				distance: dropDownValue,
@@ -99,8 +106,10 @@ const Directory = () => {
 		try {
 			const locationResponse = await getCityFromZIP(zipCode);
 			setMessageError("");
+			console.log("RETURNED: " + locationResponse.city);
 			setCity(locationResponse.city);
-			retrieveStylistData(city);
+			console.log("VALUE OF CITY IS: " + city);
+			retrieveStylistData();
 		} catch (error) {
 			setMessageError("Error Retrieving Results");
 			handleHTTPError(error);
@@ -152,14 +161,24 @@ const Directory = () => {
 
 	if (isLoading) {
 		return (
-			<View style={globalStyles.container}>
-				{renderHeaderWithInputs()}
-				<View style={globalStyles.centeringContainer}>
-					<View style={globalStyles.box}>
-						<Text style={globalStyles.promptText}>Loading...</Text>
+			<ScrollView>
+				<RefreshControl
+					refreshing={isLoading}
+					onRefresh={onRefresh}
+					colors={["#000"]}
+					tintColor="#000"
+				/>
+				<View style={globalStyles.container}>
+					{renderHeaderWithInputs()}
+					<View style={globalStyles.centeringContainer}>
+						<View style={globalStyles.box}>
+							<Text style={globalStyles.promptText}>
+								Loading...
+							</Text>
+						</View>
 					</View>
 				</View>
-			</View>
+			</ScrollView>
 		);
 	}
 	return (
@@ -168,6 +187,15 @@ const Directory = () => {
 			{stylistData ? (
 				<View>
 					<ScrollView style={globalStyles.directoryContainer}>
+						refreshControl=
+						{
+							<RefreshControl
+								refreshing={isLoading}
+								onRefresh={onRefresh}
+								colors={["#000"]}
+								tintColor="#000"
+							/>
+						}
 						{stylistData.map((stylist) => (
 							<View key={stylist.username}>
 								<StylistListing
@@ -187,22 +215,24 @@ const Directory = () => {
 							</View>
 						))}
 					</ScrollView>
-					{modalVisible && (
+					{modalVisible ? (
 						<AppointmentModal
 							visible={modalVisible}
 							onClose={hideModal}
 							onCreateAppointment={createAppointment}
 						/>
-					)}
+					) : null}
 				</View>
 			) : (
-				<ErrorMessage
-					message={
-						"Could not find stylist in " +
-						city +
-						". \n Try a different search."
-					}
-				/>
+				<ScrollView>
+					<ErrorMessage
+						message={
+							"Could not find stylist in " +
+							city +
+							". \n Try a different search."
+						}
+					/>
+				</ScrollView>
 			)}
 		</View>
 	);
