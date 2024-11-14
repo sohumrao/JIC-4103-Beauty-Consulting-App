@@ -4,7 +4,6 @@ import {
 	Text,
 	View,
 	TextInput,
-	TouchableOpacity,
 	ScrollView,
 	RefreshControl,
 } from "react-native";
@@ -21,6 +20,7 @@ import AppointmentModal from "../assets/components/appointmentModal";
 const Directory = () => {
 	var userContext = useContext(UserContext);
 	const [city, setCity] = useState("Atlanta"); // TODO: change default value once clients input address
+	const [prevReq, setPrevReq] = useState(null);
 	const [stylistData, setStylistData] = useState(null);
 	const [zipCode, setZipCode] = useState("30332");
 	const [messageError, setMessageError] = useState("");
@@ -46,12 +46,24 @@ const Directory = () => {
 				distance: dropDownValue,
 				city: queryCity,
 			};
+			setPrevReq(req);
+			// prevent repeated requests with same information
+			// save API calls
+			// we still make one call to check city with each request but thats fine
+			if (
+				prevReq &&
+				req.distance == prevReq.distance &&
+				req.city == prevReq.city
+			) {
+				return;
+			}
 			setIsLoading(true);
 			const res = await api.post(
 				`/client/matchStylists/${userContext.username}`,
 				req
 			);
 			setIsLoading(false);
+			setMessageError("");
 			setStylistData(res.data);
 		} catch (error) {
 			handleHTTPError(error);
@@ -148,9 +160,6 @@ const Directory = () => {
 					style={styles.dropDown}
 					selectedTextStyle={styles.selectedText}
 				/>
-				<TouchableOpacity style={styles.button} onPress={refreshSearch}>
-					<Text style={globalStyles.buttonText}>Refresh</Text>
-				</TouchableOpacity>
 			</View>
 			<ErrorMessage message={messageError} />
 		</View>
