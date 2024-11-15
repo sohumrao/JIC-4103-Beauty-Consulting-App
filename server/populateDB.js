@@ -5,7 +5,7 @@ import { Stylist } from "./model/stylist.js";
 import { faker } from "@faker-js/faker";
 import fs from "fs";
 
-connectDB(process.env.MONGO_URI);
+const connection = await connectDB(process.env.MONGO_URI);
 
 // Tuneable constants
 const NUM_CLIENTS = 2;

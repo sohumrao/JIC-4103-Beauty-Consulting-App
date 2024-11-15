@@ -13,7 +13,7 @@ const PORT = process.env.PORT || 5050;
 const app = express();
 
 // MongoDB Connection
-connectDB(process.env.MONGO_URI);
+await connectDB(process.env.MONGO_URI);
 
 // Middleware setup
 app.use(cors());
