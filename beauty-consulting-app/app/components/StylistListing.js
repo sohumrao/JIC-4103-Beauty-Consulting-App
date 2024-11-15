@@ -1,7 +1,14 @@
 import React from "react";
-import { Text, View, TouchableOpacity, Image } from "react-native";
+import {
+	Text,
+	View,
+	TouchableOpacity,
+	Dimensions,
+	StyleSheet,
+} from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import globalStyles from "../assets/GlobalStyles";
+import ProfilePhotoDisplay from "../assets/components/ProfilePhotoDisplay";
 
 const StylistListing = ({
 	stylistName,
@@ -35,17 +42,10 @@ const StylistListing = ({
 
 	return (
 		<View style={globalStyles.stylistListingContainer}>
-			<Image
-				style={globalStyles.stylistImage}
-				source={
-					profilePicture?.data
-						? {
-								uri: `data:${profilePicture?.contentType};base64,${arrayToBase64(profilePicture?.data.data)}`,
-							}
-						: require("../assets/images/placeholder.png")
-				}
-				resizeMode="cover"
-			/>
+			<ProfilePhotoDisplay
+				profilePhoto={profilePicture}
+				styleProp={styles.photo}
+			></ProfilePhotoDisplay>
 			<View style={globalStyles.listingTextContainer}>
 				<Text style={globalStyles.stylistName}>{stylistName}</Text>
 				<Text style={globalStyles.businessName}>{businessName}</Text>
@@ -78,5 +78,17 @@ const StylistListing = ({
 		</View>
 	);
 };
+
+const screenWidth = Dimensions.get("window").width;
+const styles = StyleSheet.create({
+	photo: {
+		width: screenWidth * 0.35,
+		height: screenWidth * 0.35, // Ensures height is equal to width
+		borderRadius: (screenWidth * 0.5) / 2, // Half of the width for a perfect circle
+		backgroundColor: "#e0e0e0",
+		alignSelf: "center",
+		marginRight: 15,
+	},
+});
 
 export default StylistListing;

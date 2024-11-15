@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { View, Text, StyleSheet, ScrollView } from "react-native";
+import { View, Text, StyleSheet, ScrollView, Dimensions } from "react-native";
 import { UserContext } from "../contexts/userContext";
 import globalStyles from "../assets/GlobalStyles";
 import api from "utils/axios";
@@ -8,6 +8,8 @@ import { useNavigation } from "@react-navigation/native";
 import handleHTTPError from "utils/errorHandling";
 import { formatDate } from "utils/utils";
 import StylistServices from "../components/StylistServices";
+import ImageUploadButton from "../assets/components/ImageUploadButton";
+import ProfilePhotoDisplay from "../assets/components/ProfilePhotoDisplay";
 
 const BusinessInfoPage = (routeObject) => {
 	// Access the user context
@@ -15,11 +17,12 @@ const BusinessInfoPage = (routeObject) => {
 	const navigation = useNavigation();
 	const [stylistData, setStylistData] = useState(null);
 	const [editable, setEditable] = useState(true);
+	const [photoChanged, setPhotoChanged] = useState(false);
 
 	useEffect(() => {
 		setEditable(userContext.username == routeObject.route.params.username);
 		populateStylistData(routeObject.route.params.username);
-	}, [routeObject]);
+	}, [routeObject, photoChanged]);
 
 	const populateStylistData = async (username) => {
 		try {
@@ -41,6 +44,19 @@ const BusinessInfoPage = (routeObject) => {
 	return (
 		<ScrollView style={styles.container}>
 			<Text style={styles.header}>{stylistData.business.name}</Text>
+
+			<ProfilePhotoDisplay
+				profilePhoto={stylistData.profilePhoto}
+				styleProp={styles.photo}
+			></ProfilePhotoDisplay>
+
+			{stylistData.username == userContext.username && (
+				<ImageUploadButton
+					username={userContext.username}
+					photoChanged={photoChanged}
+					setPhotoChanged={setPhotoChanged}
+				></ImageUploadButton>
+			)}
 
 			<View style={styles.infoContainer}>
 				<Text style={styles.label}>Stylist Name:</Text>
@@ -106,6 +122,7 @@ const BusinessInfoPage = (routeObject) => {
 	);
 };
 
+const screenWidth = Dimensions.get("window").width;
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
@@ -129,6 +146,13 @@ const styles = StyleSheet.create({
 	value: {
 		fontSize: 16,
 		color: "#555",
+	},
+	photo: {
+		width: screenWidth * 0.5,
+		height: screenWidth * 0.5, // Ensures height is equal to width
+		borderRadius: (screenWidth * 0.5) / 2, // Half of the width for a perfect circle
+		backgroundColor: "#e0e0e0",
+		alignSelf: "center",
 	},
 });
 

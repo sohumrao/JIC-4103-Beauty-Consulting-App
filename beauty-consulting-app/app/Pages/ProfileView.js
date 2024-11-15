@@ -6,8 +6,8 @@ import SignupBackground from "../assets/components/SignupBackground";
 import api from "utils/axios";
 import AboutMeBox from "../assets/components/AboutMeBox";
 import AboutHairBox from "../assets/components/AboutHairBox";
-import ProfilePicture from "../assets/components/ProfilePicture";
 import handleHTTPError from "utils/errorHandling";
+import ProfilePhotoDisplay from "../assets/components/ProfilePhotoDisplay";
 
 const ProfileView = () => {
 	const navigation = useNavigation();
@@ -111,9 +111,7 @@ const ProfileView = () => {
 							marginTop: 100,
 							marginLeft: 20,
 						}}
-					>
-						<ProfilePicture picture={profilePicture} />
-					</View>
+					></View>
 					<View style={{ marginTop: 180 }}>
 						<AboutMeBox
 							userContext={userContext}
