@@ -5,29 +5,52 @@ import { Stylist } from "./model/stylist.js";
 import { faker } from "@faker-js/faker";
 import fs from "fs";
 
-const connection = await connectDB(process.env.MONGO_URI);
+const dummyData = JSON.parse(fs.readFileSync("./assets/dummyData.json"));
+const { services, concerns, allergies, additionalInfo } = dummyData;
+
+await connectDB(process.env.MONGO_URI);
 
 // Tuneable constants
 const NUM_CLIENTS = 2;
 const NUM_STYLISTS = 10;
 
-// Helper function to generate random boolean
-const randomBoolean = () => Math.random() < 0.5;
-
 // Helper function to generate hair details
-const generateHairDetails = () => ({
-	Natural: randomBoolean(),
-	Relaxed: randomBoolean(),
-	Straight: randomBoolean(),
-	Wavy: randomBoolean(),
-	Curly: randomBoolean(),
-	DeepWave: randomBoolean(),
-	LooseCurl: randomBoolean(),
-	TightlyCoiled: randomBoolean(),
-	Fine: randomBoolean(),
-	Medium: randomBoolean(),
-	Thick: randomBoolean(),
-});
+const generateHairDetails = () => {
+	// Select one random type and one random texture
+	const hairTypes = [
+		"Natural",
+		"Relaxed",
+		"Straight",
+		"Wavy",
+		"Curly",
+		"DeepWave",
+		"LooseCurl",
+		"TightlyCoiled",
+	];
+	const hairTextures = ["Fine", "Medium", "Thick"];
+
+	const selectedType =
+		hairTypes[Math.floor(Math.random() * hairTypes.length)];
+	const selectedTexture =
+		hairTextures[Math.floor(Math.random() * hairTextures.length)];
+
+	return {
+		// type
+		Natural: selectedType === "Natural",
+		Relaxed: selectedType === "Relaxed",
+		Straight: selectedType === "Straight",
+		Wavy: selectedType === "Wavy",
+		Curly: selectedType === "Curly",
+		DeepWave: selectedType === "DeepWave",
+		LooseCurl: selectedType === "LooseCurl",
+		TightlyCoiled: selectedType === "TightlyCoiled",
+
+		// texture
+		Fine: selectedTexture === "Fine",
+		Medium: selectedTexture === "Medium",
+		Thick: selectedTexture === "Thick",
+	};
+};
 
 const photos = {
 	male: fs.readdirSync("assets/profilePhotos/male").map((file) => ({
@@ -38,21 +61,6 @@ const photos = {
 		data: fs.readFileSync(`assets/profilePhotos/female/${file}`),
 		contentType: "image/jpeg",
 	})),
-};
-
-// Helper function to generate services
-const generateServices = () => {
-	const services = [];
-	const numServices = Math.floor(Math.random() * 5) + 1; // 1-5 services
-
-	for (let i = 0; i < numServices; i++) {
-		services.push({
-			name: faker.commerce.productName(),
-			price: parseFloat(faker.commerce.price(30, 300)),
-			description: faker.lorem.sentence(),
-		});
-	}
-	return services;
 };
 
 const generatePerson = () => {
@@ -86,8 +94,18 @@ const createClients = async () => {
 			},
 			profilePhoto: photo,
 			hairDetails: generateHairDetails(),
-			allergies: faker.food.ingredient(),
-			additionalConcerns: faker.lorem.sentence(),
+			allergies: faker.helpers
+				.arrayElements(allergies, {
+					min: 1,
+					max: 3,
+				})
+				.join(", "),
+			additionalConcerns: faker.helpers
+				.arrayElements(concerns, {
+					min: 1,
+					max: 3,
+				})
+				.join(", "),
 		});
 
 		client.createHashedPassword("password");
@@ -103,6 +121,10 @@ const createStylists = async () => {
 
 	for (let i = 0; i < NUM_STYLISTS; i++) {
 		const { sex, fullName, email, username, photo } = generatePerson();
+		const stylistServices = faker.helpers.arrayElements(services, {
+			min: 1,
+			max: 3,
+		});
 		const stylist = new Stylist({
 			username: username,
 			email: email,
@@ -121,11 +143,18 @@ const createStylists = async () => {
 					"New York",
 					"Los Angeles",
 				]),
-				experience: faker.lorem.sentence(),
-				specialty: faker.lorem.sentence(),
-				additionalInfo: faker.lorem.paragraph(),
+				experience: faker.number.int({ min: 1, max: 10 }), // TODO: should be refactored to be a date
+				specialty: stylistServices
+					.map((service) => service.name)
+					.join(", "),
+				additionalInfo: faker.helpers
+					.arrayElements(additionalInfo, {
+						min: 1,
+						max: 3,
+					})
+					.join(", "),
 				workedWithHairTypes: generateHairDetails(),
-				services: generateServices(),
+				services: stylistServices,
 			},
 		});
 
