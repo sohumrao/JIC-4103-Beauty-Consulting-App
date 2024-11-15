@@ -1,0 +1,172 @@
+{
+	"services": [
+		{
+			"name": "Women's Haircut",
+			"description": "Precision cut and style tailored for women's hair",
+			"price": 65
+		},
+		{
+			"name": "Men's Haircut",
+			"description": "Professional cut and style specifically for men",
+			"price": 45
+		},
+		{
+			"name": "Children's Haircut",
+			"description": "Gentle haircut service for kids in a welcoming environment",
+			"price": 35
+		},
+		{
+			"name": "Blowout",
+			"description": "Hair washing and blow-dry styling to achieve smooth, voluminous results",
+			"price": 45
+		},
+		{
+			"name": "Hair Coloring",
+			"description": "Full hair color service using premium products",
+			"price": 120
+		},
+		{
+			"name": "Highlights",
+			"description": "Foil or cap highlighting to create dimensional color",
+			"price": 150
+		},
+		{
+			"name": "Balayage",
+			"description": "Hand-painted highlights for a natural, graduated look",
+			"price": 200
+		},
+		{
+			"name": "Root Touch-up",
+			"description": "Color application to cover visible roots between full colorings",
+			"price": 75
+		},
+		{
+			"name": "Deep Conditioning",
+			"description": "Intensive moisture treatment to restore hair health",
+			"price": 45
+		},
+		{
+			"name": "Hair Extensions",
+			"description": "Application of high-quality hair extensions for added length and volume",
+			"price": 400
+		},
+		{
+			"name": "Keratin Treatment",
+			"description": "Smoothing treatment to reduce frizz and enhance manageability",
+			"price": 300
+		},
+		{
+			"name": "Chemical Relaxer",
+			"description": "Hair straightening treatment using chemical processes",
+			"price": 125
+		},
+		{
+			"name": "Perm",
+			"description": "Chemical service to create permanent waves or curls",
+			"price": 120
+		},
+		{
+			"name": "Updo Styling",
+			"description": "Formal hair styling for special occasions",
+			"price": 85
+		},
+		{
+			"name": "Wedding Hair",
+			"description": "Specialized styling services for brides and bridal parties",
+			"price": 150
+		},
+		{
+			"name": "Bang Trim",
+			"description": "Quick trim to maintain bang length and shape",
+			"price": 15
+		},
+		{
+			"name": "Beard Trim",
+			"description": "Precise trimming and shaping of facial hair",
+			"price": 25
+		},
+		{
+			"name": "Hot Oil Treatment",
+			"description": "Warm oil therapy to nourish and condition hair and scalp",
+			"price": 55
+		},
+		{
+			"name": "Scalp Treatment",
+			"description": "Therapeutic treatment for scalp health and hair growth",
+			"price": 65
+		},
+		{
+			"name": "Toner Application",
+			"description": "Color-balancing treatment to achieve desired hair tone",
+			"price": 45
+		}
+	],
+	"concerns": [
+		"Hair Loss",
+		"Hair Color",
+		"Hair Texture",
+		"Hair Growth",
+		"Hair Strand Breakage",
+		"Hair Breakage",
+		"Hair Tan",
+		"Dry Hair",
+		"Dandruff",
+		"Dry Skin",
+		"Acne",
+		"Wrinkles",
+		"Dark Circles",
+		"Fine Lines",
+		"Straight Hair",
+		"Thin Hair",
+		"Poor Hair",
+		"Uneven Hair",
+		"Uneven Skin",
+		"Skin Color",
+		"Skin Texture",
+		"Skin Tan",
+		"Dark Skin",
+		"Acne",
+		"Wrinkles",
+		"Dark Circles",
+		"Fine Lines",
+		"Straight Skin",
+		"Thin Skin",
+		"Poor Skin",
+		"Uneven Skin"
+	],
+	"allergies": [
+		"Ammonia",
+		"Nickel",
+		"Latex",
+		"Fragrances",
+		"Petroleum derivatives",
+		"Peroxide",
+		"Lanolin",
+		"Parabens",
+		"Formaldehyde",
+		"Hair dye",
+		"Bleach"
+	],
+	"additionalInfo": [
+		"Walk-ins welcome",
+		"Free parking available",
+		"Credit cards accepted",
+		"Wi-Fi available",
+		"Wheelchair accessible",
+		"Family friendly",
+		"Private styling rooms",
+		"Online booking available",
+		"Product retail section",
+		"Complimentary beverages",
+		"Early/late appointments available",
+		"Student discounts",
+		"Military discounts",
+		"Senior discounts",
+		"Gender neutral pricing",
+		"Eco-friendly products used",
+		"Training salon",
+		"Multi-language staff",
+		"Child-friendly waiting area",
+		"Air conditioned"
+	]
+}
