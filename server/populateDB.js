@@ -29,18 +29,17 @@ const generateHairDetails = () => ({
 	Thick: randomBoolean(),
 });
 
-const randomPhoto = () => {
-	// get a random photo from assets/profilePhotos
-	const photos = fs.readdirSync("assets/profilePhotos");
-	const randomIndex = Math.floor(Math.random() * photos.length);
-	const photo = photos[randomIndex];
-
-	// format into photoSchema
-	return {
-		data: fs.readFileSync(`assets/profilePhotos/${photo}`),
+const photos = {
+	male: fs.readdirSync("assets/profilePhotos/male").map((file) => ({
+		data: fs.readFileSync(`assets/profilePhotos/male/${file}`),
 		contentType: "image/jpeg",
-	};
+	})),
+	female: fs.readdirSync("assets/profilePhotos/female").map((file) => ({
+		data: fs.readFileSync(`assets/profilePhotos/female/${file}`),
+		contentType: "image/jpeg",
+	})),
 };
+
 // Helper function to generate services
 const generateServices = () => {
 	const services = [];
@@ -63,7 +62,10 @@ const generatePerson = () => {
 	const fullName = firstName + " " + lastName;
 	const email = faker.internet.email({ firstName, lastName });
 	const username = faker.internet.username({ firstName, lastName });
-	return { sex, fullName, email, username };
+
+	const randomIndex = Math.floor(Math.random() * photos[sex].length);
+	const photo = photos[sex][randomIndex];
+	return { sex, fullName, email, username, photo };
 };
 
 // Create clients
@@ -71,7 +73,7 @@ const createClients = async () => {
 	const clients = [];
 
 	for (let i = 0; i < NUM_CLIENTS; i++) {
-		const { sex, fullName, email, username } = generatePerson();
+		const { sex, fullName, email, username, photo } = generatePerson();
 
 		const client = new Client({
 			username: username,
@@ -82,7 +84,7 @@ const createClients = async () => {
 				gender: sex,
 				phoneNumber: faker.phone.number(),
 			},
-			profilePhoto: randomPhoto(),
+			profilePhoto: photo,
 			hairDetails: generateHairDetails(),
 			allergies: faker.food.ingredient(),
 			additionalConcerns: faker.lorem.sentence(),
@@ -100,7 +102,7 @@ const createStylists = async () => {
 	const stylists = [];
 
 	for (let i = 0; i < NUM_STYLISTS; i++) {
-		const { sex, fullName, email, username } = generatePerson();
+		const { sex, fullName, email, username, photo } = generatePerson();
 		const stylist = new Stylist({
 			username: username,
 			email: email,
@@ -110,7 +112,7 @@ const createStylists = async () => {
 				gender: sex,
 				phoneNumber: faker.phone.number(),
 			},
-			profilePhoto: randomPhoto(),
+			profilePhoto: photo,
 			business: {
 				name: faker.company.name(),
 				address: faker.location.streetAddress(),
