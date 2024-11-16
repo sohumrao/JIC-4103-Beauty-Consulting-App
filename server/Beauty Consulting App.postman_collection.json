@@ -117,7 +117,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\": \"Patty.Littel@gmail.com\"\n}",
+							"raw": "{\n    \"resetCode\": 443773\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -125,9 +125,9 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/account/emailResetPasswordCode",
+							"raw": "{{base_url}}/account/verifyResetPasswordCode",
 							"host": ["{{base_url}}"],
-							"path": ["account", "emailResetPasswordCode"]
+							"path": ["account", "verifyResetPasswordCode"]
 						}
 					},
 					"response": []
@@ -139,7 +139,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\": \"Patty.Littel@gmail.com\"\n}",
+							"raw": "{\n    \"resetCode\": 443773,\n    \"password\": \"newpassword\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -147,9 +147,9 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/account/emailResetPasswordCode",
+							"raw": "{{base_url}}/account/resetPassword",
 							"host": ["{{base_url}}"],
-							"path": ["account", "emailResetPasswordCode"]
+							"path": ["account", "resetPassword"]
 						}
 					},
 					"response": []
@@ -174,10 +174,8 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:5050/client",
-							"protocol": "http",
-							"host": ["localhost"],
-							"port": "5050",
+							"raw": "{{base_url}}/client",
+							"host": ["{{base_url}}"],
 							"path": ["client"]
 						}
 					},
@@ -198,10 +196,8 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:5050/client/{username}",
-							"protocol": "http",
-							"host": ["localhost"],
-							"port": "5050",
+							"raw": "{{base_url}}/client/{username}",
+							"host": ["{{base_url}}"],
 							"path": ["client", "{username}"]
 						}
 					},
@@ -213,10 +209,8 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:5050/client/{username}",
-							"protocol": "http",
-							"host": ["localhost"],
-							"port": "5050",
+							"raw": "{{base_url}}/client/{username}",
+							"host": ["{{base_url}}"],
 							"path": ["client", "{username}"]
 						}
 					},
@@ -247,10 +241,8 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:5050/client/matchStylists/{username}",
-							"protocol": "http",
-							"host": ["localhost"],
-							"port": "5050",
+							"raw": "{{base_url}}/client/matchStylists/{username}",
+							"host": ["{{base_url}}"],
 							"path": ["client", "matchStylists", "{username}"]
 						}
 					},
@@ -276,10 +268,8 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:5050/stylist",
-							"protocol": "http",
-							"host": ["localhost"],
-							"port": "5050",
+							"raw": "{{base_url}}/stylist",
+							"host": ["{{base_url}}"],
 							"path": ["stylist"]
 						}
 					},
@@ -291,10 +281,8 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:5050/stylist/{username}",
-							"protocol": "http",
-							"host": ["localhost"],
-							"port": "5050",
+							"raw": "{{base_url}}/stylist/{username}",
+							"host": ["{{base_url}}"],
 							"path": ["stylist", "{username}"]
 						}
 					},
@@ -320,10 +308,8 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:5050/appointment/create",
-							"protocol": "http",
-							"host": ["localhost"],
-							"port": "5050",
+							"raw": "{{base_url}}/appointment/create",
+							"host": ["{{base_url}}"],
 							"path": ["appointment", "create"],
 							"query": [
 								{
@@ -342,10 +328,8 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:5050/appointment/scheduled?username=Eleanore24",
-							"protocol": "http",
-							"host": ["localhost"],
-							"port": "5050",
+							"raw": "{{base_url}}/appointment/scheduled?username=Eleanore24",
+							"host": ["{{base_url}}"],
 							"path": ["appointment", "scheduled"],
 							"query": [
 								{
@@ -363,10 +347,8 @@
 						"method": "PUT",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:5050/appointment/{id}/cancel",
-							"protocol": "http",
-							"host": ["localhost"],
-							"port": "5050",
+							"raw": "{{base_url}}/appointment/{id}/cancel",
+							"host": ["{{base_url}}"],
 							"path": ["appointment", "{id}", "cancel"]
 						}
 					},
@@ -378,10 +360,8 @@
 						"method": "PUT",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:5050/appointment/{id}/complete",
-							"protocol": "http",
-							"host": ["localhost"],
-							"port": "5050",
+							"raw": "{{base_url}}/appointment/{id}/complete",
+							"host": ["{{base_url}}"],
 							"path": ["appointment", "{id}", "complete"]
 						}
 					},
@@ -393,10 +373,8 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:5050/appointment/availability?username=stylist123&month=10",
-							"protocol": "http",
-							"host": ["localhost"],
-							"port": "5050",
+							"raw": "{{base_url}}/appointment/availability?username=stylist123&month=10",
+							"host": ["{{base_url}}"],
 							"path": ["appointment", "availability"],
 							"query": [
 								{
