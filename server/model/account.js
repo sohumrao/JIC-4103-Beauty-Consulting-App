@@ -1,9 +1,8 @@
 import mongoose from "mongoose";
 import crypto from "crypto";
 import { PhotoSchema } from "./photo.js";
-const Schema = mongoose.Schema;
 
-const AccountSchema = new Schema({
+const AccountSchema = new mongoose.Schema({
 	username: { type: String, required: true, unique: true },
 	email: { type: String }, //TODO: refactor password to be required
 	password: {
@@ -17,8 +16,11 @@ const AccountSchema = new Schema({
 		phoneNumber: String,
 	},
 	profilePhoto: PhotoSchema,
+	resetCode: {
+		type: String,
+		expires: 60 * 60, // seconds
+	},
 	// authToken: JWT token
-	// resetToken: JWT token
 });
 
 AccountSchema.methods.createHashedPassword = function (password) {
@@ -39,28 +41,5 @@ AccountSchema.methods.validateHashedPassword = function (password) {
 	return this.password.hash === hash;
 };
 
-const ResetPasswordSchema = new mongoose.Schema({
-	email: {
-		type: String,
-		required: true,
-	},
-	//TODO: connect tables with IDs
-	username: {
-		type: String,
-		required: true,
-	},
-	code: {
-		type: String,
-		required: true,
-	},
-	createdAt: {
-		type: Date,
-		default: Date.now,
-		expires: 60 * 60, // seconds
-	},
-});
-
 const Account = mongoose.model("Account", AccountSchema);
-const ResetPassword = mongoose.model("resetpassword", ResetPasswordSchema);
-
-export { Account, ResetPassword };
+export { Account };

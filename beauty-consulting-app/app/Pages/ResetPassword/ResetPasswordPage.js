@@ -6,16 +6,17 @@ import globalStyles from "../../assets/GlobalStyles";
 import ErrorMessage from "../../components/ErrorMessage";
 import handleHTTPError from "utils/errorHandling";
 import api from "utils/axios";
+import KeyboardMove from "../../assets/components/KeyboardMove";
 //TODO:
 // clean up error display
-// allow resending code
+// allow resending resetCode
 const ResetPasswordPage = () => {
 	const [formData, setFormData] = useState({
-		code: "",
+		resetCode: "",
 		password: "",
 		passwordConfirm: "",
 	});
-	const [validCode, setValidCode] = useState(false);
+	const [validresetCode, setValidresetCode] = useState(false);
 	const [success, setSuccess] = useState(false);
 	const [errorMessage, setErrorMessage] = useState("");
 	const navigation = useNavigation();
@@ -24,17 +25,12 @@ const ResetPasswordPage = () => {
 		setFormData((prevState) => ({ ...prevState, [name]: value }));
 	};
 
-	const handleVerifyCode = async () => {
-		if (!API_URL) {
-			setErrorMessage("API URL not defined");
-			return;
-		}
-
+	const handleVerifyresetCode = async () => {
 		try {
 			await api.post("/account/verifyResetPasswordCode", {
-				code: formData.code,
+				resetCode: formData.resetCode,
 			});
-			setValidCode(true);
+			setValidresetCode(true);
 			setErrorMessage(""); // Clear error on success
 		} catch (error) {
 			handleHTTPError(error, setErrorMessage);
@@ -47,14 +43,9 @@ const ResetPasswordPage = () => {
 			return;
 		}
 
-		if (!API_URL) {
-			setErrorMessage("API URL not defined");
-			return;
-		}
-
 		try {
 			await api.post("/account/resetPassword", {
-				code: formData.code,
+				resetCode: formData.resetCode,
 				password: formData.password,
 			});
 			setSuccess(true);
@@ -64,86 +55,88 @@ const ResetPasswordPage = () => {
 	};
 
 	return (
-		<SignupBackground>
-			<View style={globalStyles.box}>
-				{success ? (
-					<>
-						<Text style={globalStyles.title}>
-							Password Reset Successful.
-						</Text>
-						<TouchableOpacity
-							style={globalStyles.button}
-							onPress={() => navigation.navigate("Sign In")}
-						>
-							<Text style={globalStyles.buttonText}>
-								Return to Sign In
+		<KeyboardMove>
+			<SignupBackground>
+				<View style={globalStyles.box}>
+					{success ? (
+						<>
+							<Text style={globalStyles.title}>
+								Password Reset Successful.
 							</Text>
-						</TouchableOpacity>
-					</>
-				) : (
-					<>
-						<Text style={globalStyles.title}>
-							Enter the code sent to your email
-						</Text>
-						<TextInput
-							style={globalStyles.input}
-							placeholder="Code"
-							value={formData.code}
-							onChangeText={(value) =>
-								handleInputChange("code", value)
-							}
-							autoCapitalize="none"
-						/>
-						<TouchableOpacity
-							style={globalStyles.button}
-							onPress={handleVerifyCode}
-						>
-							<Text style={globalStyles.buttonText}>
-								Verify Code
+							<TouchableOpacity
+								style={globalStyles.button}
+								onPress={() => navigation.navigate("Sign In")}
+							>
+								<Text style={globalStyles.buttonText}>
+									Return to Sign In
+								</Text>
+							</TouchableOpacity>
+						</>
+					) : (
+						<>
+							<Text style={globalStyles.title}>
+								Enter the reset code sent to your email
 							</Text>
-						</TouchableOpacity>
-						<ErrorMessage message={errorMessage} />
-						{validCode && (
-							<>
-								<TextInput
-									style={globalStyles.input}
-									placeholder="New Password"
-									value={formData.password}
-									onChangeText={(value) =>
-										handleInputChange("password", value)
-									}
-									secureTextEntry
-									autoCapitalize="none"
-									autoCorrect={false}
-								/>
-								<TextInput
-									style={globalStyles.input}
-									placeholder="Confirm New Password"
-									value={formData.passwordConfirm}
-									onChangeText={(value) =>
-										handleInputChange(
-											"passwordConfirm",
-											value
-										)
-									}
-									secureTextEntry
-									autoCapitalize="none"
-									autoCorrect={false}
-								/>
-								<TouchableOpacity
-									style={globalStyles.button}
-									onPress={handleResetPassword}
-								>
-									<Text style={globalStyles.buttonText}>
-										Reset Password
-									</Text>
-								</TouchableOpacity>
-							</>
-						)}
-					</>
-				)}
-			</View>
-		</SignupBackground>
+							<TextInput
+								style={globalStyles.input}
+								placeholder="Reset Code"
+								value={formData.resetCode}
+								onChangeText={(value) =>
+									handleInputChange("resetCode", value)
+								}
+								autoCapitalize="none"
+							/>
+							<TouchableOpacity
+								style={globalStyles.button}
+								onPress={handleVerifyresetCode}
+							>
+								<Text style={globalStyles.buttonText}>
+									Verify Reset Code
+								</Text>
+							</TouchableOpacity>
+							<ErrorMessage message={errorMessage} />
+							{validresetCode && (
+								<>
+									<TextInput
+										style={globalStyles.input}
+										placeholder="New Password"
+										value={formData.password}
+										onChangeText={(value) =>
+											handleInputChange("password", value)
+										}
+										secureTextEntry
+										autoCapitalize="none"
+										autoCorrect={false}
+									/>
+									<TextInput
+										style={globalStyles.input}
+										placeholder="Confirm New Password"
+										value={formData.passwordConfirm}
+										onChangeText={(value) =>
+											handleInputChange(
+												"passwordConfirm",
+												value
+											)
+										}
+										secureTextEntry
+										autoCapitalize="none"
+										autoCorrect={false}
+									/>
+									<TouchableOpacity
+										style={globalStyles.button}
+										onPress={handleResetPassword}
+									>
+										<Text style={globalStyles.buttonText}>
+											Reset Password
+										</Text>
+									</TouchableOpacity>
+								</>
+							)}
+						</>
+					)}
+				</View>
+			</SignupBackground>
+		</KeyboardMove>
 	);
 };
 

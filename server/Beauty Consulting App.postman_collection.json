@@ -7,330 +7,390 @@
 	},
 	"item": [
 		{
-			"name": "Create Client",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"username\": \"client1\",\r\n    \"password\": \"securepassword\",\r\n    \"name\": \"John Doe\",\r\n    \"email\": \"john.doe@example.com\",\r\n    \"age\": 30,\r\n    \"gender\": \"male\",\r\n    \"zipcode\": \"30301\",\r\n    \"phoneNumber\": \"123-456-7890\",\r\n    \"city\": \"Atlanta\",\r\n    \"hairDetails\": {\r\n        \"Natural\": true,\r\n        \"Relaxed\": false,\r\n        \"Straight\": true,\r\n        \"Wavy\": false,\r\n        \"Curly\": true,\r\n        \"DeepWave\": false,\r\n        \"LooseCurl\": false,\r\n        \"TightlyCoiled\": false,\r\n        \"Fine\": true,\r\n        \"Medium\": false,\r\n        \"Thick\": true\r\n    },\r\n    \"allergies\": \"None\"\r\n}\r\n",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:5050/client",
-					"protocol": "http",
-					"host": ["localhost"],
-					"port": "5050",
-					"path": ["client"]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Update Client",
-			"request": {
-				"method": "PUT",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n  \"username\" : \"TEST\",\r\n  \"name\": \"NEW UPDATE TEST NEW NEW NEW\",\r\n  \"email\" : \"TEST@gmai.com\",\r\n  \"gender\" : \"male UPDATE\",\r\n  \"status\" : \"active\"\r\n}\r\n",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:5050/client/{username}",
-					"protocol": "http",
-					"host": ["localhost"],
-					"port": "5050",
-					"path": ["client", "{username}"]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Delete Client",
-			"request": {
-				"method": "DELETE",
-				"header": [],
-				"url": {
-					"raw": "http://localhost:5050/client/{username}",
-					"protocol": "http",
-					"host": ["localhost"],
-					"port": "5050",
-					"path": ["client", "{username}"]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Match Client",
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "",
-						"value": "",
-						"type": "text",
-						"disabled": true
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"city\" : null // will use inputed client's city if null\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:5050/client/matchStylists/{username}",
-					"protocol": "http",
-					"host": ["localhost"],
-					"port": "5050",
-					"path": ["client", "matchStylists", "{username}"]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Create Stylist",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n  \"name\": \"david12\",\r\n  \"email\" : \"TEST@gmai.com\",\r\n  \"gender\" : \"male\",\r\n  \"status\" : \"active\"\r\n}\r\n",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:5050/stylist",
-					"protocol": "http",
-					"host": ["localhost"],
-					"port": "5050",
-					"path": ["stylist"]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Get Stylist",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "http://localhost:5050/stylist/{username}",
-					"protocol": "http",
-					"host": ["localhost"],
-					"port": "5050",
-					"path": ["stylist", "{username}"]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Create Account",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"username\": \"client1222\",\r\n    \"password\": \"securepassword\"\r\n\r\n}\r\n",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:5050/account/createAccount",
-					"protocol": "http",
-					"host": ["localhost"],
-					"port": "5050",
-					"path": ["account", "createAccount"]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Upload Profile Photo",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "formdata",
-					"formdata": [
-						{
-							"key": "username",
-							"value": "{username}",
-							"contentType": "Text",
-							"type": "text"
+			"name": "account",
+			"item": [
+				{
+					"name": "Create Account",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"client1222\",\r\n    \"password\": \"securepassword\"\r\n\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
 						},
-						{
-							"key": "photo",
-							"contentType": "",
-							"type": "file",
-							"src": []
+						"url": {
+							"raw": "{{base_url}}/account/createAccount",
+							"host": ["{{base_url}}"],
+							"path": ["account", "createAccount"]
 						}
-					]
+					},
+					"response": []
 				},
-				"url": {
-					"raw": "http://localhost:5050/account/photo",
-					"protocol": "http",
-					"host": ["localhost"],
-					"port": "5050",
-					"path": ["account", "photo"]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Get Profile Photo",
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
-			"request": {
-				"method": "GET",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:5050/account/{username}/photo",
-					"protocol": "http",
-					"host": ["localhost"],
-					"port": "5050",
-					"path": ["account", "{username}", "photo"]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Create Appointment",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"clientUsername\": \"Eleanore24\",\r\n    \"stylistUsername\": \"Antonia_Hane\",\r\n    \"appointmentDate\": \"2024-11-02\",\r\n    \"duration\": 60,\r\n    \"notes\": \"Looking for a haircut and color\"\r\n}\r\n",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "http://localhost:5050/appointment/create",
-					"protocol": "http",
-					"host": ["localhost"],
-					"port": "5050",
-					"path": ["appointment", "create"],
-					"query": [
-						{
-							"key": "",
-							"value": null,
-							"disabled": true
-						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Get Scheduled Appointments",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "http://localhost:5050/appointment/scheduled?username=Eleanore24",
-					"protocol": "http",
-					"host": ["localhost"],
-					"port": "5050",
-					"path": ["appointment", "scheduled"],
-					"query": [
-						{
-							"key": "username",
-							"value": "Eleanore24"
-						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Appointment Cancel",
-			"request": {
-				"method": "PUT",
-				"header": [],
-				"url": {
-					"raw": "http://localhost:5050/appointment/{id}/cancel",
-					"protocol": "http",
-					"host": ["localhost"],
-					"port": "5050",
-					"path": ["appointment", "{id}", "cancel"]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Appointment Complete",
-			"request": {
-				"method": "PUT",
-				"header": [],
-				"url": {
-					"raw": "http://localhost:5050/appointment/{id}/complete",
-					"protocol": "http",
-					"host": ["localhost"],
-					"port": "5050",
-					"path": ["appointment", "{id}", "complete"]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Appointment Availability",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "http://localhost:5050/appointment/availability?username=stylist123&month=10",
-					"protocol": "http",
-					"host": ["localhost"],
-					"port": "5050",
-					"path": ["appointment", "availability"],
-					"query": [
-						{
-							"key": "username",
-							"value": "stylist123"
+				{
+					"name": "Upload Profile Photo",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "username",
+									"value": "{username}",
+									"contentType": "Text",
+									"type": "text"
+								},
+								{
+									"key": "photo",
+									"contentType": "",
+									"type": "file",
+									"src": []
+								}
+							]
 						},
-						{
-							"key": "month",
-							"value": "10"
+						"url": {
+							"raw": "{{base_url}}/account/photo",
+							"host": ["{{base_url}}"],
+							"path": ["account", "photo"]
 						}
-					]
+					},
+					"response": []
+				},
+				{
+					"name": "Get Profile Photo",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}http://localhost:5050/account/{username}/photo",
+							"protocol": "{{base_url}}http",
+							"host": ["localhost"],
+							"port": "5050",
+							"path": ["account", "{username}", "photo"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Reset Code",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"Patty.Littel@gmail.com\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/account/emailResetPasswordCode",
+							"host": ["{{base_url}}"],
+							"path": ["account", "emailResetPasswordCode"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Verify Reset Code",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"resetCode\": 443773\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/account/verifyResetPasswordCode",
+							"host": ["{{base_url}}"],
+							"path": ["account", "verifyResetPasswordCode"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Reset Password",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"resetCode\": 443773,\n    \"password\": \"newpassword\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/account/resetPassword",
+							"host": ["{{base_url}}"],
+							"path": ["account", "resetPassword"]
+						}
+					},
+					"response": []
 				}
-			},
-			"response": []
+			]
+		},
+		{
+			"name": "client",
+			"item": [
+				{
+					"name": "Create Client",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"client1\",\r\n    \"password\": \"securepassword\",\r\n    \"name\": \"John Doe\",\r\n    \"email\": \"john.doe@example.com\",\r\n    \"age\": 30,\r\n    \"gender\": \"male\",\r\n    \"zipcode\": \"30301\",\r\n    \"phoneNumber\": \"123-456-7890\",\r\n    \"city\": \"Atlanta\",\r\n    \"hairDetails\": {\r\n        \"Natural\": true,\r\n        \"Relaxed\": false,\r\n        \"Straight\": true,\r\n        \"Wavy\": false,\r\n        \"Curly\": true,\r\n        \"DeepWave\": false,\r\n        \"LooseCurl\": false,\r\n        \"TightlyCoiled\": false,\r\n        \"Fine\": true,\r\n        \"Medium\": false,\r\n        \"Thick\": true\r\n    },\r\n    \"allergies\": \"None\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/client",
+							"host": ["{{base_url}}"],
+							"path": ["client"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Client",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"username\" : \"TEST\",\r\n  \"name\": \"NEW UPDATE TEST NEW NEW NEW\",\r\n  \"email\" : \"TEST@gmai.com\",\r\n  \"gender\" : \"male UPDATE\",\r\n  \"status\" : \"active\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/client/{username}",
+							"host": ["{{base_url}}"],
+							"path": ["client", "{username}"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Client",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/client/{username}",
+							"host": ["{{base_url}}"],
+							"path": ["client", "{username}"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Match Client",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"city\" : null // will use inputed client's city if null\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/client/matchStylists/{username}",
+							"host": ["{{base_url}}"],
+							"path": ["client", "matchStylists", "{username}"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "stylist",
+			"item": [
+				{
+					"name": "Create Stylist",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"david12\",\r\n  \"email\" : \"TEST@gmai.com\",\r\n  \"gender\" : \"male\",\r\n  \"status\" : \"active\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/stylist",
+							"host": ["{{base_url}}"],
+							"path": ["stylist"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Stylist",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/stylist/{username}",
+							"host": ["{{base_url}}"],
+							"path": ["stylist", "{username}"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "appointment",
+			"item": [
+				{
+					"name": "Create Appointment",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"clientUsername\": \"Eleanore24\",\r\n    \"stylistUsername\": \"Antonia_Hane\",\r\n    \"appointmentDate\": \"2024-11-02\",\r\n    \"duration\": 60,\r\n    \"notes\": \"Looking for a haircut and color\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/appointment/create",
+							"host": ["{{base_url}}"],
+							"path": ["appointment", "create"],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Scheduled Appointments",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/appointment/scheduled?username=Eleanore24",
+							"host": ["{{base_url}}"],
+							"path": ["appointment", "scheduled"],
+							"query": [
+								{
+									"key": "username",
+									"value": "Eleanore24"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Appointment Cancel",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/appointment/{id}/cancel",
+							"host": ["{{base_url}}"],
+							"path": ["appointment", "{id}", "cancel"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Appointment Complete",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/appointment/{id}/complete",
+							"host": ["{{base_url}}"],
+							"path": ["appointment", "{id}", "complete"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Appointment Availability",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/appointment/availability?username=stylist123&month=10",
+							"host": ["{{base_url}}"],
+							"path": ["appointment", "availability"],
+							"query": [
+								{
+									"key": "username",
+									"value": "stylist123"
+								},
+								{
+									"key": "month",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		}
 	]
 }
