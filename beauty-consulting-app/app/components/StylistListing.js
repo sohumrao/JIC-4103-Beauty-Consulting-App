@@ -15,7 +15,6 @@ const StylistListing = ({
 	businessName,
 	businessAddress,
 	profilePicture,
-	mostSimilarHairDetails,
 	username,
 	booked,
 	handleBookingPress,
@@ -51,10 +50,6 @@ const StylistListing = ({
 				<Text style={globalStyles.businessName}>{businessName}</Text>
 				<Text style={globalStyles.businessAddress}>
 					{businessAddress}
-				</Text>
-				<Text style={globalStyles.businessAddress}>
-					Experienced with hair that is:{" "}
-					{Object.keys(mostSimilarHairDetails).join(", ")}
 				</Text>
 				<TouchableOpacity
 					style={[globalStyles.button, { marginTop: 10 }]}

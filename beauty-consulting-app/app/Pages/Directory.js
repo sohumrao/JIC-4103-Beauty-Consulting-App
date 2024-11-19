@@ -195,9 +195,6 @@ const Directory = () => {
 									stylistName={stylist.name}
 									businessName={stylist.businessName}
 									businessAddress={stylist.businessAddress}
-									mostSimilarHairDetails={
-										stylist.mostSimilarHairDetails
-									}
 									username={stylist.username}
 									booked={stylistsBooked}
 									handleBookingPress={() => {
