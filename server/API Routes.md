@@ -86,5 +86,5 @@
 
 -   **Check Booking Availability for Stylist**
 
-    -   **GET** `/appointment/checkbooking?stylistUsername={username}&dateTime={dateTime}
+    -   **GET** `/appointment/checkbooking?stylistUsername={username}&dateTime={dateTime}`
     -   **Description**: Checks if an appointment already exists with that stylist at that time.
