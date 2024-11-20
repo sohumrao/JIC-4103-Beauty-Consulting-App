@@ -80,5 +80,11 @@
     -   **Description**: Marks an appointment as completed by appointment ID.
 
 -   **Check Date Availability for Stylist**
+
     -   **GET** `/appointment/availability?username={id}&month={monthNumber}`
     -   **Description**: Checks availability for each date in a specified month for a stylist.
+
+-   **Check Booking Availability for Stylist**
+
+    -   **GET** `/appointment/checkbooking?stylistUsername={username}&dateTime={dateTime}
+    -   **Description**: Checks if an appointment already exists with that stylist at that time.

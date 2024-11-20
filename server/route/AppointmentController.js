@@ -98,6 +98,42 @@ router.get(
 	})
 );
 
+// Endpoint that checks if appointment with stylist at same time is available or not
+router.get(
+	"/checkbooking",
+	asyncHandler(async (req, res, next) => {
+		const { stylistUsername, dateTime } = req.query;
+
+		if (!stylistUsername || !dateTime) {
+			return next(
+				new MalformedRequestError(
+					"Both Stylist Username and DateTime are required."
+				)
+			);
+		}
+		let appointments;
+		if (stylistUsername) {
+			appointments = await Appointment.find({
+				stylistUsername: stylistUsername,
+				appointmentDate: dateTime,
+				status: { $ne: "Canceled" },
+			});
+		} else {
+			return next(
+				new ConflictError(
+					`User with username ${stylistUsername} not found.`
+				)
+			);
+		}
+
+		if (appointments && appointments.length > 0) {
+			res.json({ available: false });
+		} else {
+			res.json({ available: true });
+		}
+	})
+);
+
 // Endpoint to mark an appointment as completed
 router.put(
 	"/:id/complete",
