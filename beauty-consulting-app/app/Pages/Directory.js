@@ -6,6 +6,7 @@ import {
 	TextInput,
 	ScrollView,
 	RefreshControl,
+	ActivityIndicator,
 } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
 import globalStyles from "../assets/GlobalStyles";
@@ -167,9 +168,10 @@ const Directory = () => {
 			<View style={globalStyles.container}>
 				{renderHeaderWithInputs()}
 				<View style={globalStyles.centeringContainer}>
-					<View style={globalStyles.box}>
-						<Text style={globalStyles.promptText}>Loading...</Text>
-					</View>
+					<Text style={globalStyles.promptText}>
+						Finding Stylists
+					</Text>
+					<ActivityIndicator size="large" animating={isLoading} />
 				</View>
 			</View>
 		);
@@ -193,9 +195,6 @@ const Directory = () => {
 									stylistName={stylist.name}
 									businessName={stylist.businessName}
 									businessAddress={stylist.businessAddress}
-									mostSimilarHairDetails={
-										stylist.mostSimilarHairDetails
-									}
 									username={stylist.username}
 									booked={stylistsBooked}
 									handleBookingPress={() => {
