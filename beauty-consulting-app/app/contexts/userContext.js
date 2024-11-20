@@ -5,11 +5,13 @@ const UserContext = React.createContext();
 const UserContextProvider = ({ children }) => {
 	const [userContext, setUserContext] = useState({
 		username: "not signed in",
-		name: "No Name",
-		birthday: new Date(),
-		gender: "male",
-		phoneNumber: "0000000000",
 		email: "email@emailsite.com",
+		info: {
+			name: "No Name",
+			birthday: new Date(),
+			gender: "male",
+			phoneNumber: "0000000000",
+		},
 		hairDetails: {
 			Natural: false,
 			Relaxed: false,

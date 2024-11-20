@@ -13,13 +13,14 @@ import PhoneIcon from "../images/phone-call.svg";
 import EmailIcon from "../images/email.svg";
 import GenderIcon from "../images/genders.svg";
 import api from "utils/axios";
+import { formatDate } from "../../utils/utils";
 
-const AboutMeBox = ({ userContext, onUpdateUser }) => {
+const AboutMeBox = ({ userContext, onUpdateUser, handleEdit }) => {
 	const [isEdit, setIsEdit] = useState(false);
 	const [fieldValues, setFieldValues] = useState({
-		age: userContext.age,
-		gender: userContext.gender,
-		phoneNumber: userContext.phoneNumber,
+		age: userContext.info.birthday,
+		gender: userContext.info.gender,
+		phoneNumber: userContext.info.phoneNumber,
 		email: userContext.email,
 	});
 
@@ -48,6 +49,7 @@ const AboutMeBox = ({ userContext, onUpdateUser }) => {
 		}
 	};
 
+	// TODO: ifgure out if this needs to be handle edit or what
 	const toggleEdit = () => {
 		if (isEdit) {
 			handleSave(); // Save on toggle if in edit mode
@@ -78,7 +80,7 @@ const AboutMeBox = ({ userContext, onUpdateUser }) => {
 			<View style={styles.container}>
 				<View style={styles.infoRow}>
 					<AgeIcon width={20} height={20} style={styles.icon} />
-					<Text style={styles.label}>Age:</Text>
+					<Text style={styles.label}>Birthday:</Text>
 					{isEdit ? (
 						<TextInput
 							style={[styles.input, styles.value]}
@@ -89,7 +91,9 @@ const AboutMeBox = ({ userContext, onUpdateUser }) => {
 							keyboardType="numeric"
 						/>
 					) : (
-						<Text style={styles.value}>{fieldValues.age}</Text>
+						<Text style={styles.value}>
+							{formatDate(fieldValues.age)}
+						</Text>
 					)}
 				</View>
 

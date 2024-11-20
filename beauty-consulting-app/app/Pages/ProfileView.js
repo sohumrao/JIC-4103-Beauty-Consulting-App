@@ -27,10 +27,20 @@ const ProfileView = () => {
 		try {
 			const res = await api.get(`/client/${userContext.username}`);
 			const data = res.data;
-			userContext = userContext.updateUserContext({
+			console.log("RETURNED DATA: ", data);
+			const updatedContext = {
 				...userContext,
-				...data,
-			});
+				info: {
+					...data.info,
+				},
+				hairDetails: data.hairDetails,
+				email: data.email,
+				allergies: data.allergies,
+				concerns: data.concerns,
+				profilePicture: data.profilePhoto,
+			};
+			userContext = userContext.updateUserContext(updatedContext);
+			console.log("USER CONTEXT: " + userContext);
 		} catch (error) {
 			handleHTTPError(error);
 			console.error("Error with request: ", error);
@@ -42,23 +52,22 @@ const ProfileView = () => {
 	}, []);
 
 	const handleEdit = async () => {
-		name = name != "" ? name : userContext.name;
-		gender = gender != "" ? gender : userContext.gender;
-		allergies = allergies != "" ? allergies : userContext.allergies;
-		concerns = concerns != "" ? concerns : userContext.concerns;
-
+		console.log("called!");
 		if (isEdit) {
 			try {
 				const req = {
 					username: userContext.username,
 					name: name,
-					age: userContext.age,
-					gender: gender,
-					phoneNumber: userContext.phoneNumber,
-					email: userContext.email,
+					info: {
+						gender: gender || userContext.info.gender,
+						phoneNumber:
+							phoneNumber || userContext.info.phoneNumber,
+						email: userContext.info.email,
+						birthday: userContext.info.birthday,
+					},
 					hairDetails: userContext.hairDetails,
-					allergies: allergies,
-					concerns: concerns,
+					allergies: allergies || userContext.allergies,
+					concerns: concerns || userContext.concerns,
 				};
 				const res = await api.put(
 					`/client/${userContext.username}`,
@@ -73,10 +82,12 @@ const ProfileView = () => {
 			userContext = userContext.updateUserContext({
 				username: userContext.username,
 				name: name,
-				age: age,
-				gender: gender,
-				phoneNumber: userContext.phoneNumber,
-				email: userContext.email,
+				info: {
+					gender: gender,
+					phoneNumber: phoneNumber,
+					email: userContext.info.email,
+					birthday: userContext.info.birthday,
+				},
 				hairDetails: userContext.hairDetails,
 				allergies: allergies,
 				concerns: concerns,
@@ -118,6 +129,7 @@ const ProfileView = () => {
 							onUpdateUser={(updatedUser) =>
 								userContext.updateUserContext(updatedUser)
 							}
+							handleEdit={handleEdit}
 						/>
 					</View>
 					<View>
