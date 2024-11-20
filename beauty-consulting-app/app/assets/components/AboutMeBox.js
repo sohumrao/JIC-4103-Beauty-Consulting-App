@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import {
 	View,
 	Text,
@@ -14,15 +14,12 @@ import EmailIcon from "../images/email.svg";
 import GenderIcon from "../images/genders.svg";
 import api from "utils/axios";
 import { formatDate } from "../../utils/utils";
+import { UserContext } from "../../contexts/userContext";
+import handleHTTPError from "utils/errorHandling";
 
-const AboutMeBox = ({ userContext, onUpdateUser, handleEdit }) => {
+const AboutMeBox = ({ fieldValues, setFieldValues }) => {
+	const userContext = useContext(UserContext);
 	const [isEdit, setIsEdit] = useState(false);
-	const [fieldValues, setFieldValues] = useState({
-		age: userContext.info.birthday,
-		gender: userContext.info.gender,
-		phoneNumber: userContext.info.phoneNumber,
-		email: userContext.email,
-	});
 
 	const handleInputChange = (field, value) => {
 		setFieldValues((prev) => ({
@@ -39,13 +36,9 @@ const AboutMeBox = ({ userContext, onUpdateUser, handleEdit }) => {
 			};
 
 			await api.put(`client/${userContext.username}`, updatedData);
-			console.log("Update successful");
-
-			onUpdateUser(updatedData); // Update the user context
-
 			setIsEdit(false);
 		} catch (error) {
-			console.error("Error updating profile:", error);
+			handleHTTPError(error);
 		}
 	};
 
@@ -84,15 +77,15 @@ const AboutMeBox = ({ userContext, onUpdateUser, handleEdit }) => {
 					{isEdit ? (
 						<TextInput
 							style={[styles.input, styles.value]}
-							value={fieldValues.age}
+							value={fieldValues.birthday}
 							onChangeText={(value) =>
-								handleInputChange("age", value)
+								handleInputChange("birthday", value)
 							}
 							keyboardType="numeric"
 						/>
 					) : (
 						<Text style={styles.value}>
-							{formatDate(fieldValues.age)}
+							{formatDate(fieldValues.birthday)}
 						</Text>
 					)}
 				</View>
