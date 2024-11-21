@@ -17,7 +17,7 @@ import BusinessInfoPage from "./Pages/BusinessInfoPage";
 import Directory from "./Pages/Directory";
 import AppointmentsPage from "./Pages/AppointmentsPage";
 import ConversationPage from "./Pages/ConversationPage";
-import MessagePage from "./Pages/MessagePage";
+import ChatPage from "./Pages/ChatPage";
 
 export {
 	LandingPage,
@@ -39,5 +39,5 @@ export {
 	Directory,
 	AppointmentsPage,
 	ConversationPage,
-	MessagePage,
+	ChatPage,
 };

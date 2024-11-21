@@ -22,7 +22,7 @@ import {
 	AppointmentsPage,
 	Directory,
 	ConversationPage,
-	MessagePage,
+	ChatPage,
 } from "./Pages";
 import { UserContext, UserContextProvider } from "./contexts/userContext";
 import { useNavigation } from "@react-navigation/native";
@@ -80,6 +80,7 @@ function MainTabNavigator() {
 			)}
 			<Tab.Screen name="Appointments" component={AppointmentsPage} />
 			<Tab.Screen name="Messages" component={ConversationPage} />
+			<Tab.Screen name="Chats" component={ChatPage} />
 			<Tab.Screen
 				name="Logout"
 				component={LogoutComponent}

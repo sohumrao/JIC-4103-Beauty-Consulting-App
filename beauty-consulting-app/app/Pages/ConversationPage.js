@@ -42,9 +42,7 @@ const ConversationPage = () => {
 	const renderConversation = ({ item }) => (
 		<TouchableOpacity
 			style={styles.conversationContainer}
-			onPress={() =>
-				navigation.navigate("MessagePage", { userId: item.id })
-			}
+			onPress={() => navigation.navigate("ChatPage", { userId: item.id })}
 		>
 			<Image source={{ uri: item.avatar }} style={styles.avatar} />
 			<View style={styles.textContainer}>
