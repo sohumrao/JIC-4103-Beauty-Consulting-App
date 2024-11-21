@@ -13,8 +13,9 @@ import handleHTTPError from "utils/errorHandling";
 import ErrorMessage from "../components/ErrorMessage";
 import globalStyles from "../assets/GlobalStyles";
 import ProfilePhotoDisplay from "../assets/components/ProfilePhotoDisplay";
+import ChatPage from "../Pages/ChatPage";
 
-const mockConversations = [
+const conversations = [
 	{
 		id: "1",
 		name: "John Doe",
@@ -38,11 +39,11 @@ const mockConversations = [
 	},
 ];
 
-const ConversationPage = () => {
+const ConversationPage = ({ navigation }) => {
 	const renderConversation = ({ item }) => (
 		<TouchableOpacity
 			style={styles.conversationContainer}
-			onPress={() => navigation.navigate("ChatPage", { userId: item.id })}
+			onPress={() => navigation.navigate(ChatPage, { userId: item.id })}
 		>
 			<Image source={{ uri: item.avatar }} style={styles.avatar} />
 			<View style={styles.textContainer}>
@@ -58,7 +59,7 @@ const ConversationPage = () => {
 	return (
 		<View style={styles.container}>
 			<FlatList
-				data={mockConversations}
+				data={conversations}
 				keyExtractor={(item) => item.id}
 				renderItem={renderConversation}
 			/>

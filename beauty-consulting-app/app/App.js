@@ -58,6 +58,23 @@ function StylistDetailsStack() {
 	);
 }
 
+function ChatStack() {
+	return (
+		<Stack.Navigator screenOptions={{ headerShown: true }}>
+			<Stack.Screen
+				name="ConversationPage"
+				component={ConversationPage}
+				options={{ headerTitle: "Messages" }}
+			/>
+			<Stack.Screen
+				name="ChatPage"
+				component={ChatPage}
+				options={{ headerTitle: "Chat" }}
+			/>
+		</Stack.Navigator>
+	);
+}
+
 function MainTabNavigator() {
 	const { username, role, updateUserContext } = useContext(UserContext);
 	const navigation = useNavigation();
@@ -79,8 +96,7 @@ function MainTabNavigator() {
 				<Tab.Screen name="Directory" component={Directory} />
 			)}
 			<Tab.Screen name="Appointments" component={AppointmentsPage} />
-			<Tab.Screen name="Messages" component={ConversationPage} />
-			<Tab.Screen name="Chats" component={ChatPage} />
+			<Tab.Screen name="Messages" component={ChatStack} />
 			<Tab.Screen
 				name="Logout"
 				component={LogoutComponent}
