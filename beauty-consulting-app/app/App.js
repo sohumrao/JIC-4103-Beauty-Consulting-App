@@ -21,6 +21,8 @@ import {
 	BusinessInfoPage,
 	AppointmentsPage,
 	Directory,
+	ConversationPage,
+	MessagePage,
 } from "./Pages";
 import { UserContext, UserContextProvider } from "./contexts/userContext";
 import { useNavigation } from "@react-navigation/native";
@@ -77,6 +79,7 @@ function MainTabNavigator() {
 				<Tab.Screen name="Directory" component={Directory} />
 			)}
 			<Tab.Screen name="Appointments" component={AppointmentsPage} />
+			<Tab.Screen name="Messages" component={ConversationPage} />
 			<Tab.Screen
 				name="Logout"
 				component={LogoutComponent}
