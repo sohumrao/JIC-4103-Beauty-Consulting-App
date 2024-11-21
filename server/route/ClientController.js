@@ -105,7 +105,6 @@ router.get(
 router.put(
 	"/:username",
 	asyncHandler(async (req, res, next) => {
-		// Find the user by username and update their info
 		const updatedUser = await Client.findOneAndUpdate(
 			{ username: req.params.username },
 			//FIXME: req.body should be formatted to Client Schema

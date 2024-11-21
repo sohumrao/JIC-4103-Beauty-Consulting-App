@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import {
 	View,
 	Text,
@@ -13,15 +13,13 @@ import PhoneIcon from "../images/phone-call.svg";
 import EmailIcon from "../images/email.svg";
 import GenderIcon from "../images/genders.svg";
 import api from "utils/axios";
+import { formatDate } from "../../utils/utils";
+import { UserContext } from "../../contexts/userContext";
+import handleHTTPError from "utils/errorHandling";
 
-const AboutMeBox = ({ userContext, onUpdateUser }) => {
+const AboutMeBox = ({ fieldValues, setFieldValues }) => {
+	const userContext = useContext(UserContext);
 	const [isEdit, setIsEdit] = useState(false);
-	const [fieldValues, setFieldValues] = useState({
-		age: userContext.age,
-		gender: userContext.gender,
-		phoneNumber: userContext.phoneNumber,
-		email: userContext.email,
-	});
 
 	const handleInputChange = (field, value) => {
 		setFieldValues((prev) => ({
@@ -38,16 +36,13 @@ const AboutMeBox = ({ userContext, onUpdateUser }) => {
 			};
 
 			await api.put(`client/${userContext.username}`, updatedData);
-			console.log("Update successful");
-
-			onUpdateUser(updatedData); // Update the user context
-
 			setIsEdit(false);
 		} catch (error) {
-			console.error("Error updating profile:", error);
+			handleHTTPError(error);
 		}
 	};
 
+	// TODO: ifgure out if this needs to be handle edit or what
 	const toggleEdit = () => {
 		if (isEdit) {
 			handleSave(); // Save on toggle if in edit mode
@@ -78,18 +73,20 @@ const AboutMeBox = ({ userContext, onUpdateUser }) => {
 			<View style={styles.container}>
 				<View style={styles.infoRow}>
 					<AgeIcon width={20} height={20} style={styles.icon} />
-					<Text style={styles.label}>Age:</Text>
+					<Text style={styles.label}>Birthday:</Text>
 					{isEdit ? (
 						<TextInput
 							style={[styles.input, styles.value]}
-							value={fieldValues.age}
+							value={fieldValues.birthday}
 							onChangeText={(value) =>
-								handleInputChange("age", value)
+								handleInputChange("birthday", value)
 							}
 							keyboardType="numeric"
 						/>
 					) : (
-						<Text style={styles.value}>{fieldValues.age}</Text>
+						<Text style={styles.value}>
+							{formatDate(fieldValues.birthday)}
+						</Text>
 					)}
 				</View>
 
