@@ -4,6 +4,7 @@ import { Client } from "../model/client.js";
 import { Stylist } from "../model/stylist.js";
 import asyncHandler from "express-async-handler";
 import { WebSocketServer } from "ws";
+import { ConflictError, MalformedRequestError } from "../errors.js";
 
 const router = express.Router();
 let wss;
@@ -22,6 +23,25 @@ export const setUpWebSocketServer = (server) => {
 			try {
 				const data = JSON.parse(message);
 				if (data.event === "joinRoom" && data.username) {
+					// Check if the username belongs to a valid account
+					const client = await Client.findOne({
+						username: data.username,
+					});
+					const stylist = await Stylist.findOne({
+						username: data.username,
+					});
+
+					if (!client && !stylist) {
+						ws.send(
+							JSON.stringify({
+								event: "error",
+								message:
+									"Invalid username: no matching account found",
+							})
+						);
+						return;
+					}
+
 					ws.username = data.username; // Attach the username to the WebSocket instance
 					connectedUsers[data.username] = ws; // Store the WebSocket connection
 					console.log(`${data.username} joined the room`);
@@ -98,48 +118,51 @@ export const setUpWebSocketServer = (server) => {
 
 // Endpoint to fetch chat history between a client and a stylist
 router.get(
-	"/history/:clientUsername/:stylistUsername",
-	asyncHandler(async (req, res) => {
-		const { clientUsername, stylistUsername } = req.params;
+	"/history",
+	asyncHandler(async (req, res, next) => {
+		const { clientUsername, stylistUsername } = req.query;
+
+		if (!clientUsername || !stylistUsername) {
+			return res
+				.status(400)
+				.json({ error: "Missing required query parameters" });
+		}
+
+		// Check if client and stylist exist
+		const client = await Client.findOne({ username: clientUsername });
+		const stylist = await Stylist.findOne({ username: stylistUsername });
+
+		if (!client || !stylist) {
+			return next(
+				new ConflictError(
+					"Either client or stylist account was deleted"
+				)
+			);
+		}
 
 		// Fetch chat history
 		const messages = await Message.find({
 			clientUsername,
 			stylistUsername,
-		}).sort({ createdAt: 1 });
-
-		// Format the response for the chat page
-		const formattedMessages = messages.map((message) => ({
-			content: message.content,
-			sender: message.sender,
-			createdAt: message.createdAt,
-		}));
-
-		// Fetch the profile picture and name for the stylist
-		const stylist = await Stylist.findOne({ username: stylistUsername });
-		const client = await Client.findOne({ username: clientUsername });
-
-		res.json({
-			stylist: {
-				name: stylist?.info?.name,
-				profilePicture: stylist?.profilePhoto?.photoData,
-			},
-			client: {
-				name: client?.info?.name,
-				profilePicture: client?.profilePhoto?.photoData,
-			},
-			messages: formattedMessages,
 		});
+
+		res.json(messages);
 	})
 );
 
-// Endpoint to fetch recent messages for the Messages Page
+// Endpoint to fetch recent messages
 router.get(
-	"/recent/:username",
+	"/recent",
 	asyncHandler(async (req, res) => {
-		const { username } = req.params;
+		const { username } = req.query;
 
-		// Fetch most recent message per conversation
+		if (!username) {
+			return res
+				.status(400)
+				.json({ error: "Missing required query parameter: username" });
+		}
+
+		// Fetch most recent message per conversation for the given username
 		const messages = await Message.aggregate([
 			{
 				$match: {
