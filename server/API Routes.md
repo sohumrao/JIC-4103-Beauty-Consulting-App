@@ -94,9 +94,9 @@
 
 -   **Get Chat History**
 
-    -   **GET** `/messages/history/{clientUsername}/{stylistUsername}`
-    -   **Description**: Retrieves the chat history between a client and a stylist.
+    -   **GET** `/messages/history`
+    -   **Description**: Retrieves the chat history between a client and a stylist using query parameters `clientUsername` and `stylistUsername`.
 
 -   **Get Recent Messages**
-    -   **GET** `/messages/recent/{username}`
-    -   **Description**: Retrieves recent messages for a specific user.
+    -   **GET** `/messages/recent`
+    -   **Description**: Retrieves recent messages for a specific user using the query parameter `username`.
