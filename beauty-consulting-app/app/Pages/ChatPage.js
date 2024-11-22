@@ -34,7 +34,7 @@ const ChatPage = () => {
 				text:
 					role === "client"
 						? "Hello! How can I assist you today?"
-						: "Hi! I’d like to book an appointment.",
+						: "Hi! I'd like to book an appointment.",
 				timestamp: new Date().getTime() - 60000, // 1 minute ago
 			},
 			{
@@ -42,7 +42,7 @@ const ChatPage = () => {
 				sender: role === "client" ? "client" : "stylist",
 				text:
 					role === "client"
-						? "I’m looking to get a haircut next week."
+						? "I'm looking to get a haircut next week."
 						: "Sure! What day works best for you?",
 				timestamp: new Date().getTime() - 30000, // 30 seconds ago
 			},
@@ -97,7 +97,7 @@ const ChatPage = () => {
 				<ScrollView
 					style={styles.messagesContainer}
 					ref={scrollViewRef}
-					contentContainerStyle={{ paddingVertical: 10 }}
+					contentContainerStyle={{ paddingVertical: 5 }}
 				>
 					{messages.map((message) => (
 						<View
@@ -160,7 +160,7 @@ const styles = StyleSheet.create({
 	header: {
 		flexDirection: "row",
 		alignItems: "center",
-		paddingVertical: 10,
+		paddingVertical: 50,
 		borderBottomWidth: 1,
 		borderBottomColor: "#ddd",
 	},
