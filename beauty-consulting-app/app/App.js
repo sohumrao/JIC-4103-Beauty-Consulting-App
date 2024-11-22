@@ -20,6 +20,8 @@ import {
 	StylistDetailsComplete,
 	BusinessInfoPage,
 	AppointmentsPage,
+	ConversationsPage,
+	ChatPage,
 	Directory,
 } from "./Pages";
 import { UserContext, UserContextProvider } from "./contexts/userContext";
@@ -80,6 +82,7 @@ function MainTabNavigator() {
 				<Tab.Screen name="Directory" component={Directory} />
 			)}
 			<Tab.Screen name="Appointments" component={AppointmentsPage} />
+			<Tab.Screen name="Conversations" component={ConversationsPage} />
 			<Tab.Screen
 				name="Logout"
 				component={LogoutComponent}
@@ -143,6 +146,7 @@ function App() {
 						component={AppointmentsPage}
 					/>
 					<Tab.Screen name="ProfileView" component={ProfileView} />
+					<Tab.Screen name="Chat" component={ChatPage} />
 				</Stack.Navigator>
 			</NavigationContainer>
 		</UserContextProvider>
