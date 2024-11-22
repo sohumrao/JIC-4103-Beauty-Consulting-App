@@ -9,9 +9,11 @@ import AboutHairBox from "../assets/components/AboutHairBox";
 import handleHTTPError from "utils/errorHandling";
 import globalStyles from "../assets/GlobalStyles";
 
-const ProfileView = () => {
+const ProfileView = ({ route }) => {
+	const { username } = route.params;
 	const navigation = useNavigation();
 	const userContext = useContext(UserContext);
+	const [editable, setEditable] = useState(true);
 	const [profile, setProfile] = useState();
 	const [profileDetails, setProfileDetails] = useState({
 		birthday: "",
@@ -20,9 +22,9 @@ const ProfileView = () => {
 		email: "",
 	});
 
-	const fetchDetails = async () => {
+	const fetchDetails = async (username) => {
 		try {
-			const res = await api.get(`/client/${userContext.username}`);
+			const res = await api.get(`/client/${username}`);
 			setProfile(res.data);
 			setProfileDetails({
 				birthday: res.data?.info?.birthday || "",
@@ -36,8 +38,9 @@ const ProfileView = () => {
 	};
 
 	useEffect(() => {
-		fetchDetails();
-	}, []);
+		setEditable(userContext.username == username);
+		fetchDetails(username);
+	});
 
 	const deleteAccount = async () => {
 		// TODO: update with a separate flow for password validation after backend rework

@@ -64,12 +64,15 @@ function MainTabNavigator() {
 		<Tab.Navigator screenOptions={{ headerShown: false }}>
 			{role === "client" ? (
 				// Navigate to ProfileView for both clients and stylists
-				<Tab.Screen name="ProfileView" component={ProfileView} />
+				<Tab.Screen
+					name="ProfileView"
+					component={ProfileView}
+					initialParams={{ username }}
+				/>
 			) : (
 				<Tab.Screen
 					name="BusinessInfoPage"
 					component={BusinessInfoPage}
-					// FIXME: hack to pass username as a prop
 					initialParams={{ username }}
 				/>
 			)}
@@ -123,7 +126,6 @@ function App() {
 						name="Reset Password"
 						component={ResetPasswordPage}
 					/>
-
 					<Stack.Screen
 						name="Main"
 						component={MainTabNavigator}
@@ -136,6 +138,11 @@ function App() {
 							headerShown: true,
 						}}
 					/>
+					<Tab.Screen
+						name="Appointments"
+						component={AppointmentsPage}
+					/>
+					<Tab.Screen name="ProfileView" component={ProfileView} />
 				</Stack.Navigator>
 			</NavigationContainer>
 		</UserContextProvider>
