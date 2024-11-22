@@ -6,7 +6,6 @@ import connectDB from "./db/connection.js";
 import stylistController from "./route/StylistController.js";
 import accountController from "./route/AccountController.js";
 import clientController from "./route/ClientController.js";
-import createDataController from "./route/GenerateDataController.js";
 import appointmentController from "./route/AppointmentController.js";
 import messagingController, {
 	setUpWebSocketServer,
@@ -19,7 +18,7 @@ const app = express();
 const httpServer = createServer(app);
 
 // MongoDB Connection
-connectDB();
+await connectDB(process.env.MONGO_URI);
 
 // Middleware setup
 app.use(cors());
@@ -29,7 +28,6 @@ app.use(express.json());
 app.use("/client", clientController);
 app.use("/stylist", stylistController);
 app.use("/account", accountController);
-app.use("/create-data", createDataController);
 app.use("/appointment", appointmentController);
 app.use("/messages", messagingController);
 

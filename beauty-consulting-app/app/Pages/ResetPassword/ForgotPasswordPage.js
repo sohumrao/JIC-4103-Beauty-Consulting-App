@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { Text, View, TextInput, TouchableOpacity } from "react-native";
+import { Text, TextInput, TouchableOpacity, View } from "react-native";
+import KeyboardMove from "../../assets/components/KeyboardMove";
 import SignupBackground from "../../assets/components/SignupBackground";
 import ErrorMessage from "../../components/ErrorMessage";
 import globalStyles from "../../assets/GlobalStyles";
@@ -23,30 +24,32 @@ const ForgotPasswordPage = () => {
 		}
 	};
 	return (
-		<SignupBackground>
-			<View style={globalStyles.box}>
-				<Text style={globalStyles.title}>Reset Password</Text>
-				<Text style={globalStyles.description}>
-					Enter the email associated with your account to reset your
-					password.
-				</Text>
-				<ErrorMessage message={errorMessage} />
-				<TextInput
-					style={globalStyles.input}
-					placeholder="Email"
-					value={email}
-					onChangeText={setEmail}
-					keyboardType="email-address"
-					autoCapitalize="none"
-				/>
-				<TouchableOpacity
-					style={globalStyles.button}
-					onPress={handleForgotPassword}
-				>
-					<Text style={globalStyles.buttonText}>Send Email</Text>
-				</TouchableOpacity>
-			</View>
-		</SignupBackground>
+		<KeyboardMove>
+			<SignupBackground>
+				<View style={globalStyles.box}>
+					<Text style={globalStyles.title}>Reset Password</Text>
+					<Text style={globalStyles.description}>
+						Enter the email associated with your account to reset
+						your password.
+					</Text>
+					<ErrorMessage message={errorMessage} />
+					<TextInput
+						style={globalStyles.input}
+						placeholder="Email"
+						value={email}
+						onChangeText={setEmail}
+						keyboardType="email-address"
+						autoCapitalize="none"
+					/>
+					<TouchableOpacity
+						style={globalStyles.button}
+						onPress={handleForgotPassword}
+					>
+						<Text style={globalStyles.buttonText}>Send Email</Text>
+					</TouchableOpacity>
+				</View>
+			</SignupBackground>
+		</KeyboardMove>
 	);
 };
 

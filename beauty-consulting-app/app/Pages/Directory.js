@@ -4,8 +4,9 @@ import {
 	Text,
 	View,
 	TextInput,
-	TouchableOpacity,
 	ScrollView,
+	RefreshControl,
+	ActivityIndicator,
 } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
 import globalStyles from "../assets/GlobalStyles";
@@ -20,6 +21,7 @@ import AppointmentModal from "../assets/components/appointmentModal";
 const Directory = () => {
 	var userContext = useContext(UserContext);
 	const [city, setCity] = useState("Atlanta"); // TODO: change default value once clients input address
+	const [prevReq, setPrevReq] = useState(null);
 	const [stylistData, setStylistData] = useState(null);
 	const [zipCode, setZipCode] = useState("30332");
 	const [messageError, setMessageError] = useState("");
@@ -32,24 +34,57 @@ const Directory = () => {
 		retrieveStylistData(city);
 	}, [userContext.username, city]);
 
-	const retrieveStylistData = async (city) => {
+	const onRefresh = React.useCallback(() => {
+		setIsLoading(true);
+		refreshSearch().then(() => setIsLoading(false));
+	});
+
+	const retrieveStylistData = async (queryCity) => {
 		try {
+			setCity(queryCity);
 			const req = {
 				username: userContext.username,
 				distance: dropDownValue,
-				city: city,
+				city: queryCity,
 			};
+			setPrevReq(req);
+			// prevent repeated requests with same information
+			// save API calls
+			// we still make one call to check city with each request but thats fine
+			if (
+				prevReq &&
+				req.distance == prevReq.distance &&
+				req.city == prevReq.city
+			) {
+				return;
+			}
 			setIsLoading(true);
 			const res = await api.post(
 				`/client/matchStylists/${userContext.username}`,
 				req
 			);
 			setIsLoading(false);
+			setMessageError("");
 			setStylistData(res.data);
 		} catch (error) {
 			handleHTTPError(error);
 			setIsLoading(false);
 			setStylistData(null);
+		}
+	};
+
+	const refreshSearch = async () => {
+		if (zipCode.length < 5) {
+			setMessageError("Input a full ZIP code.");
+			return;
+		}
+		try {
+			const locationResponse = await getCityFromZIP(zipCode);
+			setMessageError("");
+			retrieveStylistData(locationResponse.city);
+		} catch (error) {
+			setMessageError("Error Retrieving Results");
+			handleHTTPError(error);
 		}
 	};
 
@@ -62,8 +97,6 @@ const Directory = () => {
 		setCurrentStylist(stylistUsername);
 	};
 
-	// TODO: prevent multiple appointments being created
-	// maybe blur button / make it non interactable for that session?
 	const createAppointment = async (date, time) => {
 		try {
 			if (!date || !time) {
@@ -79,7 +112,6 @@ const Directory = () => {
 			};
 			console.log(req);
 			await api.post("/appointment/create", req);
-			console.log("Appointment Created!");
 			setModalVisible(false);
 			setStylistsBooked([...stylistsBooked, currentStylist]);
 		} catch (error) {
@@ -89,22 +121,6 @@ const Directory = () => {
 
 	const hideModal = () => {
 		setModalVisible(false);
-	};
-
-	const refreshSearch = async () => {
-		if (zipCode.length < 5) {
-			setMessageError("Input a full ZIP code.");
-			return;
-		}
-		try {
-			const locationResponse = await getCityFromZIP(zipCode);
-			setMessageError("");
-			setCity(locationResponse.city);
-			retrieveStylistData(city);
-		} catch (error) {
-			setMessageError("Error Retrieving Results");
-			handleHTTPError(error);
-		}
 	};
 
 	const dropDownData = [
@@ -142,9 +158,6 @@ const Directory = () => {
 					style={styles.dropDown}
 					selectedTextStyle={styles.selectedText}
 				/>
-				<TouchableOpacity style={styles.button} onPress={refreshSearch}>
-					<Text style={globalStyles.buttonText}>Refresh</Text>
-				</TouchableOpacity>
 			</View>
 			<ErrorMessage message={messageError} />
 		</View>
@@ -155,9 +168,10 @@ const Directory = () => {
 			<View style={globalStyles.container}>
 				{renderHeaderWithInputs()}
 				<View style={globalStyles.centeringContainer}>
-					<View style={globalStyles.box}>
-						<Text style={globalStyles.promptText}>Loading...</Text>
-					</View>
+					<Text style={globalStyles.promptText}>
+						Finding Stylists
+					</Text>
+					<ActivityIndicator size="large" animating={isLoading} />
 				</View>
 			</View>
 		);
@@ -168,6 +182,12 @@ const Directory = () => {
 			{stylistData ? (
 				<View>
 					<ScrollView style={globalStyles.directoryContainer}>
+						<RefreshControl
+							refreshing={isLoading}
+							onRefresh={onRefresh}
+							colors={["#000"]}
+							tintColor="#000"
+						/>
 						{stylistData.map((stylist) => (
 							<View key={stylist.username}>
 								<StylistListing
@@ -175,9 +195,6 @@ const Directory = () => {
 									stylistName={stylist.name}
 									businessName={stylist.businessName}
 									businessAddress={stylist.businessAddress}
-									mostSimilarHairDetails={
-										stylist.mostSimilarHairDetails
-									}
 									username={stylist.username}
 									booked={stylistsBooked}
 									handleBookingPress={() => {
@@ -187,22 +204,30 @@ const Directory = () => {
 							</View>
 						))}
 					</ScrollView>
-					{modalVisible && (
+					{modalVisible ? (
 						<AppointmentModal
 							visible={modalVisible}
 							onClose={hideModal}
 							onCreateAppointment={createAppointment}
 						/>
-					)}
+					) : null}
 				</View>
 			) : (
-				<ErrorMessage
-					message={
-						"Could not find stylist in " +
-						city +
-						". \n Try a different search."
-					}
-				/>
+				<ScrollView>
+					<RefreshControl
+						refreshing={isLoading}
+						onRefresh={onRefresh}
+						colors={["#000"]}
+						tintColor="#000"
+					/>
+					<ErrorMessage
+						message={
+							"Could not find stylist in " +
+							city +
+							". \n Try a different search."
+						}
+					/>
+				</ScrollView>
 			)}
 		</View>
 	);

@@ -7,6 +7,7 @@ import {
 	Modal,
 	TouchableOpacity,
 	RefreshControl,
+	Dimensions,
 } from "react-native";
 import SignupBackground from "../assets/components/SignupBackground";
 import { UserContext } from "../contexts/userContext";
@@ -26,8 +27,6 @@ function AppointmentsPage() {
 	const [cancelUsername, setCancelUsername] = useState("");
 	const [cancelTime, setCancelTime] = useState("");
 	const [cancelID, setCancelID] = useState("");
-	const [currentlyViewedClient, setCurrentlyViewedClient] = useState(null);
-	const [viewedClientInfo, setViewedClientInfo] = useState(null);
 
 	const fetchAppointments = async () => {
 		try {
@@ -39,28 +38,6 @@ function AppointmentsPage() {
 
 			setAppointments(response.data);
 			setErrorMessage(null);
-		} catch (error) {
-			handleHTTPError(error, setErrorMessage);
-		}
-	};
-
-	const populateClientData = async (clientUsername) => {
-		try {
-			console.log(clientUsername);
-			const response = await api.get(`/client/${clientUsername}`, {
-				params: {
-					username: currentlyViewedClient,
-				},
-			});
-
-			const formattedHairDetails = Object.keys(response.data.hairDetails)
-				.filter((key) => response.data.hairDetails[key]) // Filters keys with `true` values
-				.join(", ");
-
-			setViewedClientInfo({
-				...response.data,
-				hairDetails: formattedHairDetails,
-			});
 		} catch (error) {
 			handleHTTPError(error, setErrorMessage);
 		}
@@ -93,7 +70,6 @@ function AppointmentsPage() {
 		}
 	};
 
-	// TODO: would be nice to display actual names rather than username
 	return (
 		<SignupBackground>
 			<View style={styles.container}>
@@ -118,10 +94,10 @@ function AppointmentsPage() {
 						appointments.map((appointment) => (
 							<View key={appointment._id}>
 								<AppointmentBlock
-									name={
+									account={
 										role === "stylist"
-											? appointment.clientUsername
-											: appointment.stylistUsername
+											? appointment.client
+											: appointment.stylist
 									}
 									date={formatDate(
 										appointment.appointmentDate
@@ -132,18 +108,10 @@ function AppointmentsPage() {
 									cancelAppointment={() => {
 										handleCancelPress(
 											role === "stylist"
-												? appointment.clientUsername
-												: appointment.stylistUsername,
+												? appointment.client.username
+												: appointment.stylist.username,
 											appointment.appointmentDate,
 											appointment._id
-										);
-									}}
-									handleClientInfoPress={() => {
-										populateClientData(
-											appointment.clientUsername
-										);
-										setCurrentlyViewedClient(
-											appointment.clientUsername
 										);
 									}}
 								/>
@@ -151,45 +119,6 @@ function AppointmentsPage() {
 						))
 					)}
 				</ScrollView>
-				<Modal
-					visible={currentlyViewedClient != null}
-					transparent={false}
-					animationType="slide"
-				>
-					<SignupBackground>
-						<View style={styles.box}>
-							<Text
-								style={styles.modalTitle}
-							>{`${viewedClientInfo?.info.name ?? ""}\'s Info`}</Text>
-
-							<Text style={styles.profileDetail}>
-								<Text style={styles.label}>Gender:</Text>{" "}
-								{viewedClientInfo?.info.gender ?? ""}
-							</Text>
-							<Text style={styles.profileDetail}>
-								<Text style={styles.label}>Phone Number:</Text>{" "}
-								{viewedClientInfo?.info.phoneNumber ?? ""}
-							</Text>
-							<Text style={styles.profileDetail}>
-								<Text style={styles.label}>Hair Type: </Text>
-								{viewedClientInfo?.hairDetails ?? ""}
-							</Text>
-							<Text style={styles.profileDetail}>
-								<Text style={styles.label}>Allergies:</Text>{" "}
-								{viewedClientInfo?.allergies ?? ""}
-							</Text>
-
-							<TouchableOpacity
-								style={[globalStyles.button, { marginTop: 20 }]}
-								onPress={() => setCurrentlyViewedClient(null)}
-							>
-								<Text style={globalStyles.buttonText}>
-									Close
-								</Text>
-							</TouchableOpacity>
-						</View>
-					</SignupBackground>
-				</Modal>
 				<Modal
 					visible={modalVisible}
 					transparent={false}
@@ -238,6 +167,7 @@ function AppointmentsPage() {
 	);
 }
 
+const screenWidth = Dimensions.get("window").width;
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
@@ -316,11 +246,12 @@ const styles = StyleSheet.create({
 		color: "white",
 		fontWeight: "bold",
 	},
-	clientPicture: {
-		width: 100, // Width of the image
-		height: 100, // Height of the image
-		borderRadius: 50, // Half of width/height for a circle
-		marginBottom: 15,
+	photo: {
+		width: screenWidth * 0.5,
+		height: screenWidth * 0.5, // Ensures height is equal to width
+		borderRadius: (screenWidth * 0.5) / 2, // Half of the width for a perfect circle
+		backgroundColor: "#e0e0e0",
+		alignSelf: "center",
 	},
 });
 

@@ -1,46 +1,39 @@
-import React, { useContext } from "react";
-import { Text, View, TouchableOpacity, Image, StyleSheet } from "react-native";
+import React from "react";
+import { Text, View, TouchableOpacity, StyleSheet } from "react-native";
 import globalStyles from "../assets/GlobalStyles";
-import { UserContext } from "../contexts/userContext";
+import { useNavigation } from "@react-navigation/native";
 
-const AppointmentBlock = ({
-	name,
-	date,
-	time,
-	cancelAppointment,
-	handleClientInfoPress,
-}) => {
-	const userContext = useContext(UserContext);
-
+const AppointmentBlock = ({ account, date, time, cancelAppointment }) => {
+	const navigation = useNavigation(); // Add this hook
 	return (
 		<View style={styles.appointmentBox}>
-			<Text style={styles.name}> {name}</Text>
+			// FIXME: this hack is quite ugly
+			<TouchableOpacity
+				onPress={() => {
+					const page =
+						account.__t === "Stylist"
+							? "BusinessInfoPage"
+							: "ProfileView";
+					navigation.navigate(page, { username: account.username });
+				}}
+			>
+				<Text style={styles.name}>{account.info.name}</Text>
+			</TouchableOpacity>
 			<Text style={styles.details}> {date}</Text>
 			<Text style={styles.details}> {time}</Text>
-			{userContext.role == "stylist" && (
-				<TouchableOpacity
-					style={[
-						globalStyles.button,
-						{
-							alignSelf: "flex-end",
-							width: "50%",
-							marginBottom: 5,
-						},
-					]}
-					onPress={handleClientInfoPress}
-				>
-					<Text style={globalStyles.buttonText}>Client Info</Text>
-				</TouchableOpacity>
-			)}
-			<TouchableOpacity
-				style={[
-					globalStyles.button,
-					{ alignSelf: "flex-end", width: "50%" },
-				]}
-				onPress={cancelAppointment}
+			<View
+				style={{
+					padding: 10,
+					alignItems: "flex-end",
+				}}
 			>
-				<Text style={globalStyles.buttonText}>Cancel</Text>
-			</TouchableOpacity>
+				<TouchableOpacity
+					style={[globalStyles.button, { width: "50%" }]}
+					onPress={cancelAppointment}
+				>
+					<Text style={globalStyles.buttonText}>Cancel</Text>
+				</TouchableOpacity>
+			</View>
 		</View>
 	);
 };

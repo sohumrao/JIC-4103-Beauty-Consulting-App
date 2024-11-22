@@ -1,9 +1,8 @@
 import mongoose from "mongoose";
-const Schema = mongoose.Schema;
 
-const AppointmentSchema = new Schema({
-	clientUsername: { type: String },
-	stylistUsername: { type: String },
+const AppointmentSchema = new mongoose.Schema({
+	client: { type: mongoose.Types.ObjectId, ref: "Client" },
+	stylist: { type: mongoose.Types.ObjectId, ref: "Stylist" },
 	appointmentDate: { type: Date }, // Date of the appointment
 	duration: { type: Number }, // Duration in minutes
 	status: {

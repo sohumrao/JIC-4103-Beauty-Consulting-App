@@ -66,8 +66,8 @@ const StylistDetails2 = () => {
 		setStreetOne(streetOne.trim());
 		setCity(city.trim());
 
-		streetOnePassed = streetOne != "";
-		cityPassed = city != "";
+		const streetOnePassed = streetOne != "";
+		const cityPassed = city != "";
 
 		if (streetOnePassed != cityPassed) {
 			setMessage("Complete Address to Coninue");
@@ -214,7 +214,7 @@ const StylistDetails2 = () => {
 					placeholderTextColor="#707070"
 					inputMode="text"
 					autoCapitalize="characters"
-					autoCorrect="false"
+					autoCorrect={false}
 					maxLength={2}
 				/>
 

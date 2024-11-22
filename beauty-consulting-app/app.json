@@ -6,7 +6,8 @@
 		"assetBundlePatterns": ["**/*"],
 		"packagerOpts": {
 			"config": "metro.config.js"
-		}
+		},
+		"newArchEnabled": true
 	},
 	"name": "beauty-consulting-app"
 }
