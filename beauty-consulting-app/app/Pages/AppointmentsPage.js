@@ -46,28 +46,6 @@ function AppointmentsPage() {
 		}
 	};
 
-	const populateClientData = async (clientUsername) => {
-		try {
-			console.log(clientUsername);
-			const response = await api.get(`/client/${clientUsername}`, {
-				params: {
-					username: currentlyViewedClient,
-				},
-			});
-
-			const formattedHairDetails = Object.keys(response.data.hairDetails)
-				.filter((key) => response.data.hairDetails[key]) // Filters keys with `true` values
-				.join(", ");
-
-			setViewedClientInfo({
-				...response.data,
-				hairDetails: formattedHairDetails,
-			});
-		} catch (error) {
-			handleHTTPError(error, setErrorMessage);
-		}
-	};
-
 	useEffect(() => {
 		fetchAppointments();
 	}, [username]);
@@ -122,8 +100,8 @@ function AppointmentsPage() {
 								<AppointmentBlock
 									name={
 										role === "stylist"
-											? appointment.clientUsername
-											: appointment.stylistUsername
+											? appointment.client.info.name
+											: appointment.stylist.info.name
 									}
 									date={formatDate(
 										appointment.appointmentDate
@@ -134,18 +112,15 @@ function AppointmentsPage() {
 									cancelAppointment={() => {
 										handleCancelPress(
 											role === "stylist"
-												? appointment.clientUsername
-												: appointment.stylistUsername,
+												? appointment.client.username
+												: appointment.stylist.username,
 											appointment.appointmentDate,
 											appointment._id
 										);
 									}}
 									handleClientInfoPress={() => {
-										populateClientData(
-											appointment.clientUsername
-										);
 										setCurrentlyViewedClient(
-											appointment.clientUsername
+											appointment.client.username
 										);
 									}}
 								/>

@@ -55,11 +55,11 @@ router.post(
 
 		// Create a new appointment
 		const newAppointment = new Appointment({
-			clientUsername,
-			stylistUsername,
-			appointmentDate,
-			duration,
-			notes,
+			client: client._id,
+			stylist: stylist._id,
+			appointmentDate: appointmentDate,
+			duration: duration,
+			notes: notes,
 		});
 
 		const savedAppointment = await newAppointment.save();
@@ -71,7 +71,6 @@ router.post(
 router.get(
 	"/scheduled",
 	asyncHandler(async (req, res, next) => {
-		console.log(req.query);
 		const { username } = req.query;
 		const client = await Client.findOne({ username });
 		const stylist = await Stylist.findOne({ username });
@@ -80,14 +79,14 @@ router.get(
 
 		if (client) {
 			appointments = await Appointment.find({
-				clientUsername: username,
+				client: client._id,
 				status: "Scheduled",
-			});
+			}).populate("stylist");
 		} else if (stylist) {
 			appointments = await Appointment.find({
-				stylistUsername: username,
+				stylist: stylist._id,
 				status: "Scheduled",
-			});
+			}).populate("client");
 		} else {
 			return next(
 				new ConflictError(`User with username ${username} not found.`)
@@ -170,6 +169,15 @@ router.get(
 			);
 		}
 
+		const stylist = await Stylist.findOne({ username: username });
+		if (!stylist) {
+			return next(
+				new ConflictError(
+					`Stylist with username ${username} not found.`
+				)
+			);
+		}
+
 		const currentDate = new Date();
 		const year = currentDate.getFullYear();
 
@@ -185,7 +193,7 @@ router.get(
 
 			// Count appointments on this date
 			const appointmentCount = await Appointment.countDocuments({
-				stylistUsername: username,
+				stylistUsername: stylist.username,
 				appointmentDate: {
 					$gte: currentDay,
 					$lt: new Date(currentDay.getTime() + 24 * 60 * 60 * 1000),
