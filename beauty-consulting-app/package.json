@@ -15,6 +15,7 @@
 		"@react-navigation/native-stack": "^6.11.0",
 		"axios": "^1.7.7",
 		"beauty-consulting-app": "file:",
+		"dayjs": "^1.11.13",
 		"expo": "^52.0.4",
 		"expo-image-picker": "~16.0.1",
 		"expo-status-bar": "~2.0.0",

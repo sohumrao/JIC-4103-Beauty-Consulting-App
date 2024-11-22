@@ -5,10 +5,7 @@ import {
 	TextInput,
 	StyleSheet,
 	TouchableOpacity,
-	StyleSheet,
 } from "react-native";
-import EditImage from "../images/pen.svg";
-import SaveImage from "../images/save.svg"; // Import SaveImage
 import AgeIcon from "../images/birthday-cake.svg";
 import PhoneIcon from "../images/phone-call.svg";
 import EmailIcon from "../images/email.svg";
@@ -62,16 +59,14 @@ const AboutMeBox = ({ fieldValues, setFieldValues }) => {
 		setModalVisible(false);
 	};
 
-	// TODO: verify if ternary is necessary???
+	console.log("LOGGING FROM ABOUT ME:", fieldValues);
 	return (
 		<View>
-			{modalVisible ? (
-				<EditProfileViewModal
-					visible={modalVisible}
-					onClose={closeEditModal}
-					profileDetails={profileDetails}
-				/>
-			) : null}
+			<EditProfileViewModal
+				visible={modalVisible}
+				onClose={closeEditModal}
+				profileDetails={fieldValues}
+			/>
 			<View style={styles.headerRow}>
 				<Text style={styles.title}>About Me</Text>
 				<TouchableOpacity
