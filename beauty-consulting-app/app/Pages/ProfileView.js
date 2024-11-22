@@ -1,5 +1,12 @@
 import React, { useContext, useEffect, useState } from "react";
-import { View, ScrollView, Text, TouchableOpacity } from "react-native";
+import {
+	View,
+	ScrollView,
+	Text,
+	TouchableOpacity,
+	Dimensions,
+	StyleSheet,
+} from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { UserContext } from "../contexts/userContext";
 import SignupBackground from "../assets/components/SignupBackground";
@@ -8,6 +15,9 @@ import AboutMeBox from "../assets/components/AboutMeBox";
 import AboutHairBox from "../assets/components/AboutHairBox";
 import handleHTTPError from "utils/errorHandling";
 import globalStyles from "../assets/GlobalStyles";
+import ProfilePhotoDisplay from "../assets/components/ProfilePhotoDisplay";
+import ImageUploadButton from "../assets/components/ImageUploadButton";
+import GoBackArrow from "../assets/images/go-back-arrow.svg";
 
 const ProfileView = ({ route }) => {
 	const { username } = route.params;
@@ -21,6 +31,7 @@ const ProfileView = ({ route }) => {
 		phoneNumber: "",
 		email: "",
 	});
+	const [photoChanged, setPhotoChanged] = useState(false);
 
 	const fetchDetails = async (username) => {
 		try {
@@ -31,6 +42,8 @@ const ProfileView = ({ route }) => {
 				gender: res.data?.info?.gender || "",
 				phoneNumber: res.data?.info?.phoneNumber || "",
 				email: res.data?.email || "",
+				profilePhoto: res.data?.profilePhoto || null,
+				username: res.data?.username,
 			});
 		} catch (error) {
 			handleHTTPError(error);
@@ -58,13 +71,37 @@ const ProfileView = ({ route }) => {
 				<View style={{ flex: 1 }}>
 					<View
 						style={{
-							flexDirection: "row",
-							alignItems: "flex-start",
-							marginTop: 100,
-							marginLeft: 20,
+							marginTop: 80,
 						}}
-					></View>
-					<View style={{ marginTop: 180 }}>
+					>
+						{profileDetails.username !== userContext.username && (
+							<TouchableOpacity
+								onPress={() => {
+									navigation.goBack();
+								}}
+							>
+								<GoBackArrow
+									width={36}
+									height={36}
+									fill={"black"}
+									style={styles.editIcon}
+								/>
+							</TouchableOpacity>
+						)}
+						<ProfilePhotoDisplay
+							profilePhoto={profileDetails.profilePhoto}
+							styleProp={styles.photo}
+						></ProfilePhotoDisplay>
+
+						{profileDetails.username == userContext.username && (
+							<ImageUploadButton
+								username={userContext.username}
+								photoChanged={photoChanged}
+								setPhotoChanged={setPhotoChanged}
+							></ImageUploadButton>
+						)}
+					</View>
+					<View style={{}}>
 						<AboutMeBox
 							fieldValues={profileDetails}
 							setFieldValues={setProfileDetails}
@@ -74,15 +111,31 @@ const ProfileView = ({ route }) => {
 						<AboutHairBox />
 					</View>
 				</View>
-				<TouchableOpacity
-					style={globalStyles.button}
-					onPress={deleteAccount}
-				>
-					<Text style={globalStyles.buttonText}>Delete Account</Text>
-				</TouchableOpacity>
+				{profileDetails.username == userContext.username && (
+					<TouchableOpacity
+						style={globalStyles.button}
+						onPress={deleteAccount}
+					>
+						<Text style={globalStyles.buttonText}>
+							Delete Account
+						</Text>
+					</TouchableOpacity>
+				)}
 			</ScrollView>
 		</SignupBackground>
 	);
 };
+
+const screenWidth = Dimensions.get("window").width;
+const styles = StyleSheet.create({
+	photo: {
+		width: screenWidth * 0.5,
+		height: screenWidth * 0.5, // Ensures height is equal to width
+		borderRadius: (screenWidth * 0.5) / 2, // Half of the width for a perfect circle
+		backgroundColor: "#e0e0e0",
+		alignSelf: "center",
+		borderWidth: 5,
+	},
+});
 
 export default ProfileView;
