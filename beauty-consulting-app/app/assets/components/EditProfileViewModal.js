@@ -4,12 +4,10 @@ import {
 	View,
 	Text,
 	TouchableOpacity,
-	ScrollView,
 	StyleSheet,
 	TextInput,
 } from "react-native";
 import globalStyles from "../GlobalStyles";
-import SignupBackground from "./SignupBackground";
 import AgeIcon from "../images/birthday-cake.svg";
 import PhoneIcon from "../images/phone-call.svg";
 import EmailIcon from "../images/email.svg";
@@ -17,7 +15,6 @@ import GenderIcon from "../images/genders.svg";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { UserContext, updateUserContext } from "../../contexts/userContext";
 import handleHTTPError from "utils/errorHandling";
-import { formatDate } from "../../utils/utils";
 import api from "utils/axios";
 import dayjs from "dayjs";
 
@@ -60,7 +57,7 @@ const EditProfileViewModal = ({ visible, onClose, profileDetails }) => {
 	};
 
 	const saveAndClose = async () => {
-		userContext.updateUserContext({
+		updatedData = {
 			...userContext,
 			email: formData.email,
 			info: {
@@ -68,16 +65,15 @@ const EditProfileViewModal = ({ visible, onClose, profileDetails }) => {
 				gender: formData.gender,
 				birthday: formData.birthday,
 			},
-		});
-
-		updatedData = userContext;
-		console.log("UPDATED DATA: ", updatedData);
+		};
+		console.log("UPDATED DATA FOR DB: ", updatedData);
+		userContext.updateUserContext(updatedData);
 		try {
 			await api.put(`client/${userContext.username}`, updatedData);
 		} catch (error) {
 			handleHTTPError(error);
 		}
-		onClose();
+		onClose(formData);
 	};
 
 	return (
