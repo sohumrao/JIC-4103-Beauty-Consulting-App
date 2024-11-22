@@ -17,30 +17,34 @@ const AppointmentBlock = ({
 			<Text style={styles.name}> {name}</Text>
 			<Text style={styles.details}> {date}</Text>
 			<Text style={styles.details}> {time}</Text>
-			{userContext.role == "stylist" && (
-				<TouchableOpacity
-					style={[
-						globalStyles.button,
-						{
-							alignSelf: "flex-end",
-							width: "50%",
-							marginBottom: 5,
-						},
-					]}
-					onPress={handleClientInfoPress}
-				>
-					<Text style={globalStyles.buttonText}>Client Info</Text>
-				</TouchableOpacity>
-			)}
-			<TouchableOpacity
-				style={[
-					globalStyles.button,
-					{ alignSelf: "flex-end", width: "50%" },
-				]}
-				onPress={cancelAppointment}
+			<View
+				style={{
+					flexDirection: "row",
+					justifyContent: "flex-end",
+					padding: 10,
+				}}
 			>
-				<Text style={globalStyles.buttonText}>Cancel</Text>
-			</TouchableOpacity>
+				{userContext.role == "stylist" && (
+					<TouchableOpacity
+						style={[
+							globalStyles.button,
+							{
+								width: "50%",
+								marginRight: 5,
+							},
+						]}
+						onPress={handleClientInfoPress}
+					>
+						<Text style={globalStyles.buttonText}>Client Info</Text>
+					</TouchableOpacity>
+				)}
+				<TouchableOpacity
+					style={[globalStyles.button, { width: "50%" }]}
+					onPress={cancelAppointment}
+				>
+					<Text style={globalStyles.buttonText}>Cancel</Text>
+				</TouchableOpacity>
+			</View>
 		</View>
 	);
 };
