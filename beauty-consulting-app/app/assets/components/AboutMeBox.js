@@ -5,6 +5,7 @@ import {
 	TextInput,
 	StyleSheet,
 	TouchableOpacity,
+	StyleSheet,
 } from "react-native";
 import EditImage from "../images/pen.svg";
 import SaveImage from "../images/save.svg"; // Import SaveImage
@@ -16,10 +17,13 @@ import api from "utils/axios";
 import { formatDate } from "../../utils/utils";
 import { UserContext } from "../../contexts/userContext";
 import handleHTTPError from "utils/errorHandling";
+import globalStyles from "../GlobalStyles";
+import EditProfileViewModal from "./EditProfileViewModal";
 
 const AboutMeBox = ({ fieldValues, setFieldValues }) => {
 	const userContext = useContext(UserContext);
 	const [isEdit, setIsEdit] = useState(false);
+	const [modalVisible, setModalVisible] = React.useState(false);
 
 	const handleInputChange = (field, value) => {
 		setFieldValues((prev) => ({
@@ -50,24 +54,31 @@ const AboutMeBox = ({ fieldValues, setFieldValues }) => {
 		setIsEdit(!isEdit);
 	};
 
+	const openEditModal = () => {
+		setModalVisible(true);
+	};
+
+	const closeEditModal = () => {
+		setModalVisible(false);
+	};
+
+	// TODO: verify if ternary is necessary???
 	return (
 		<View>
+			{modalVisible ? (
+				<EditProfileViewModal
+					visible={modalVisible}
+					onClose={closeEditModal}
+					profileDetails={profileDetails}
+				/>
+			) : null}
 			<View style={styles.headerRow}>
 				<Text style={styles.title}>About Me</Text>
-				<TouchableOpacity onPress={toggleEdit}>
-					{isEdit ? (
-						<SaveImage
-							width={24}
-							height={24}
-							style={styles.editIcon}
-						/>
-					) : (
-						<EditImage
-							width={24}
-							height={24}
-							style={styles.editIcon}
-						/>
-					)}
+				<TouchableOpacity
+					style={globalStyles.button}
+					onPress={openEditModal}
+				>
+					<Text style={globalStyles.buttonText}>Edit Profile</Text>
 				</TouchableOpacity>
 			</View>
 			<View style={styles.container}>

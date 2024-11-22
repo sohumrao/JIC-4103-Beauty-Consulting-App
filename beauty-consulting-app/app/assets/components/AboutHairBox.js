@@ -32,7 +32,6 @@ const HairDetailsBox = () => {
 		<View>
 			<View style={styles.headerRow}>
 				<Text style={styles.title}>My Hair</Text>
-				<EditImage width={24} height={24} style={styles.editIcon} />
 			</View>
 			<View style={styles.container}>
 				<ScrollView showsVerticalScrollIndicator={false}>
