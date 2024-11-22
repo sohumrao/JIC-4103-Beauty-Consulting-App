@@ -16,6 +16,8 @@ import StylistDetailsComplete from "./Pages/StylistDetailsComplete";
 import BusinessInfoPage from "./Pages/BusinessInfoPage";
 import Directory from "./Pages/Directory";
 import AppointmentsPage from "./Pages/AppointmentsPage";
+import ConversationsPage from "./Pages/Messaging/ConversationsPage";
+import ChatPage from "./Pages/Messaging/ChatPage";
 
 export {
 	LandingPage,
@@ -36,4 +38,6 @@ export {
 	BusinessInfoPage,
 	Directory,
 	AppointmentsPage,
+	ConversationsPage,
+	ChatPage,
 };

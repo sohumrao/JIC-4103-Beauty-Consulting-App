@@ -24,11 +24,22 @@ const AppointmentBlock = ({ account, date, time, cancelAppointment }) => {
 			<View
 				style={{
 					padding: 10,
-					alignItems: "flex-end",
+					flexDirection: "row",
+					justifyContent: "space-between",
 				}}
 			>
 				<TouchableOpacity
-					style={[globalStyles.button, { width: "50%" }]}
+					style={[globalStyles.button, { width: "45%" }]}
+					onPress={() => {
+						navigation.navigate("Chat", {
+							username: account.username,
+						});
+					}}
+				>
+					<Text style={globalStyles.buttonText}>Message</Text>
+				</TouchableOpacity>
+				<TouchableOpacity
+					style={[globalStyles.button, { width: "45%" }]}
 					onPress={cancelAppointment}
 				>
 					<Text style={globalStyles.buttonText}>Cancel</Text>
