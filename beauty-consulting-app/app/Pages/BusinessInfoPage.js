@@ -11,7 +11,8 @@ import StylistServices from "../components/StylistServices";
 import ImageUploadButton from "../assets/components/ImageUploadButton";
 import ProfilePhotoDisplay from "../assets/components/ProfilePhotoDisplay";
 
-const BusinessInfoPage = (routeObject) => {
+const BusinessInfoPage = ({ route }) => {
+	const { username } = route.params;
 	// Access the user context
 	const userContext = useContext(UserContext);
 	const navigation = useNavigation();
@@ -20,9 +21,9 @@ const BusinessInfoPage = (routeObject) => {
 	const [photoChanged, setPhotoChanged] = useState(false);
 
 	useEffect(() => {
-		setEditable(userContext.username == routeObject.route.params.username);
-		populateStylistData(routeObject.route.params.username);
-	}, [routeObject, photoChanged]);
+		setEditable(userContext.username == username);
+		populateStylistData(username);
+	});
 
 	const populateStylistData = async (username) => {
 		try {

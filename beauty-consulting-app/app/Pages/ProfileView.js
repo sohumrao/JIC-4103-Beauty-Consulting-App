@@ -9,7 +9,8 @@ import AboutHairBox from "../assets/components/AboutHairBox";
 import handleHTTPError from "utils/errorHandling";
 import globalStyles from "../assets/GlobalStyles";
 
-const ProfileView = (routeObject) => {
+const ProfileView = ({ route }) => {
+	const { username } = route.params;
 	const navigation = useNavigation();
 	const userContext = useContext(UserContext);
 	const [editable, setEditable] = useState(true);
@@ -37,9 +38,9 @@ const ProfileView = (routeObject) => {
 	};
 
 	useEffect(() => {
-		setEditable(userContext.username == routeObject.route.params.username);
-		fetchDetails(routeObject.route.params.username);
-	}, [routeObject]);
+		setEditable(userContext.username == username);
+		fetchDetails(username);
+	});
 
 	const deleteAccount = async () => {
 		// TODO: update with a separate flow for password validation after backend rework
