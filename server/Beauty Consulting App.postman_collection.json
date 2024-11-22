@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "5e036700-25bb-49fa-8c7a-5e1892806fc5",
+		"_postman_id": "0e1caaa7-c0f4-4df8-ac3d-fee26f1a7998",
 		"name": "Beauty Consulting App",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "39633552"
+		"_exporter_id": "21194687"
 	},
 	"item": [
 		{
@@ -256,7 +256,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"clientUsername\": \"Eleanore24\",\r\n    \"stylistUsername\": \"Antonia_Hane\",\r\n    \"appointmentDate\": \"2024-11-02\",\r\n    \"duration\": 60,\r\n    \"notes\": \"Looking for a haircut and color\"\r\n}\r\n",
+					"raw": "{\r\n    \"clientUsername\": \"client1\",\r\n    \"stylistUsername\": \"stylist1\",\r\n    \"appointmentDate\": \"2024-11-01\",\r\n    \"duration\": 60,\r\n    \"notes\": \"Looking for a haircut and color\"\r\n}\r\n",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -268,35 +268,37 @@
 					"protocol": "http",
 					"host": ["localhost"],
 					"port": "5050",
-					"path": ["appointment", "create"],
-					"query": [
-						{
-							"key": "",
-							"value": null,
-							"disabled": true
-						}
-					]
+					"path": ["appointment", "create"]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "Get Scheduled Appointments",
+			"name": "Get All Appointments for Client",
 			"request": {
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:5050/appointment/scheduled?username=Eleanore24",
+					"raw": "http://localhost:5050/appointment/client/client1",
 					"protocol": "http",
 					"host": ["localhost"],
 					"port": "5050",
-					"path": ["appointment", "scheduled"],
-					"query": [
-						{
-							"key": "username",
-							"value": "Eleanore24"
-						}
-					]
+					"path": ["appointment", "client", "client1"]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Appointments for Stylist",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5050/appointment/stylist/stylist1",
+					"protocol": "http",
+					"host": ["localhost"],
+					"port": "5050",
+					"path": ["appointment", "stylist", "stylist1"]
 				}
 			},
 			"response": []
@@ -352,6 +354,36 @@
 							"value": "10"
 						}
 					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Recent Messages",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5050/messages/recent/client123",
+					"protocol": "http",
+					"host": ["localhost"],
+					"port": "5050",
+					"path": ["messages", "recent", "client123"]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Message History",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5050/messages/history/client123/stylist456",
+					"protocol": "http",
+					"host": ["localhost"],
+					"port": "5050",
+					"path": ["messages", "history", "client123", "stylist456"]
 				}
 			},
 			"response": []
