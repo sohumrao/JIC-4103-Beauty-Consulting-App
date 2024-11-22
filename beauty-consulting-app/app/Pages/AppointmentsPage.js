@@ -18,9 +18,11 @@ import { formatDate, formatTime } from "utils/utils";
 import AppointmentBlock from "../components/appointmentBlock";
 import globalStyles from "../assets/GlobalStyles";
 import ProfilePhotoDisplay from "../assets/components/ProfilePhotoDisplay";
+import { useNavigation } from "@react-navigation/native";
 
 function AppointmentsPage() {
 	const { username, role } = useContext(UserContext);
+	const navigation = useNavigation();
 	const [appointments, setAppointments] = useState([]);
 	const [errorMessage, setErrorMessage] = useState("");
 	const [modalVisible, setModalVisible] = useState(false);
@@ -28,8 +30,6 @@ function AppointmentsPage() {
 	const [cancelUsername, setCancelUsername] = useState("");
 	const [cancelTime, setCancelTime] = useState("");
 	const [cancelID, setCancelID] = useState("");
-	const [currentlyViewedClient, setCurrentlyViewedClient] = useState(null);
-	const [viewedClientInfo, setViewedClientInfo] = useState(null);
 
 	const fetchAppointments = async () => {
 		try {
@@ -73,7 +73,6 @@ function AppointmentsPage() {
 		}
 	};
 
-	// TODO: would be nice to display actual names rather than username
 	return (
 		<SignupBackground>
 			<View style={styles.container}>
@@ -119,61 +118,16 @@ function AppointmentsPage() {
 										);
 									}}
 									handleClientInfoPress={() => {
-										setCurrentlyViewedClient(
-											appointment.client.username
-										);
+										navigation.navigate("ProfileView", {
+											username:
+												appointment.client.username,
+										});
 									}}
 								/>
 							</View>
 						))
 					)}
 				</ScrollView>
-				<Modal
-					visible={currentlyViewedClient != null}
-					transparent={false}
-					animationType="slide"
-				>
-					<SignupBackground>
-						<View style={styles.box}>
-							<Text
-								style={styles.modalTitle}
-							>{`${viewedClientInfo?.info.name ?? ""}\'s Info`}</Text>
-
-							<ProfilePhotoDisplay
-								profilePhoto={
-									viewedClientInfo?.profilePhoto ?? null
-								}
-								styleProp={styles.photo}
-							/>
-
-							<Text style={styles.profileDetail}>
-								<Text style={styles.label}>Gender:</Text>{" "}
-								{viewedClientInfo?.info.gender ?? ""}
-							</Text>
-							<Text style={styles.profileDetail}>
-								<Text style={styles.label}>Phone Number:</Text>{" "}
-								{viewedClientInfo?.info.phoneNumber ?? ""}
-							</Text>
-							<Text style={styles.profileDetail}>
-								<Text style={styles.label}>Hair Type: </Text>
-								{viewedClientInfo?.hairDetails ?? ""}
-							</Text>
-							<Text style={styles.profileDetail}>
-								<Text style={styles.label}>Allergies:</Text>{" "}
-								{viewedClientInfo?.allergies ?? ""}
-							</Text>
-
-							<TouchableOpacity
-								style={[globalStyles.button, { marginTop: 20 }]}
-								onPress={() => setCurrentlyViewedClient(null)}
-							>
-								<Text style={globalStyles.buttonText}>
-									Close
-								</Text>
-							</TouchableOpacity>
-						</View>
-					</SignupBackground>
-				</Modal>
 				<Modal
 					visible={modalVisible}
 					transparent={false}
