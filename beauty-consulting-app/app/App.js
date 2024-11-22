@@ -3,6 +3,7 @@ import { useContext } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { StatusBar } from "react-native"; // Import StatusBar
 import {
 	LandingPage,
 	ClientDetails,
@@ -65,7 +66,6 @@ function MainTabNavigator() {
 	return (
 		<Tab.Navigator screenOptions={{ headerShown: false }}>
 			{role === "client" ? (
-				// Navigate to ProfileView for both clients and stylists
 				<Tab.Screen
 					name="ProfileView"
 					component={ProfileView}
@@ -88,7 +88,6 @@ function MainTabNavigator() {
 				component={LogoutComponent}
 				listeners={{
 					tabPress: (e) => {
-						// Prevent default action
 						e.preventDefault();
 						updateUserContext(null);
 						navigation.reset({
@@ -105,6 +104,7 @@ function MainTabNavigator() {
 function App() {
 	return (
 		<UserContextProvider>
+			<StatusBar barStyle="dark-content" backgroundColor="#fff" />
 			<NavigationContainer>
 				<Stack.Navigator screenOptions={{ headerShown: false }}>
 					<Stack.Screen name="Sign In" component={SignInPage} />
@@ -137,9 +137,6 @@ function App() {
 					<Stack.Screen
 						name="BusinessInfoPage"
 						component={BusinessInfoPage}
-						screenOptions={{
-							headerShown: true,
-						}}
 					/>
 					<Tab.Screen
 						name="Appointments"
