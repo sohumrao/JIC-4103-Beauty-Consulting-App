@@ -139,6 +139,10 @@ function App() {
 							headerShown: true,
 						}}
 					/>
+					<Tab.Screen
+						name="Appointments"
+						component={AppointmentsPage}
+					/>
 					<Tab.Screen name="ProfileView" component={ProfileView} />
 				</Stack.Navigator>
 			</NavigationContainer>

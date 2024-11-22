@@ -17,12 +17,9 @@ import ErrorMessage from "../components/ErrorMessage";
 import { formatDate, formatTime } from "utils/utils";
 import AppointmentBlock from "../components/appointmentBlock";
 import globalStyles from "../assets/GlobalStyles";
-import ProfilePhotoDisplay from "../assets/components/ProfilePhotoDisplay";
-import { useNavigation } from "@react-navigation/native";
 
 function AppointmentsPage() {
 	const { username, role } = useContext(UserContext);
-	const navigation = useNavigation();
 	const [appointments, setAppointments] = useState([]);
 	const [errorMessage, setErrorMessage] = useState("");
 	const [modalVisible, setModalVisible] = useState(false);
@@ -97,10 +94,10 @@ function AppointmentsPage() {
 						appointments.map((appointment) => (
 							<View key={appointment._id}>
 								<AppointmentBlock
-									name={
+									account={
 										role === "stylist"
-											? appointment.client.info.name
-											: appointment.stylist.info.name
+											? appointment.client
+											: appointment.stylist
 									}
 									date={formatDate(
 										appointment.appointmentDate
@@ -116,12 +113,6 @@ function AppointmentsPage() {
 											appointment.appointmentDate,
 											appointment._id
 										);
-									}}
-									handleClientInfoPress={() => {
-										navigation.navigate("ProfileView", {
-											username:
-												appointment.client.username,
-										});
 									}}
 								/>
 							</View>
