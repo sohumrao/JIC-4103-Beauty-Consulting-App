@@ -73,7 +73,6 @@ function MainTabNavigator() {
 				<Tab.Screen
 					name="BusinessInfoPage"
 					component={BusinessInfoPage}
-					// FIXME: hack to pass username as a prop
 					initialParams={{ username }}
 				/>
 			)}
