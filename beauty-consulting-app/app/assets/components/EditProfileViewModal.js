@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
 	Modal,
 	View,
@@ -15,7 +15,10 @@ import PhoneIcon from "../images/phone-call.svg";
 import EmailIcon from "../images/email.svg";
 import GenderIcon from "../images/genders.svg";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import { UserContext, updateUserContext } from "../../contexts/userContext";
+import handleHTTPError from "utils/errorHandling";
 import { formatDate } from "../../utils/utils";
+import api from "utils/axios";
 import dayjs from "dayjs";
 
 const EditProfileViewModal = ({ visible, onClose, profileDetails }) => {
@@ -25,6 +28,8 @@ const EditProfileViewModal = ({ visible, onClose, profileDetails }) => {
 		phoneNumber: "",
 		email: "",
 	});
+
+	const userContext = useContext(UserContext);
 
 	useEffect(() => {
 		if (profileDetails) {
@@ -54,8 +59,24 @@ const EditProfileViewModal = ({ visible, onClose, profileDetails }) => {
 		}
 	};
 
-	const saveAndClose = () => {
-		// TODO: save info
+	const saveAndClose = async () => {
+		userContext.updateUserContext({
+			...userContext,
+			email: formData.email,
+			info: {
+				phoneNumber: formData.phoneNumber,
+				gender: formData.gender,
+				birthday: formData.birthday,
+			},
+		});
+
+		updatedData = userContext;
+		console.log("UPDATED DATA: ", updatedData);
+		try {
+			await api.put(`client/${userContext.username}`, updatedData);
+		} catch (error) {
+			handleHTTPError(error);
+		}
 		onClose();
 	};
 
@@ -89,7 +110,7 @@ const EditProfileViewModal = ({ visible, onClose, profileDetails }) => {
 						defaultValue={formData.phoneNumber}
 						keyboardType="phone-pad"
 						onChangeText={(value) =>
-							handleInputChange(phoneNumber, value)
+							handleInputChange("phoneNumber", value)
 						}
 					/>
 				</View>
