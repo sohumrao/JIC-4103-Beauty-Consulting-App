@@ -16,7 +16,6 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import { UserContext, updateUserContext } from "../../contexts/userContext";
 import handleHTTPError from "utils/errorHandling";
 import api from "utils/axios";
-import dayjs from "dayjs";
 
 const EditProfileViewModal = ({ visible, onClose, profileDetails }) => {
 	const [formData, setFormData] = useState({
@@ -31,7 +30,7 @@ const EditProfileViewModal = ({ visible, onClose, profileDetails }) => {
 	useEffect(() => {
 		if (profileDetails) {
 			setFormData({
-				birthday: dayjs(profileDetails.birthday).toDate(),
+				birthday: new Date(profileDetails.birthday),
 				gender: profileDetails.gender,
 				phoneNumber: profileDetails.phoneNumber,
 				email: profileDetails.email,
@@ -66,7 +65,6 @@ const EditProfileViewModal = ({ visible, onClose, profileDetails }) => {
 				birthday: formData.birthday,
 			},
 		};
-		console.log("UPDATED DATA FOR DB: ", updatedData);
 		userContext.updateUserContext(updatedData);
 		try {
 			await api.put(`client/${userContext.username}`, updatedData);
