@@ -153,6 +153,94 @@ router.put(
 	})
 );
 
+router.get(
+	"/gettimes",
+	asyncHandler(async (req, res, next) => {
+		const { stylistUsername, date } = req.query;
+		if (!date || !stylistUsername) {
+			return next(
+				new MalformedRequestError(
+					"Both StylistUsername and Date required."
+				)
+			);
+		}
+
+		const stylist = await Stylist.findOne({ username: stylistUsername });
+
+		// ridiculous way to do this but apparently regex with monogdb isnt great
+		const startOfDay = `${date}T00:00:00.000+00:00`;
+		const endOfDay = `${date}T23:59:59.999+00:00`;
+
+		let times;
+		if (stylist) {
+			times = await Appointment.find({
+				stylist: stylist._id,
+				appointmentDate: {
+					$gte: startOfDay,
+					$lt: endOfDay,
+				},
+				status: { $ne: "Canceled" },
+			});
+		} else {
+			return next(new ConflictError(`Stylist not found.`));
+		}
+
+		let unavailable = [];
+		if (times && times.length > 0) {
+			for (let appointment of times) {
+				let time = appointment.appointmentDate;
+				let hour = time.getHours().toString().padStart(2, "0");
+				let minutes = time.getMinutes().toString().padStart(2, "0");
+				time = `${hour}:${minutes}`;
+				unavailable.push(time);
+			}
+		}
+		console.log(unavailable);
+		res.json({
+			unavailable: unavailable,
+		});
+	})
+);
+
+// check edge case of double booking
+router.get(
+	"/checkbooking",
+	asyncHandler(async (req, res, next) => {
+		const { stylistUsername, dateTime } = req.query;
+
+		if (!stylistUsername || !dateTime) {
+			return next(
+				new MalformedRequestError(
+					"Both Stylist Username and DateTime are required."
+				)
+			);
+		}
+
+		const stylist = await Stylist.findOne({ username: stylistUsername });
+
+		let appointments;
+		if (stylist) {
+			appointments = await Appointment.find({
+				stylist: stylist._id,
+				appointmentDate: dateTime,
+				status: { $ne: "Canceled" },
+			});
+		} else {
+			return next(
+				new ConflictError(
+					`User with username ${stylistUsername} not found.`
+				)
+			);
+		}
+
+		if (appointments && appointments.length > 0) {
+			res.json({ available: false });
+		} else {
+			res.json({ available: true });
+		}
+	})
+);
+
 // Endpoint to get availability for each date in a specified month for a stylist
 router.get(
 	"/availability",
