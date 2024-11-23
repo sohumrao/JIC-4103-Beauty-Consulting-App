@@ -82,3 +82,21 @@
 -   **Check Date Availability for Stylist**
     -   **GET** `/appointment/availability?username={id}&month={monthNumber}`
     -   **Description**: Checks availability for each date in a specified month for a stylist.
+
+---
+
+### MessagingController
+
+-   **Send Message**
+
+    -   **POST** `/messages/send`
+    -   **Description**: Sends a new message between a client and a stylist.
+
+-   **Get Chat History**
+
+    -   **GET** `/messages/history`
+    -   **Description**: Retrieves the chat history between a client and a stylist using query parameters `clientUsername` and `stylistUsername`.
+
+-   **Get Recent Messages**
+    -   **GET** `/messages/recent`
+    -   **Description**: Retrieves recent messages for a specific user using the query parameter `username`.

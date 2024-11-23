@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "5e036700-25bb-49fa-8c7a-5e1892806fc5",
+		"_postman_id": "c52baef8-d13e-4d5c-98c3-aec0cb68f039",
 		"name": "Beauty Consulting App",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "39633552"
+		"_exporter_id": "21194687"
 	},
 	"item": [
 		{
@@ -314,7 +314,7 @@
 							"query": [
 								{
 									"key": "",
-									"value": null,
+									"value": "",
 									"disabled": true
 								}
 							]
@@ -384,6 +384,53 @@
 								{
 									"key": "month",
 									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "messaging",
+			"item": [
+				{
+					"name": "Get Recent Messages",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/messages/recent?username=client1",
+							"host": ["{{base_url}}"],
+							"path": ["messages", "recent"],
+							"query": [
+								{
+									"key": "username",
+									"value": "client1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Message History",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/messages/history?clientUsername=client1&stylistUsername=stylist7",
+							"host": ["{{base_url}}"],
+							"path": ["messages", "history"],
+							"query": [
+								{
+									"key": "clientUsername",
+									"value": "client1"
+								},
+								{
+									"key": "stylistUsername",
+									"value": "stylist7"
 								}
 							]
 						}
