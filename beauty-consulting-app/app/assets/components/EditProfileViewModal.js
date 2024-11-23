@@ -16,6 +16,7 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import { UserContext, updateUserContext } from "../../contexts/userContext";
 import handleHTTPError from "utils/errorHandling";
 import api from "utils/axios";
+import { RadioButton } from "react-native-paper";
 
 const EditProfileViewModal = ({ visible, onClose, profileDetails }) => {
 	const [formData, setFormData] = useState({
@@ -57,7 +58,6 @@ const EditProfileViewModal = ({ visible, onClose, profileDetails }) => {
 
 	const saveAndClose = async () => {
 		updatedData = {
-			...userContext,
 			email: formData.email,
 			info: {
 				phoneNumber: formData.phoneNumber,
@@ -65,7 +65,6 @@ const EditProfileViewModal = ({ visible, onClose, profileDetails }) => {
 				birthday: formData.birthday,
 			},
 		};
-		userContext.updateUserContext(updatedData);
 		try {
 			await api.put(`client/${userContext.username}`, updatedData);
 		} catch (error) {
@@ -74,6 +73,7 @@ const EditProfileViewModal = ({ visible, onClose, profileDetails }) => {
 		onClose(formData);
 	};
 
+	// FIXME: styling is ugly
 	return (
 		<Modal visible={visible} transparent={false} animationType="slide">
 			<View style={styles.headerRow}>
@@ -112,13 +112,44 @@ const EditProfileViewModal = ({ visible, onClose, profileDetails }) => {
 				<View style={styles.infoRow}>
 					<GenderIcon width={20} height={20} style={styles.icon} />
 					<Text style={styles.label}>Gender:</Text>
-					<TextInput
-						style={[styles.input, styles.value]}
-						value={formData.gender}
-						onChangeText={(value) =>
-							handleInputChange("gender", value)
-						}
-					/>
+					<View style={styles.radioContainer}>
+						<RadioButton
+							value="male"
+							status={
+								formData.gender === "male"
+									? "checked"
+									: "unchecked"
+							}
+							onPress={() =>
+								setFormData({ ...formData, gender: "male" })
+							}
+						/>
+						<Text>Male</Text>
+						<RadioButton
+							value="female"
+							status={
+								formData.gender === "female"
+									? "checked"
+									: "unchecked"
+							}
+							onPress={() =>
+								setFormData({ ...formData, gender: "female" })
+							}
+						/>
+						<Text>Female</Text>
+						<RadioButton
+							value="other"
+							status={
+								formData.gender === "other"
+									? "checked"
+									: "unchecked"
+							}
+							onPress={() =>
+								setFormData({ ...formData, gender: "other" })
+							}
+						/>
+						<Text>Other</Text>
+					</View>
 				</View>
 
 				<View style={styles.infoRow}>
@@ -193,6 +224,11 @@ const styles = StyleSheet.create({
 		borderBottomWidth: 1,
 		fontSize: 18,
 		width: "55%",
+	},
+	radioContainer: {
+		flexDirection: "row",
+		alignItems: "center",
+		marginBottom: 20,
 	},
 });
 

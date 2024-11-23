@@ -108,7 +108,16 @@ router.put(
 		const updatedUser = await Client.findOneAndUpdate(
 			{ username: req.params.username },
 			//FIXME: req.body should be formatted to Client Schema
-			{ $set: req.body }, // Update the user with the new data from the request body
+			//
+			// NOTE: this could be made more generic but i don't believe it's ever used outside this context
+			{
+				$set: {
+					email: req.body.email,
+					"info.gender": req.body.info.gender,
+					"info.phoneNumber": req.body.info.phoneNumber,
+					"info.birthday": req.body.info.birthday,
+				},
+			}, // Update the user with the new data from the request body
 			{ new: true } // Return the updated document
 		);
 
