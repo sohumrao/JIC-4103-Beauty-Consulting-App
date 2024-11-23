@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
 
 const MessageSchema = new mongoose.Schema({
-	clientUsername: { type: mongoose.Types.ObjectId, ref: "Client" },
-	stylistUsername: { type: mongoose.Types.ObjectId, ref: "Stylist" },
+	clientUsername: { type: String, required: true },
+	stylistUsername: { type: String, required: true },
 	sender: { type: String, required: true },
 	content: { type: String, required: true },
 	createdAt: { type: Date, default: Date.now },

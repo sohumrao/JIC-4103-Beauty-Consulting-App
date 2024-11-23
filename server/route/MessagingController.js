@@ -75,32 +75,26 @@ export const setUpWebSocketServer = (server) => {
 					});
 					await newMessage.save();
 
-					// Find the recipient WebSocket connection
-					const recipientUsername =
-						sender === clientUsername
-							? stylistUsername
-							: clientUsername;
-					const recipientWs = connectedUsers[recipientUsername];
+					// Broadcast the message to all connected clients except the sender
+					wss.clients.forEach((client) => {
+						if (
+							client !== ws &&
+							client.readyState === client.OPEN
+						) {
+							client.send(
+								JSON.stringify({
+									event: "receiveMessage",
+									clientUsername,
+									stylistUsername,
+									sender,
+									content,
+									createdAt: newMessage.createdAt,
+								})
+							);
+						}
+					});
 
-					if (
-						recipientWs &&
-						recipientWs.readyState === WebSocketServer.OPEN
-					) {
-						recipientWs.send(
-							JSON.stringify({
-								event: "receiveMessage",
-								clientUsername,
-								stylistUsername,
-								sender,
-								content,
-								createdAt: newMessage.createdAt,
-							})
-						);
-					}
-
-					console.log(
-						`Message from ${sender} sent to ${recipientUsername}`
-					);
+					console.log(`Message from ${sender} broadcasted to room`);
 				}
 			} catch (error) {
 				console.error("Error handling message:", error);
@@ -123,19 +117,29 @@ router.get(
 		const { clientUsername, stylistUsername } = req.query;
 
 		if (!clientUsername || !stylistUsername) {
-			return res
-				.status(400)
-				.json({ error: "Missing required query parameters" });
+			return next(
+				new MalformedRequestError(
+					"Missing required query parameters: clientUsername and stylistUsername"
+				)
+			);
 		}
 
 		// Check if client and stylist exist
 		const client = await Client.findOne({ username: clientUsername });
 		const stylist = await Stylist.findOne({ username: stylistUsername });
 
-		if (!client || !stylist) {
+		if (!client) {
 			return next(
 				new ConflictError(
-					"Either client or stylist account was deleted"
+					`Client with username ${clientUsername} not found.`
+				)
+			);
+		}
+
+		if (!stylist) {
+			return next(
+				new ConflictError(
+					`Stylist with username ${stylistUsername} not found.`
 				)
 			);
 		}
@@ -153,13 +157,15 @@ router.get(
 // Endpoint to fetch recent messages
 router.get(
 	"/recent",
-	asyncHandler(async (req, res) => {
+	asyncHandler(async (req, res, next) => {
 		const { username } = req.query;
 
 		if (!username) {
-			return res
-				.status(400)
-				.json({ error: "Missing required query parameter: username" });
+			return next(
+				new MalformedRequestError(
+					"Missing required query parameter: username"
+				)
+			);
 		}
 
 		// Fetch most recent message per conversation for the given username
@@ -201,6 +207,14 @@ router.get(
 				const otherUser =
 					(await Client.findOne({ username: otherUsername })) ||
 					(await Stylist.findOne({ username: otherUsername }));
+
+				if (!otherUser) {
+					return next(
+						new ConflictError(
+							`User with username ${otherUsername} not found.`
+						)
+					);
+				}
 
 				return {
 					name: otherUser?.info?.name,
