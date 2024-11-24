@@ -11,6 +11,7 @@ function ChatPage({ route }) {
 	const { username } = route.params;
 	const userContext = useContext(UserContext);
 	const [messageHistory, setMessageHistory] = useState();
+	const [newMessage, setNewMessage] = useState("");
 	var ws = useRef(null);
 	const [isConnected, setIsConnected] = useState(false);
 
@@ -45,11 +46,35 @@ function ChatPage({ route }) {
 			//Need to revisit
 			const apiUrl = process.env.EXPO_PUBLIC_API_URL;
 			const websocketUrl = apiUrl.replace(/^http:\/\//, "");
-			console.log(websocketUrl);
 			ws.current = new WebSocket(`ws://${websocketUrl}`);
 
 			ws.current.onopen = () => {
 				setIsConnected(true);
+				ws.current.send(
+					JSON.stringify({
+						event: "joinRoom",
+						username: userContext.username,
+					})
+				);
+				//  Both parties need to join the room
+				//  However, username is just the stylist name
+				//  instead of username rn, so I commented
+				//  this out
+				// 	ws.current.send(
+				//         JSON.stringify({
+				//             event: "joinRoom",
+				//             username: username,
+				//         })
+				//     );
+			};
+			ws.current.onmessage = (event) => {
+				const data = JSON.parse(event.data);
+				if (data.event === "messageReceived") {
+					setMessageHistory((prevMessages) => [
+						...prevMessages,
+						data.message,
+					]);
+				}
 			};
 			ws.current.onclose = () => {
 				setIsConnected(false);
@@ -57,14 +82,35 @@ function ChatPage({ route }) {
 			return () => {
 				if (ws.current) {
 					ws.current.close();
-					console.log("WebSocket connection closed on page exit");
 				}
 			};
 		}, [])
 	);
 
+	const sendMessage = () => {
+		if (
+			newMessage.trim() === "" ||
+			!ws.current ||
+			ws.current.readyState !== WebSocket.OPEN
+		) {
+			return;
+		}
+
+		const message = {
+			event: "sendMessage",
+			clientUsername: userContext.username,
+			stylistUsername: username,
+			sender: userContext.username,
+			content: newMessage.trim(),
+		};
+
+		ws.current.send(JSON.stringify(message));
+		setMessageHistory((prevMessages) => [...prevMessages, message]);
+		setNewMessage("");
+	};
+
 	const renderMessage = ({ item }) => {
-		const isClient = item.sender === userContext.username; // Check if the client sent the message
+		const isClient = item.sender === userContext.username;
 		return (
 			<MessageBubble
 				content={item.content}
