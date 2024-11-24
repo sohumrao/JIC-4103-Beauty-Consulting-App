@@ -7,6 +7,10 @@ import {
 	FlatList,
 	TextInput,
 	Button,
+	TouchableOpacity,
+	KeyboardAvoidingView,
+	Platform,
+	ScrollView,
 } from "react-native";
 import SignupBackground from "../../assets/components/SignupBackground";
 import api from "utils/axios";
@@ -127,30 +131,35 @@ function ChatPage({ route }) {
 
 	return (
 		<SignupBackground>
-			<View style={styles.container}>
-				<Text style={styles.header}>Chat with {username}</Text>
-				<FlatList
-					data={messageHistory}
-					renderItem={renderMessage}
-					keyExtractor={(item) =>
-						item._id || Math.random().toString()
-					} // Generate a key if _id is missing
-					contentContainerStyle={styles.messagesList}
-				/>
-				<View style={styles.inputContainer}>
-					<TextInput
-						style={styles.input}
-						value={newMessage}
-						onChangeText={setNewMessage}
-						placeholder="Type a message..."
+			<KeyboardAvoidingView>
+				<View style={styles.container}>
+					<Text style={styles.header}>Chat with {username}</Text>
+					<FlatList
+						data={messageHistory}
+						renderItem={renderMessage}
+						keyExtractor={(item) =>
+							item._id || Math.random().toString()
+						}
+						contentContainerStyle={styles.messagesList}
 					/>
-					<Button
-						title="Send"
-						onPress={sendMessage}
-						disabled={!isConnected}
-					/>
+					<View style={styles.inputContainer}>
+						<TextInput
+							style={styles.input}
+							value={newMessage}
+							onChangeText={setNewMessage}
+							placeholder="Type a message..."
+							placeholderTextColor="#aaa"
+						/>
+						<TouchableOpacity
+							style={styles.sendButton}
+							onPress={sendMessage}
+							disabled={!isConnected}
+						>
+							<Text style={styles.sendButtonText}>Send</Text>
+						</TouchableOpacity>
+					</View>
 				</View>
-			</View>
+			</KeyboardAvoidingView>
 		</SignupBackground>
 	);
 }
@@ -166,13 +175,41 @@ const styles = StyleSheet.create({
 		marginBottom: 10,
 		textAlign: "center",
 	},
-	error: {
-		color: "red",
-		marginBottom: 10,
-		textAlign: "center",
-	},
 	messagesList: {
 		paddingBottom: 20,
 	},
+	inputContainer: {
+		flexDirection: "row",
+		padding: 10,
+		backgroundColor: "#f9f9f9",
+		borderTopWidth: 1,
+		borderTopColor: "#ccc",
+		alignItems: "center",
+	},
+	input: {
+		flex: 1,
+		height: 50,
+		padding: 10,
+		borderColor: "#ccc",
+		borderWidth: 1,
+		borderRadius: 10,
+		backgroundColor: "#fff",
+		fontSize: 16,
+	},
+	sendButton: {
+		marginLeft: 10,
+		height: 50,
+		borderRadius: 10,
+		backgroundColor: "#007BFF",
+		justifyContent: "center",
+		alignItems: "center",
+		paddingHorizontal: 20,
+	},
+	sendButtonText: {
+		color: "#fff",
+		fontSize: 16,
+		fontWeight: "bold",
+	},
 });
+
 export default ChatPage;
