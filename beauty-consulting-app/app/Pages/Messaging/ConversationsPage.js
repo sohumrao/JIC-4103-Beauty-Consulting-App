@@ -19,7 +19,6 @@ function ConversationsPage() {
 					username: userContext.username,
 				},
 			});
-			console.log(userContext.username);
 			setRecentMessages(response.data);
 		} catch (error) {
 			handleHTTPError(error, setErrorMessage);

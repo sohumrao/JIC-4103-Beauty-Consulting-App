@@ -3,13 +3,15 @@ import { FlatList, StyleSheet, View, Text } from "react-native";
 import ConversationItem from "./ConversationItem";
 
 const ConversationsList = ({ conversations }) => {
-	const renderItem = ({ item }) => (
-		<ConversationItem
-			name={item.name}
-			messagePreview={item.messagePreview}
-			timestamp={item.timestamp}
-		/>
-	);
+	const renderItem = ({ item }) => {
+		return (
+			<ConversationItem
+				name={item.name}
+				messagePreview={item.messagePreview}
+				timestamp={item.timestamp}
+			/>
+		);
+	};
 
 	return (
 		<View style={styles.container}>
