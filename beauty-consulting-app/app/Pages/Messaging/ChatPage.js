@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState, useEffect, useRef } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 import { View, Text, StyleSheet, FlatList } from "react-native";
 import SignupBackground from "../../assets/components/SignupBackground";
@@ -11,9 +11,9 @@ function ChatPage({ route }) {
 	const { username } = route.params;
 	const userContext = useContext(UserContext);
 	const [messageHistory, setMessageHistory] = useState();
+	var ws = useRef(null);
+	const [isConnected, setIsConnected] = useState(false);
 
-	console.log(userContext.username);
-	console.log(username);
 	const fetchConversation = async () => {
 		try {
 			const response = await api.get("/messages/history", {
@@ -37,6 +37,32 @@ function ChatPage({ route }) {
 			fetchConversation();
 		}, [])
 	);
+
+	useFocusEffect(
+		React.useCallback(() => {
+			//This is a bit of a hack to get the URL from
+			//EXPO_PUBLIC_API_URL
+			//Need to revisit
+			const apiUrl = process.env.EXPO_PUBLIC_API_URL;
+			const websocketUrl = apiUrl.replace(/^http:\/\//, "");
+			console.log(websocketUrl);
+			ws.current = new WebSocket(`ws://${websocketUrl}`);
+
+			ws.current.onopen = () => {
+				setIsConnected(true);
+			};
+			ws.current.onclose = () => {
+				setIsConnected(false);
+			};
+			return () => {
+				if (ws.current) {
+					ws.current.close();
+					console.log("WebSocket connection closed on page exit");
+				}
+			};
+		}, [])
+	);
+
 	const renderMessage = ({ item }) => {
 		const isClient = item.sender === userContext.username; // Check if the client sent the message
 		return (
