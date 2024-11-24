@@ -26,6 +26,8 @@ import {
 } from "./Pages";
 import { UserContext, UserContextProvider } from "./contexts/userContext";
 import { useNavigation } from "@react-navigation/native";
+import FocusAwareStatusBar from "./assets/components/FocusAwareStatusBar";
+import Ionicons from "react-native-vector-icons/Ionicons";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -63,9 +65,41 @@ function MainTabNavigator() {
 	const navigation = useNavigation();
 	const LogoutComponent = () => null;
 	return (
-		<Tab.Navigator screenOptions={{ headerShown: false }}>
+		<Tab.Navigator
+			screenOptions={({ route }) => ({
+				headerShown: false,
+				tabBarIcon: ({ focused, color, size }) => {
+					let iconName;
+
+					if (route.name === "ProfileView") {
+						iconName = focused
+							? "person-circle"
+							: "person-circle-outline";
+					} else if (route.name === "BusinessInfoPage") {
+						iconName = focused ? "business" : "business-outline";
+					} else if (route.name === "Directory") {
+						iconName = focused ? "search" : "search-outline";
+					} else if (route.name === "Appointments") {
+						iconName = focused ? "calendar" : "calendar-outline";
+					} else if (route.name === "Conversations") {
+						iconName = focused
+							? "chatbubbles"
+							: "chatbubbles-outline";
+					} else if (route.name === "Logout") {
+						iconName = focused ? "log-out" : "log-out-outline";
+					}
+
+					// Return the icon
+					return (
+						<Ionicons name={iconName} size={size} color={color} />
+					);
+				},
+				tabBarActiveTintColor: "#fa4e41", // Active tab color
+				tabBarInactiveTintColor: "gray", // Inactive tab color
+				tabBarLabelStyle: { fontSize: 10 },
+			})}
+		>
 			{role === "client" ? (
-				// Navigate to ProfileView for both clients and stylists
 				<Tab.Screen
 					name="ProfileView"
 					component={ProfileView}
@@ -88,7 +122,6 @@ function MainTabNavigator() {
 				component={LogoutComponent}
 				listeners={{
 					tabPress: (e) => {
-						// Prevent default action
 						e.preventDefault();
 						updateUserContext(null);
 						navigation.reset({
@@ -106,6 +139,10 @@ function App() {
 	return (
 		<UserContextProvider>
 			<NavigationContainer>
+				<FocusAwareStatusBar
+					barStyle="dark-content"
+					backgroundColor="#fff"
+				/>
 				<Stack.Navigator screenOptions={{ headerShown: false }}>
 					<Stack.Screen name="Sign In" component={SignInPage} />
 					<Stack.Screen
@@ -137,9 +174,6 @@ function App() {
 					<Stack.Screen
 						name="BusinessInfoPage"
 						component={BusinessInfoPage}
-						screenOptions={{
-							headerShown: true,
-						}}
 					/>
 					<Tab.Screen
 						name="Appointments"

@@ -8,6 +8,7 @@ import {
 	TouchableOpacity,
 	RefreshControl,
 	Dimensions,
+	Image,
 } from "react-native";
 import SignupBackground from "../assets/components/SignupBackground";
 import { UserContext } from "../contexts/userContext";
@@ -17,9 +18,12 @@ import ErrorMessage from "../components/ErrorMessage";
 import { formatDate, formatTime } from "utils/utils";
 import AppointmentBlock from "../components/appointmentBlock";
 import globalStyles from "../assets/GlobalStyles";
+import { SafeAreaView } from "react-native-safe-area-context";
+import Ionicons from "react-native-vector-icons/Ionicons"; // For icons
 
-function AppointmentsPage() {
-	const { username, role } = useContext(UserContext);
+function AppointmentsPage({ navigation }) {
+	// Receive navigation prop if needed
+	const { username, role, userProfile } = useContext(UserContext); // Ensure userProfile includes profilePhoto if needed
 	const [appointments, setAppointments] = useState([]);
 	const [errorMessage, setErrorMessage] = useState("");
 	const [modalVisible, setModalVisible] = useState(false);
@@ -62,7 +66,7 @@ function AppointmentsPage() {
 	const confirmCancel = async () => {
 		try {
 			const req = { id: cancelID };
-			await api.put("appointment/" + cancelID + "/cancel", req);
+			await api.put(`appointment/${cancelID}/cancel`, req);
 			setModalVisible(false);
 			fetchAppointments();
 		} catch (error) {
@@ -72,147 +76,198 @@ function AppointmentsPage() {
 
 	return (
 		<SignupBackground>
-			<View style={styles.container}>
-				<Text style={styles.header}>Appointments</Text>
-				<ScrollView
-					contentContainerStyle={styles.scrollContainer}
-					refreshControl={
-						<RefreshControl
-							refreshing={refreshing}
-							onRefresh={onRefresh}
-							colors={["#000"]} // Android
-							tintColor="#000" // iOS
-						/>
-					}
-				>
-					<ErrorMessage message={errorMessage} />
-					{appointments.length === 0 ? (
-						<Text style={styles.details}>
-							No appointments booked
-						</Text>
-					) : (
-						appointments.map((appointment) => (
-							<View key={appointment._id}>
-								<AppointmentBlock
-									account={
-										role === "stylist"
-											? appointment.client
-											: appointment.stylist
-									}
-									date={formatDate(
-										appointment.appointmentDate
-									)}
-									time={formatTime(
-										appointment.appointmentDate
-									)}
-									cancelAppointment={() => {
-										handleCancelPress(
-											role === "stylist"
-												? appointment.client.username
-												: appointment.stylist.username,
-											appointment.appointmentDate,
-											appointment._id
-										);
-									}}
+			<SafeAreaView style={styles.safeArea}>
+				<View style={styles.container}>
+					{/* Header Bar */}
+					<View style={styles.headerBar}>
+						{/* Profile Photo */}
+						{userProfile?.profilePhoto ? (
+							<Image
+								source={{ uri: userProfile.profilePhoto }}
+								style={styles.profilePhoto}
+							/>
+						) : (
+							<View style={styles.placeholderPhoto}>
+								<Ionicons
+									name="person"
+									size={24}
+									color="#fff"
 								/>
 							</View>
-						))
-					)}
-				</ScrollView>
-				<Modal
-					visible={modalVisible}
-					transparent={false}
-					animationType="slide"
-				>
-					<SignupBackground>
-						<View style={globalStyles.box}>
-							<Text style={globalStyles.title}>
-								Cancel Appointment
+						)}
+						{/* Title */}
+						<Text style={styles.headerTitle}>Appointments</Text>
+						{/* Placeholder for balancing the header layout */}
+						<View style={styles.headerRightPlaceholder} />
+					</View>
+					{/* End of Header Bar */}
+
+					{/* Main Content */}
+					<ScrollView
+						contentContainerStyle={styles.scrollContainer}
+						refreshControl={
+							<RefreshControl
+								refreshing={refreshing}
+								onRefresh={onRefresh}
+								colors={["#007bff"]} // Android
+								tintColor="#007bff" // iOS
+							/>
+						}
+					>
+						<ErrorMessage message={errorMessage} />
+						{appointments.length === 0 ? (
+							<Text style={styles.details}>
+								No appointments booked
 							</Text>
-							<Text
-								style={[
-									globalStyles.promptText,
-									{ marginBottom: 10 },
-								]}
-							>
-								Cancel your appointment with {cancelUsername} at{" "}
-								{formatTime(cancelTime)} on{" "}
-								{formatDate(cancelTime)}?
-							</Text>
-							<TouchableOpacity
-								style={[globalStyles.button, { marginTop: 10 }]}
-								onPress={confirmCancel}
-							>
-								<Text style={globalStyles.buttonText}>
-									Confirm Cancel
+						) : (
+							appointments.map((appointment) => (
+								<View key={appointment._id}>
+									<AppointmentBlock
+										account={
+											role === "stylist"
+												? appointment.client
+												: appointment.stylist
+										}
+										date={formatDate(
+											appointment.appointmentDate
+										)}
+										time={formatTime(
+											appointment.appointmentDate
+										)}
+										cancelAppointment={() => {
+											handleCancelPress(
+												role === "stylist"
+													? appointment.client
+															.username
+													: appointment.stylist
+															.username,
+												appointment.appointmentDate,
+												appointment._id
+											);
+										}}
+									/>
+								</View>
+							))
+						)}
+					</ScrollView>
+					{/* End of Main Content */}
+
+					{/* Modal for Cancel Confirmation */}
+					<Modal
+						visible={modalVisible}
+						transparent={true} // Allows overlay effect
+						animationType="fade" // Smooth transition
+					>
+						<View style={styles.modalOverlay}>
+							<View style={styles.modalContent}>
+								<Text style={styles.modalTitle}>
+									Cancel Appointment
 								</Text>
-							</TouchableOpacity>
-							<TouchableOpacity
-								style={[globalStyles.button, { marginTop: 10 }]}
-								onPress={() => {
-									setModalVisible(false);
-									setErrorMessage(null);
-								}}
-							>
-								<Text style={globalStyles.buttonText}>
-									Go Back
+								<Text style={styles.promptText}>
+									Cancel your appointment with{" "}
+									{cancelUsername} at {formatTime(cancelTime)}{" "}
+									on {formatDate(cancelTime)}?
 								</Text>
-							</TouchableOpacity>
-							<ErrorMessage message={errorMessage} />
+								<TouchableOpacity
+									style={[
+										globalStyles.button,
+										styles.modalButton,
+									]}
+									onPress={confirmCancel}
+								>
+									<Text style={globalStyles.buttonText}>
+										Confirm Cancel
+									</Text>
+								</TouchableOpacity>
+								<TouchableOpacity
+									style={[
+										globalStyles.button,
+										styles.modalButton,
+									]}
+									onPress={() => {
+										setModalVisible(false);
+										setErrorMessage(null);
+									}}
+								>
+									<Text style={globalStyles.buttonText}>
+										Go Back
+									</Text>
+								</TouchableOpacity>
+								<ErrorMessage message={errorMessage} />
+							</View>
 						</View>
-					</SignupBackground>
-				</Modal>
-			</View>
+					</Modal>
+					{/* End of Modal */}
+				</View>
+			</SafeAreaView>
 		</SignupBackground>
 	);
 }
 
 const screenWidth = Dimensions.get("window").width;
 const styles = StyleSheet.create({
+	safeArea: {
+		flex: 1,
+	},
 	container: {
 		flex: 1,
-		padding: 20,
 		width: "100%",
+		paddingHorizontal: 20,
 	},
-	header: {
-		fontSize: 24,
+	headerBar: {
+		height: 60,
+		width: 350,
+		backgroundColor: "#fa4e41", // Primary color
+		flexDirection: "row",
+		alignItems: "center",
+		justifyContent: "space-between",
+		paddingHorizontal: 10,
+		borderRadius: 8,
+		// Subtle shadow for iOS
+		shadowColor: "#000",
+		shadowOffset: { width: 0, height: 2 },
+		shadowOpacity: 0.2,
+		shadowRadius: 2,
+		// Subtle elevation for Android
+		elevation: 2,
+		marginBottom: 10, // Space between header and content
+	},
+	profilePhoto: {
+		width: 40,
+		height: 40,
+		borderRadius: 20,
+		backgroundColor: "#fff",
+	},
+	placeholderPhoto: {
+		width: 40,
+		height: 40,
+		borderRadius: 20,
+		backgroundColor: "#555",
+		justifyContent: "center",
+		alignItems: "center",
+	},
+	headerTitle: {
+		fontSize: 20,
 		fontWeight: "bold",
-		textAlign: "center",
-		marginBottom: 30,
-		marginTop: 40,
+		color: "#fff",
+	},
+	headerRightPlaceholder: {
+		width: 40, // To balance the header layout since left has profile photo
 	},
 	scrollContainer: {
 		paddingBottom: 20,
 	},
-	appointmentBox: {
-		backgroundColor: "#fff",
-		padding: 15,
-		marginVertical: 10,
-		borderRadius: 8,
-		borderWidth: 1,
-		borderColor: "#ddd",
-		shadowColor: "#000",
-		shadowOffset: { width: 0, height: 2 },
-		shadowOpacity: 0.1,
-		shadowRadius: 4,
-		elevation: 2,
-		width: "90%",
-		alignSelf: "center",
-	},
-	name: {
-		fontSize: 18,
-		fontWeight: "bold",
-		marginBottom: 5,
-	},
 	details: {
 		fontSize: 16,
 		color: "#555",
+		textAlign: "center",
+		marginTop: 20,
 	},
 	modalOverlay: {
 		flex: 1,
+		backgroundColor: "rgba(0, 0, 0, 0.5)", // Semi-transparent background
 		justifyContent: "center",
-		alignSelf: "center",
-		backgroundColor: "rgba(0, 0, 0, 0.5)",
+		alignItems: "center",
 	},
 	modalContent: {
 		width: "80%",
@@ -222,29 +277,19 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 	},
 	modalTitle: {
-		fontSize: 30,
+		fontSize: 22,
 		fontWeight: "bold",
 		marginBottom: 20,
-		alignItems: "center",
 		textAlign: "center",
 	},
-	profileDetail: {
-		fontSize: 24,
-		marginBottom: 10,
+	promptText: {
+		fontSize: 16,
+		textAlign: "center",
+		marginBottom: 20,
 	},
-	label: {
-		fontWeight: "bold",
-	},
-	closeButton: {
-		marginTop: 40,
-		backgroundColor: "#007bff",
-		paddingVertical: 20,
-		paddingHorizontal: 20,
-		borderRadius: 5,
-	},
-	closeButtonText: {
-		color: "white",
-		fontWeight: "bold",
+	modalButton: {
+		width: "100%",
+		marginVertical: 5,
 	},
 	photo: {
 		width: screenWidth * 0.5,
