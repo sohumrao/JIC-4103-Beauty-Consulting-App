@@ -1,6 +1,13 @@
 import React, { useContext, useState, useEffect, useRef } from "react";
 import { useFocusEffect } from "@react-navigation/native";
-import { View, Text, StyleSheet, FlatList } from "react-native";
+import {
+	View,
+	Text,
+	StyleSheet,
+	FlatList,
+	TextInput,
+	Button,
+} from "react-native";
 import SignupBackground from "../../assets/components/SignupBackground";
 import api from "utils/axios";
 import handleHTTPError from "utils/errorHandling";
@@ -95,10 +102,11 @@ function ChatPage({ route }) {
 
 		const message = {
 			event: "sendMessage",
-			clientUsername: userContext.username,
-			stylistUsername: username,
+			clientUsername: clientUsername,
+			stylistUsername: stylistUsername,
 			sender: userContext.username,
 			content: newMessage.trim(),
+			createdAt: new Date().toISOString(),
 		};
 
 		ws.current.send(JSON.stringify(message));
@@ -124,9 +132,24 @@ function ChatPage({ route }) {
 				<FlatList
 					data={messageHistory}
 					renderItem={renderMessage}
-					keyExtractor={(item) => item._id} // Use unique `_id` from the message
+					keyExtractor={(item) =>
+						item._id || Math.random().toString()
+					} // Generate a key if _id is missing
 					contentContainerStyle={styles.messagesList}
 				/>
+				<View style={styles.inputContainer}>
+					<TextInput
+						style={styles.input}
+						value={newMessage}
+						onChangeText={setNewMessage}
+						placeholder="Type a message..."
+					/>
+					<Button
+						title="Send"
+						onPress={sendMessage}
+						disabled={!isConnected}
+					/>
+				</View>
 			</View>
 		</SignupBackground>
 	);
