@@ -9,32 +9,48 @@ import {
 } from "react-native";
 import globalStyles from "../GlobalStyles";
 import MyCalendar from "./Calendar";
+import api from "utils/axios";
 
-const AppointmentModal = ({ visible, onClose, onCreateAppointment }) => {
+const AppointmentModal = ({
+	visible,
+	onClose,
+	onCreateAppointment,
+	stylistUsername,
+}) => {
 	const [selectedDay, setSelectedDay] = useState(null);
 	const [selectedTime, setSelectedTime] = useState(null);
+	const [timeSlots, setTimeSlots] = useState([]);
 
-	const handleDaySelect = (day) => {
+	const handleDaySelect = async (day) => {
 		setSelectedDay(day.dateString);
 		setSelectedTime(null);
+		availableTimes = await generateTimeSlots(day.dateString);
+		setTimeSlots(availableTimes);
 	};
 
-	const generateTimeSlots = () => {
+	const generateTimeSlots = async (date) => {
 		const slots = [];
 		let startTime = new Date();
 		startTime.setHours(9, 0, 0, 0);
 		const endTime = new Date();
 		endTime.setHours(17, 0, 0, 0);
 
+		const res = await api.get(
+			`/appointment/gettimes?stylistUsername=${stylistUsername}&date=${date}`
+		);
+		const unavailable = res.data.unavailable;
+		console.log(unavailable);
+
 		while (startTime < endTime) {
 			const timeString = startTime.toTimeString().slice(0, 5);
-			slots.push(timeString);
+			if (!unavailable.includes(timeString)) {
+				slots.push(timeString);
+			}
 			startTime.setMinutes(startTime.getMinutes() + 30);
 		}
+
 		return slots;
 	};
-
-	const timeSlots = generateTimeSlots();
 
 	return (
 		<Modal visible={visible} transparent={false} animationType="slide">

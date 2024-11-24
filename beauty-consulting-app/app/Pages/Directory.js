@@ -93,8 +93,8 @@ const Directory = () => {
 	 * done in this file so we don't have to pass state around
 	 */
 	const handleBookPress = (stylistUsername) => {
-		setModalVisible(true);
 		setCurrentStylist(stylistUsername);
+		setModalVisible(true);
 	};
 
 	const createAppointment = async (date, time) => {
@@ -110,6 +110,14 @@ const Directory = () => {
 				duration: 60,
 				notes: "",
 			};
+			const res = await api.get(
+				`/appointment/checkBooking?stylistUsername=${req.stylistUsername}&dateTime=${req.appointmentDate}`
+			);
+			if (!res.data.available) {
+				// TODO: handle error better
+				console.error("APPOINTMENT NOT AVAILABLE AT TIME ");
+				return;
+			}
 			console.log(req);
 			await api.post("/appointment/create", req);
 			setModalVisible(false);
@@ -209,6 +217,7 @@ const Directory = () => {
 							visible={modalVisible}
 							onClose={hideModal}
 							onCreateAppointment={createAppointment}
+							stylistUsername={currentStylist}
 						/>
 					) : null}
 				</View>
