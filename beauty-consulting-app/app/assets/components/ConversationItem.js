@@ -1,14 +1,21 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 
 const ConversationItem = ({ name, messagePreview, timestamp }) => {
+	const navigation = useNavigation();
+
 	const formatDate = (timestamp) => {
 		const date = new Date(timestamp);
 		return `${date.toLocaleDateString()} ${date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}`;
 	};
 
+	const navigateToChat = () => {
+		navigation.navigate("Chat", { username: name });
+	};
+
 	return (
-		<View style={styles.container}>
+		<TouchableOpacity onPress={navigateToChat} style={styles.container}>
 			<View style={styles.messageInfo}>
 				<Text style={styles.name}>{name}</Text>
 				<Text style={styles.preview} numberOfLines={1}>
@@ -16,7 +23,7 @@ const ConversationItem = ({ name, messagePreview, timestamp }) => {
 				</Text>
 			</View>
 			<Text style={styles.timestamp}>{formatDate(timestamp)}</Text>
-		</View>
+		</TouchableOpacity>
 	);
 };
 
