@@ -222,6 +222,8 @@ router.get(
 					messagePreview: msg.mostRecentMessage.content,
 					sender: msg.mostRecentMessage.sender,
 					timestamp: msg.mostRecentMessage.createdAt,
+					clientUsername: msg.mostRecentMessage.clientUsername, // Added client username field
+					stylistUsername: msg.mostRecentMessage.stylistUsername, // Added stylist username field
 				};
 			})
 		);
