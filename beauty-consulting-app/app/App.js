@@ -3,7 +3,6 @@ import { useContext } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { StatusBar } from "react-native"; // Import StatusBar
 import {
 	LandingPage,
 	ClientDetails,
@@ -27,6 +26,8 @@ import {
 } from "./Pages";
 import { UserContext, UserContextProvider } from "./contexts/userContext";
 import { useNavigation } from "@react-navigation/native";
+import FocusAwareStatusBar from "./assets/components/FocusAwareStatusBar";
+import Ionicons from "react-native-vector-icons/Ionicons";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -64,7 +65,40 @@ function MainTabNavigator() {
 	const navigation = useNavigation();
 	const LogoutComponent = () => null;
 	return (
-		<Tab.Navigator screenOptions={{ headerShown: false }}>
+		<Tab.Navigator
+			screenOptions={({ route }) => ({
+				headerShown: false,
+				tabBarIcon: ({ focused, color, size }) => {
+					let iconName;
+
+					if (route.name === "ProfileView") {
+						iconName = focused
+							? "person-circle"
+							: "person-circle-outline";
+					} else if (route.name === "BusinessInfoPage") {
+						iconName = focused ? "business" : "business-outline";
+					} else if (route.name === "Directory") {
+						iconName = focused ? "search" : "search-outline";
+					} else if (route.name === "Appointments") {
+						iconName = focused ? "calendar" : "calendar-outline";
+					} else if (route.name === "Conversations") {
+						iconName = focused
+							? "chatbubbles"
+							: "chatbubbles-outline";
+					} else if (route.name === "Logout") {
+						iconName = focused ? "log-out" : "log-out-outline";
+					}
+
+					// Return the icon
+					return (
+						<Ionicons name={iconName} size={size} color={color} />
+					);
+				},
+				tabBarActiveTintColor: "#fa4e41", // Active tab color
+				tabBarInactiveTintColor: "gray", // Inactive tab color
+				tabBarLabelStyle: { fontSize: 10 },
+			})}
+		>
 			{role === "client" ? (
 				<Tab.Screen
 					name="ProfileView"
@@ -104,8 +138,11 @@ function MainTabNavigator() {
 function App() {
 	return (
 		<UserContextProvider>
-			<StatusBar barStyle="dark-content" backgroundColor="#fff" />
 			<NavigationContainer>
+				<FocusAwareStatusBar
+					barStyle="dark-content"
+					backgroundColor="#fff"
+				/>
 				<Stack.Navigator screenOptions={{ headerShown: false }}>
 					<Stack.Screen name="Sign In" component={SignInPage} />
 					<Stack.Screen

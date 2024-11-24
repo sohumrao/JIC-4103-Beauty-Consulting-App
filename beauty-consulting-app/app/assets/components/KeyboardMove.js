@@ -10,7 +10,7 @@ import {
 
 const KeyboardMove = ({ children }) => {
 	const keyboardVerticalOffset = Platform.select({
-		ios: 80,
+		ios: 0,
 		android: StatusBar.currentHeight || 80,
 	});
 
