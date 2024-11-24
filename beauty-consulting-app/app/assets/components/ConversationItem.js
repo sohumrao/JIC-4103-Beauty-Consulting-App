@@ -2,7 +2,13 @@ import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
-const ConversationItem = ({ name, messagePreview, timestamp }) => {
+const ConversationItem = ({
+	name,
+	messagePreview,
+	timestamp,
+	stylistUsername,
+	clientUsername,
+}) => {
 	const navigation = useNavigation();
 
 	const formatDate = (timestamp) => {
@@ -11,7 +17,11 @@ const ConversationItem = ({ name, messagePreview, timestamp }) => {
 	};
 
 	const navigateToChat = () => {
-		navigation.navigate("Chat", { username: name });
+		navigation.navigate("Chat", {
+			username: name,
+			stylistUsername: stylistUsername,
+			clientUsername: clientUsername,
+		});
 	};
 
 	return (

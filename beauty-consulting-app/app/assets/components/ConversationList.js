@@ -9,6 +9,8 @@ const ConversationsList = ({ conversations }) => {
 				name={item.name}
 				messagePreview={item.messagePreview}
 				timestamp={item.timestamp}
+				stylistUsername={item.stylistUsername}
+				clientUsername={item.clientUsername}
 			/>
 		);
 	};

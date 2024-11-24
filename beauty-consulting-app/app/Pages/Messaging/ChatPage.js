@@ -8,23 +8,24 @@ import { UserContext } from "../../contexts/userContext";
 import MessageBubble from "../../assets/components/MessageBubble";
 
 function ChatPage({ route }) {
-	const { username } = route.params;
+	const { username, stylistUsername, clientUsername } = route.params;
 	const userContext = useContext(UserContext);
 	const [messageHistory, setMessageHistory] = useState();
 	const [newMessage, setNewMessage] = useState("");
 	var ws = useRef(null);
 	const [isConnected, setIsConnected] = useState(false);
 
+	//username is the name of whomever is being chatted with
+	//stylistUsername and clientUsername are the literal
+	//usernames
+	//e.g. username = Stylist 7
+	//     clientUsername = stylist7
 	const fetchConversation = async () => {
 		try {
 			const response = await api.get("/messages/history", {
 				params: {
-					clientUsername: userContext.username,
-					// stylistUsername: username,
-					// we need to grab the account username
-					// instead of the name for this
-					// not possible with current api call
-					stylistUsername: "stylist7",
+					clientUsername: clientUsername,
+					stylistUsername: stylistUsername,
 				},
 			});
 			setMessageHistory(response.data);
@@ -53,19 +54,15 @@ function ChatPage({ route }) {
 				ws.current.send(
 					JSON.stringify({
 						event: "joinRoom",
-						username: userContext.username,
+						username: clientUsername,
 					})
 				);
-				//  Both parties need to join the room
-				//  However, username is just the stylist name
-				//  instead of username rn, so I commented
-				//  this out
-				// 	ws.current.send(
-				//         JSON.stringify({
-				//             event: "joinRoom",
-				//             username: username,
-				//         })
-				//     );
+				ws.current.send(
+					JSON.stringify({
+						event: "joinRoom",
+						username: stylistUsername,
+					})
+				);
 			};
 			ws.current.onmessage = (event) => {
 				const data = JSON.parse(event.data);
