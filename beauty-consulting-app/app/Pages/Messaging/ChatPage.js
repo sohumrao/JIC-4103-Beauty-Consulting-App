@@ -160,7 +160,10 @@ function ChatPage({ route }) {
 							onPress={sendMessage}
 							disabled={!isConnected}
 						>
-							<Text style={styles.sendButtonText}>Send</Text>
+							<Ionicons
+								name="send"
+								style={styles.sendButtonIcon}
+							/>
 						</TouchableOpacity>
 					</View>
 				</KeyboardAvoidingView>
@@ -207,36 +210,40 @@ const styles = StyleSheet.create({
 	},
 	inputContainer: {
 		flexDirection: "row",
-		padding: 5,
-		borderRadius: 10,
-		backgroundColor: "#f9f9f9",
-		borderTopWidth: 1,
-		borderTopColor: "#ccc",
 		alignItems: "center",
+		padding: 10,
+		backgroundColor: "#f2f2f2",
+		borderRadius: 30,
+		marginHorizontal: 10,
+		marginVertical: 5,
+		elevation: 1, // Add subtle shadow for Android
+		shadowColor: "#000", // Shadow for iOS
+		shadowOffset: { width: 0, height: 1 },
+		shadowOpacity: 0.1,
+		shadowRadius: 3,
 	},
 	input: {
 		flex: 1,
-		height: 50,
-		padding: 10,
-		borderColor: "#ccc",
-		borderWidth: 1,
-		borderRadius: 10,
-		backgroundColor: "#fff",
+		paddingVertical: 10,
+		paddingHorizontal: 15,
 		fontSize: 16,
+		backgroundColor: "#fff",
+		borderRadius: 25,
+		borderWidth: 0, // Remove border for a clean look
+		elevation: 0,
 	},
 	sendButton: {
 		marginLeft: 10,
-		height: 50,
-		borderRadius: 10,
+		height: 40,
+		width: 40,
+		borderRadius: 20,
 		backgroundColor: "#007BFF",
 		justifyContent: "center",
 		alignItems: "center",
-		paddingHorizontal: 20,
 	},
-	sendButtonText: {
+	sendButtonIcon: {
 		color: "#fff",
-		fontSize: 16,
-		fontWeight: "bold",
+		fontSize: 20,
 	},
 });
 
