@@ -37,12 +37,13 @@ const StylistDetails2 = () => {
 		userContext.updateUserContext({
 			...userContext, // Keep existing fields in the context (name, age, gender, etc.)
 			business: {
+				...userContext.business,
 				experience: experience || "", // Optional fields can be left empty
 				specialty: specialty || "",
 				additionalInfo: additionalInfo || "",
 				name: businessName || "",
-				address: businessAddress || "",
-				city: businessCity,
+				address: streetOne || "",
+				city: city,
 			},
 		});
 		console.log(userContext);
@@ -86,8 +87,6 @@ const StylistDetails2 = () => {
 		} else {
 			console.log("updating business unformation");
 			setMessage(null);
-			setBusinessAddress(result[1]);
-			setBusinessCity(result[2]);
 		}
 		return result[0];
 	};

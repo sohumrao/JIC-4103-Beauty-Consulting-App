@@ -36,11 +36,12 @@ const StylistDetails3 = () => {
 		// Update context with stylist's work experience
 		userContext.updateUserContext({
 			...userContext,
-			stylistDetails: {
-				...userContext.stylistDetails,
+			business: {
+				...userContext.business,
 				workedWithHairTypes: workedWithHairTypes,
 			},
 		});
+		console.log(userContext);
 		navigation.navigate("StylistDetailsComplete");
 	};
 
