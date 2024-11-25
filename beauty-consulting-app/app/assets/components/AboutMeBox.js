@@ -30,6 +30,9 @@ const AboutMeBox = ({ fieldValues, setFieldValues }) => {
 		});
 	};
 
+	// TODO: do not let someone who is not the client update the profile
+	// David's latest change has easy to implement logic for this
+
 	return (
 		<View>
 			<EditProfileViewModal

@@ -57,6 +57,7 @@ const ProfileView = ({ route }) => {
 	}, [userContext.username, username]);
 
 	const deleteAccount = async () => {
+		// TODO: update with a separate flow for password validation after backend rework
 		try {
 			await api.delete(`/client/${userContext.username}`);
 			navigation.navigate("Sign In");
