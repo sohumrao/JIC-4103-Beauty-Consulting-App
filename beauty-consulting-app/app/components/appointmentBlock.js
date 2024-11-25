@@ -34,15 +34,15 @@ const AppointmentBlock = ({ account, date, time, cancelAppointment }) => {
 					style={[globalStyles.button, { width: "45%" }]}
 					onPress={() => {
 						navigation.navigate("Chat", {
-							username: account.username,
+							username: account.info.name,
 							stylistUsername:
 								account.__t === "Stylist"
-									? userContext.username
-									: account.username,
+									? account.username
+									: userContext.username,
 							clientUsername:
 								account.__t === "Client"
-									? userContext.username
-									: account.username,
+									? account.username
+									: userContext.username,
 						});
 					}}
 				>
