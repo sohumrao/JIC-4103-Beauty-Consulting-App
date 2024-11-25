@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Text, View, TouchableOpacity, StyleSheet } from "react-native";
 import globalStyles from "../assets/GlobalStyles";
 import { useNavigation } from "@react-navigation/native";
+import { UserContext } from "../contexts/userContext";
 
 const AppointmentBlock = ({ account, date, time, cancelAppointment }) => {
 	const navigation = useNavigation(); // Add this hook
+	const userContext = useContext(UserContext);
 	return (
 		<View style={styles.appointmentBox}>
 			// FIXME: this hack is quite ugly
@@ -33,6 +35,14 @@ const AppointmentBlock = ({ account, date, time, cancelAppointment }) => {
 					onPress={() => {
 						navigation.navigate("Chat", {
 							username: account.username,
+							stylistUsername:
+								account.__t === "Stylist"
+									? userContext.username
+									: account.username,
+							clientUsername:
+								account.__t === "Client"
+									? userContext.username
+									: account.username,
 						});
 					}}
 				>

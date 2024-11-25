@@ -21,7 +21,7 @@ import MessageBubble from "../../assets/components/MessageBubble";
 function ChatPage({ route }) {
 	const { username, stylistUsername, clientUsername } = route.params;
 	const userContext = useContext(UserContext);
-	const [messageHistory, setMessageHistory] = useState();
+	const [messageHistory, setMessageHistory] = useState([]);
 	const [newMessage, setNewMessage] = useState("");
 	var ws = useRef(null);
 	const [isConnected, setIsConnected] = useState(false);
@@ -112,7 +112,7 @@ function ChatPage({ route }) {
 			content: newMessage.trim(),
 			createdAt: new Date().toISOString(),
 		};
-
+		console.log(message);
 		ws.current.send(JSON.stringify(message));
 		setMessageHistory((prevMessages) => [...prevMessages, message]);
 		setNewMessage("");
