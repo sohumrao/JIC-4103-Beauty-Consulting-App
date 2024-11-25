@@ -17,8 +17,6 @@ const StylistDetails2 = () => {
 	const [specialty, setSpecialty] = useState("");
 	const [additionalInfo, setAdditionalInfo] = useState("");
 	const [businessName, setBusinessName] = useState("");
-	const [businessAddress, setBusinessAddress] = useState("");
-	const [businessCity, setBusinessCity] = useState("");
 
 	const [message, setMessage] = useState("");
 
@@ -28,11 +26,10 @@ const StylistDetails2 = () => {
 	const [zip, setZip] = useState("");
 
 	const handleContinue = async () => {
-		const valid = await validateAddressStylistSide();
+		const [valid, businessCity] = await validateAddressStylistSide();
 		if (!valid) {
 			return;
 		}
-		console.log(businessCity);
 		// Update context with stylist details
 		userContext.updateUserContext({
 			...userContext, // Keep existing fields in the context (name, age, gender, etc.)
@@ -43,7 +40,7 @@ const StylistDetails2 = () => {
 				additionalInfo: additionalInfo || "",
 				name: businessName || "",
 				address: streetOne || "",
-				city: city,
+				city: businessCity,
 			},
 		});
 		console.log(userContext);
@@ -81,14 +78,13 @@ const StylistDetails2 = () => {
 			address = zip;
 		}
 		const result = await validateAddress(address, streetOnePassed);
-		console.log(result);
 		if (!result[0]) {
 			setMessage("Error Locating Business, Try Again");
 		} else {
-			console.log("updating business unformation");
+			setCity(result[2]);
 			setMessage(null);
 		}
-		return result[0];
+		return [result[0], result[2]];
 	};
 
 	const styles = StyleSheet.create({
