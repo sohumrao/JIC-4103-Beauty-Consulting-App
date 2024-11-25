@@ -18,6 +18,7 @@ import { getCityFromZIP } from "utils/geocoding";
 import ErrorMessage from "../components/ErrorMessage";
 import AppointmentModal from "../assets/components/appointmentModal";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import SignupBackground from "../assets/components/SignupBackground";
 
 const Directory = () => {
 	var userContext = useContext(UserContext);
@@ -139,70 +140,6 @@ const Directory = () => {
 	];
 
 	const [dropDownValue, setDropDownValue] = useState(dropDownData[0].value);
-
-	// const renderHeaderWithInputs = () => (
-	// 	<View>
-	// 		<View style={globalStyles.directoryHeaderContainer}>
-	// 			<Text style={globalStyles.directoryHeaderText}>
-	// 				Stylists for You
-	// 			</Text>
-	// 		</View>
-	// 		<View style={styles.container}>
-	// 			<TextInput
-	// 				style={styles.stateAndZipInput}
-	// 				value={zipCode}
-	// 				onChangeText={setZipCode}
-	// 				inputMode="numeric"
-	// 				maxLength={5}
-	// 				returnKeyType="done"
-	// 			/>
-	// 			<Dropdown
-	// 				data={dropDownData}
-	// 				value={dropDownValue}
-	// 				labelField="label"
-	// 				valueField="value"
-	// 				onChange={(item) => {
-	// 					setDropDownValue(item.value);
-	// 				}}
-	// 				style={styles.dropDown}
-	// 				selectedTextStyle={styles.selectedText}
-	// 			/>
-	// 		</View>
-	// 		<ErrorMessage message={messageError} />
-	// 	</View>
-	// );
-
-	// const renderHeaderWithInputs = () => (
-	//   <View>
-	//     {/* Styled Header */}
-	//     <View style={styles.headerBar}>
-	//       <Text style={styles.headerTitle}>Stylists for You</Text>
-	//     </View>
-	//     {/* Inputs */}
-	//     <View style={styles.container}>
-	//       <TextInput
-	//         style={styles.stateAndZipInput}
-	//         value={zipCode}
-	//         onChangeText={setZipCode}
-	//         inputMode="numeric"
-	//         maxLength={5}
-	//         returnKeyType="done"
-	//       />
-	//       <Dropdown
-	//         data={dropDownData}
-	//         value={dropDownValue}
-	//         labelField="label"
-	//         valueField="value"
-	//         onChange={(item) => {
-	//           setDropDownValue(item.value);
-	//         }}
-	//         style={styles.dropDown}
-	//         selectedTextStyle={styles.selectedText}
-	//       />
-	//     </View>
-	//     <ErrorMessage message={messageError} />
-	//   </View>
-	// );
 
 	const renderHeaderWithInputs = () => (
 		<View>
@@ -362,10 +299,10 @@ const styles = StyleSheet.create({
 	headerBar: {
 		height: 60,
 		width: 350,
-		backgroundColor: "#fa4e41", // Primary color
+		backgroundColor: "#fa4e41",
 		flexDirection: "row",
 		alignItems: "center",
-		justifyContent: "space-between", // Space out items
+		justifyContent: "space-between",
 		paddingHorizontal: 10,
 		borderRadius: 8,
 		shadowColor: "#000",
@@ -374,7 +311,7 @@ const styles = StyleSheet.create({
 		shadowRadius: 2,
 		elevation: 2,
 		marginBottom: 10,
-		marginTop: 60, // Adjust spacing
+		marginTop: 60,
 		alignSelf: "center",
 	},
 	profilePhoto: {
@@ -397,7 +334,7 @@ const styles = StyleSheet.create({
 		color: "#fff",
 	},
 	headerRightPlaceholder: {
-		width: 40, // Balance layout on the right side
+		width: 40,
 	},
 });
 

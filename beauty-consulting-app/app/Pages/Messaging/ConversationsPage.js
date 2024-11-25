@@ -114,8 +114,8 @@ const styles = StyleSheet.create({
 	},
 	headerBar: {
 		height: 60,
-		width: "100%",
-		backgroundColor: "#fa4e41", // Primary color
+		width: 350,
+		backgroundColor: "#fa4e41",
 		flexDirection: "row",
 		alignItems: "center",
 		justifyContent: "space-between",
@@ -126,7 +126,8 @@ const styles = StyleSheet.create({
 		shadowOpacity: 0.2,
 		shadowRadius: 2,
 		elevation: 2,
-		marginBottom: 10, // Space between header and content
+		marginBottom: 10,
+		alignSelf: "center",
 	},
 	profilePhoto: {
 		width: 40,

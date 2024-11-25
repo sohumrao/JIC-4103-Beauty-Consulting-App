@@ -217,20 +217,19 @@ const styles = StyleSheet.create({
 	headerBar: {
 		height: 60,
 		width: 350,
-		backgroundColor: "#fa4e41", // Primary color
+		backgroundColor: "#fa4e41",
 		flexDirection: "row",
 		alignItems: "center",
 		justifyContent: "space-between",
 		paddingHorizontal: 10,
 		borderRadius: 8,
-		// Subtle shadow for iOS
+		alignSelf: "center",
 		shadowColor: "#000",
 		shadowOffset: { width: 0, height: 2 },
 		shadowOpacity: 0.2,
 		shadowRadius: 2,
-		// Subtle elevation for Android
 		elevation: 2,
-		marginBottom: 10, // Space between header and content
+		// marginTop: 60
 	},
 	profilePhoto: {
 		width: 40,

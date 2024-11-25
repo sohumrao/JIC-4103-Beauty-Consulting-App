@@ -7,6 +7,7 @@ import GenderIcon from "../images/genders.svg";
 import { formatDate } from "../../utils/utils";
 import globalStyles from "../GlobalStyles";
 import EditProfileViewModal from "./EditProfileViewModal";
+import Ionicons from "react-native-vector-icons/Ionicons"; // Import the icon library
 
 const AboutMeBox = ({ fieldValues, setFieldValues }) => {
 	const [modalVisible, setModalVisible] = React.useState(false);
@@ -29,8 +30,6 @@ const AboutMeBox = ({ fieldValues, setFieldValues }) => {
 		});
 	};
 
-	// TODO: do not let someone who is not the client update the profile
-	// David's latest change has easy to implement logic for this
 	return (
 		<View>
 			<EditProfileViewModal
@@ -40,11 +39,13 @@ const AboutMeBox = ({ fieldValues, setFieldValues }) => {
 			/>
 			<View style={styles.headerRow}>
 				<Text style={styles.title}>About Me</Text>
-				<TouchableOpacity
-					style={globalStyles.button}
-					onPress={openEditModal}
-				>
-					<Text style={globalStyles.buttonText}>Edit Profile</Text>
+				<TouchableOpacity onPress={openEditModal}>
+					<Ionicons
+						name="pencil"
+						size={24}
+						color="#000"
+						style={styles.editIcon}
+					/>
 				</TouchableOpacity>
 			</View>
 			<View style={styles.container}>
