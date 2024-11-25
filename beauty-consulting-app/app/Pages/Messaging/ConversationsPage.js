@@ -16,6 +16,9 @@ import handleHTTPError from "utils/errorHandling";
 import ConversationList from "../../assets/components/ConversationList";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import { LogBox } from "react-native";
+
+LogBox.ignoreLogs(["VirtualizedLists should never be nested"]);
 
 function ConversationsPage() {
 	const userContext = useContext(UserContext);
