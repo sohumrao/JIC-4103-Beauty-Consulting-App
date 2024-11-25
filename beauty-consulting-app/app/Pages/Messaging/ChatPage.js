@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect, useRef } from "react";
+import React, { useContext, useState, useRef } from "react";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import {
 	View,
@@ -6,32 +6,29 @@ import {
 	StyleSheet,
 	FlatList,
 	TextInput,
-	Button,
 	TouchableOpacity,
 	KeyboardAvoidingView,
 	Platform,
-	ScrollView,
+	Dimensions,
+	Image,
 } from "react-native";
 import SignupBackground from "../../assets/components/SignupBackground";
 import api from "utils/axios";
 import handleHTTPError from "utils/errorHandling";
 import { UserContext } from "../../contexts/userContext";
 import MessageBubble from "../../assets/components/MessageBubble";
+import Ionicons from "react-native-vector-icons/Ionicons";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 function ChatPage({ route }) {
 	const { username, stylistUsername, clientUsername } = route.params;
 	const userContext = useContext(UserContext);
 	const [messageHistory, setMessageHistory] = useState([]);
 	const [newMessage, setNewMessage] = useState("");
-	var ws = useRef(null);
+	const ws = useRef(null);
 	const [isConnected, setIsConnected] = useState(false);
 	const navigation = useNavigation();
 
-	//username is the name of whomever is being chatted with
-	//stylistUsername and clientUsername are the literal
-	//usernames
-	//e.g. username = Stylist 7
-	//     clientUsername = stylist7
 	const fetchConversation = async () => {
 		try {
 			const response = await api.get("/messages/history", {
@@ -54,9 +51,6 @@ function ChatPage({ route }) {
 
 	useFocusEffect(
 		React.useCallback(() => {
-			//This is a bit of a hack to get the URL from
-			//EXPO_PUBLIC_API_URL
-			//Need to revisit
 			const apiUrl = process.env.EXPO_PUBLIC_API_URL;
 			const websocketUrl = apiUrl.replace(/^http:\/\//, "");
 			ws.current = new WebSocket(`ws://${websocketUrl}`);
@@ -113,7 +107,6 @@ function ChatPage({ route }) {
 			content: newMessage.trim(),
 			createdAt: new Date().toISOString(),
 		};
-		console.log(message);
 		ws.current.send(JSON.stringify(message));
 		setMessageHistory((prevMessages) => [...prevMessages, message]);
 		setNewMessage("");
@@ -132,9 +125,20 @@ function ChatPage({ route }) {
 
 	return (
 		<SignupBackground>
-			<KeyboardAvoidingView>
-				<View style={styles.container}>
-					<Text style={styles.header}>Chat with {username}</Text>
+			<SafeAreaView style={styles.safeArea}>
+				{/* Header */}
+				<View style={styles.headerBar}>
+					<TouchableOpacity onPress={() => navigation.goBack()}>
+						<Ionicons name="arrow-back" size={24} color="#fff" />
+					</TouchableOpacity>
+					<Text style={styles.headerTitle}>Chat with {username}</Text>
+					<View style={styles.headerRightPlaceholder} />
+				</View>
+				{/* Main Content */}
+				<KeyboardAvoidingView
+					behavior={Platform.OS === "ios" ? "padding" : "height"}
+					style={styles.container}
+				>
 					<FlatList
 						data={messageHistory}
 						renderItem={renderMessage}
@@ -144,12 +148,6 @@ function ChatPage({ route }) {
 						contentContainerStyle={styles.messagesList}
 					/>
 					<View style={styles.inputContainer}>
-						<TouchableOpacity
-							style={styles.backButton}
-							onPress={() => navigation.goBack()}
-						>
-							<Text style={styles.backButtonText}>Back</Text>
-						</TouchableOpacity>
 						<TextInput
 							style={styles.input}
 							value={newMessage}
@@ -162,72 +160,90 @@ function ChatPage({ route }) {
 							onPress={sendMessage}
 							disabled={!isConnected}
 						>
-							<Text style={styles.sendButtonText}>Send</Text>
+							<Ionicons
+								name="send"
+								style={styles.sendButtonIcon}
+							/>
 						</TouchableOpacity>
 					</View>
-				</View>
-			</KeyboardAvoidingView>
+				</KeyboardAvoidingView>
+			</SafeAreaView>
 		</SignupBackground>
 	);
 }
 
+const screenWidth = Dimensions.get("window").width;
+
 const styles = StyleSheet.create({
+	safeArea: {
+		flex: 1,
+	},
 	container: {
 		flex: 1,
 		padding: 10,
 	},
-	header: {
+	headerBar: {
+		height: 60,
+		width: "100%",
+		backgroundColor: "#fa4e41", // Primary color
+		flexDirection: "row",
+		alignItems: "center",
+		justifyContent: "space-between",
+		paddingHorizontal: 10,
+		shadowColor: "#000",
+		shadowOffset: { width: 0, height: 2 },
+		shadowOpacity: 0.2,
+		shadowRadius: 2,
+		elevation: 2,
+		marginBottom: 10, // Space between header and content
+	},
+	headerTitle: {
 		fontSize: 20,
 		fontWeight: "bold",
-		marginBottom: 10,
-		textAlign: "center",
+		color: "#fff",
+	},
+	headerRightPlaceholder: {
+		width: 40,
 	},
 	messagesList: {
 		paddingBottom: 20,
 	},
 	inputContainer: {
 		flexDirection: "row",
-		padding: 10,
-		backgroundColor: "#f9f9f9",
-		borderTopWidth: 1,
-		borderTopColor: "#ccc",
 		alignItems: "center",
+		padding: 10,
+		backgroundColor: "#f2f2f2",
+		borderRadius: 30,
+		marginHorizontal: 10,
+		marginVertical: 5,
+		elevation: 1, // Add subtle shadow for Android
+		shadowColor: "#000", // Shadow for iOS
+		shadowOffset: { width: 0, height: 1 },
+		shadowOpacity: 0.1,
+		shadowRadius: 3,
 	},
 	input: {
 		flex: 1,
-		height: 50,
-		padding: 10,
-		borderColor: "#ccc",
-		borderWidth: 1,
-		borderRadius: 10,
-		backgroundColor: "#fff",
+		paddingVertical: 10,
+		paddingHorizontal: 15,
 		fontSize: 16,
+		backgroundColor: "#fff",
+		borderRadius: 25,
+		borderWidth: 0, // Remove border for a clean look
+		elevation: 0,
 	},
 	sendButton: {
 		marginLeft: 10,
-		height: 50,
-		borderRadius: 10,
+		height: 40,
+		width: 40,
+		borderRadius: 20,
 		backgroundColor: "#007BFF",
 		justifyContent: "center",
 		alignItems: "center",
-		paddingHorizontal: 20,
 	},
-	sendButtonText: {
+	sendButtonIcon: {
 		color: "#fff",
-		fontSize: 16,
-		fontWeight: "bold",
-	},
-	backButton: {
-		alignSelf: "flex-start",
-		marginBottom: 10,
-		padding: 10,
-		backgroundColor: "#f2f2f2",
-		borderRadius: 5,
-	},
-	backButtonText: {
-		color: "#007BFF",
-		fontSize: 16,
-		fontWeight: "bold",
+		fontSize: 20,
 	},
 });
 
