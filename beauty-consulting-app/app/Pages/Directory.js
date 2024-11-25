@@ -17,6 +17,7 @@ import handleHTTPError from "utils/errorHandling";
 import { getCityFromZIP } from "utils/geocoding";
 import ErrorMessage from "../components/ErrorMessage";
 import AppointmentModal from "../assets/components/appointmentModal";
+import Ionicons from "react-native-vector-icons/Ionicons";
 
 const Directory = () => {
 	var userContext = useContext(UserContext);
@@ -139,13 +140,90 @@ const Directory = () => {
 
 	const [dropDownValue, setDropDownValue] = useState(dropDownData[0].value);
 
+	// const renderHeaderWithInputs = () => (
+	// 	<View>
+	// 		<View style={globalStyles.directoryHeaderContainer}>
+	// 			<Text style={globalStyles.directoryHeaderText}>
+	// 				Stylists for You
+	// 			</Text>
+	// 		</View>
+	// 		<View style={styles.container}>
+	// 			<TextInput
+	// 				style={styles.stateAndZipInput}
+	// 				value={zipCode}
+	// 				onChangeText={setZipCode}
+	// 				inputMode="numeric"
+	// 				maxLength={5}
+	// 				returnKeyType="done"
+	// 			/>
+	// 			<Dropdown
+	// 				data={dropDownData}
+	// 				value={dropDownValue}
+	// 				labelField="label"
+	// 				valueField="value"
+	// 				onChange={(item) => {
+	// 					setDropDownValue(item.value);
+	// 				}}
+	// 				style={styles.dropDown}
+	// 				selectedTextStyle={styles.selectedText}
+	// 			/>
+	// 		</View>
+	// 		<ErrorMessage message={messageError} />
+	// 	</View>
+	// );
+
+	// const renderHeaderWithInputs = () => (
+	//   <View>
+	//     {/* Styled Header */}
+	//     <View style={styles.headerBar}>
+	//       <Text style={styles.headerTitle}>Stylists for You</Text>
+	//     </View>
+	//     {/* Inputs */}
+	//     <View style={styles.container}>
+	//       <TextInput
+	//         style={styles.stateAndZipInput}
+	//         value={zipCode}
+	//         onChangeText={setZipCode}
+	//         inputMode="numeric"
+	//         maxLength={5}
+	//         returnKeyType="done"
+	//       />
+	//       <Dropdown
+	//         data={dropDownData}
+	//         value={dropDownValue}
+	//         labelField="label"
+	//         valueField="value"
+	//         onChange={(item) => {
+	//           setDropDownValue(item.value);
+	//         }}
+	//         style={styles.dropDown}
+	//         selectedTextStyle={styles.selectedText}
+	//       />
+	//     </View>
+	//     <ErrorMessage message={messageError} />
+	//   </View>
+	// );
+
 	const renderHeaderWithInputs = () => (
 		<View>
-			<View style={globalStyles.directoryHeaderContainer}>
-				<Text style={globalStyles.directoryHeaderText}>
-					Stylists for You
-				</Text>
+			{/* Styled Header */}
+			<View style={styles.headerBar}>
+				{/* Profile Photo */}
+				{userContext.userProfile?.profilePhoto ? (
+					<Image
+						source={{ uri: userContext.userProfile.profilePhoto }}
+						style={styles.profilePhoto}
+					/>
+				) : (
+					<View style={styles.placeholderPhoto}>
+						<Ionicons name="person" size={24} color="#fff" />
+					</View>
+				)}
+				<Text style={styles.headerTitle}>Stylists for You</Text>
+				{/* Placeholder to balance the layout */}
+				<View style={styles.headerRightPlaceholder} />
 			</View>
+			{/* Inputs */}
 			<View style={styles.container}>
 				<TextInput
 					style={styles.stateAndZipInput}
@@ -280,6 +358,46 @@ const styles = StyleSheet.create({
 		marginRight: 8,
 		padding: 10,
 		alignItems: "center",
+	},
+	headerBar: {
+		height: 60,
+		width: 350,
+		backgroundColor: "#fa4e41", // Primary color
+		flexDirection: "row",
+		alignItems: "center",
+		justifyContent: "space-between", // Space out items
+		paddingHorizontal: 10,
+		borderRadius: 8,
+		shadowColor: "#000",
+		shadowOffset: { width: 0, height: 2 },
+		shadowOpacity: 0.2,
+		shadowRadius: 2,
+		elevation: 2,
+		marginBottom: 10,
+		marginTop: 60, // Adjust spacing
+		alignSelf: "center",
+	},
+	profilePhoto: {
+		width: 40,
+		height: 40,
+		borderRadius: 20,
+		backgroundColor: "#fff",
+	},
+	placeholderPhoto: {
+		width: 40,
+		height: 40,
+		borderRadius: 20,
+		backgroundColor: "#555",
+		justifyContent: "center",
+		alignItems: "center",
+	},
+	headerTitle: {
+		fontSize: 20,
+		fontWeight: "bold",
+		color: "#fff",
+	},
+	headerRightPlaceholder: {
+		width: 40, // Balance layout on the right side
 	},
 });
 
