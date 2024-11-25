@@ -10,15 +10,7 @@ function StylistDetailsComplete() {
 	const userContext = useContext(UserContext);
 
 	const handleContinue = async () => {
-		const req = {
-			username: userContext.username,
-			name: userContext.name,
-			email: userContext.email,
-			gender: userContext.gender,
-			age: userContext.age,
-			phoneNumber: userContext.phoneNumber,
-			business: userContext.business,
-		};
+		const req = userContext;
 		try {
 			const res = await api.post("/stylist/", req);
 			console.log("Stylist created: ", res.data);
