@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
 	},
 	clientMessage: {
 		alignSelf: "flex-end",
-		backgroundColor: "#DCF8C6",
+		backgroundColor: "#c5e0fc",
 	},
 	stylistMessage: {
 		alignSelf: "flex-start",
