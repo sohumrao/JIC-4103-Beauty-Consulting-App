@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect, useRef } from "react";
-import { useFocusEffect } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import {
 	View,
 	Text,
@@ -25,6 +25,7 @@ function ChatPage({ route }) {
 	const [newMessage, setNewMessage] = useState("");
 	var ws = useRef(null);
 	const [isConnected, setIsConnected] = useState(false);
+	const navigation = useNavigation();
 
 	//username is the name of whomever is being chatted with
 	//stylistUsername and clientUsername are the literal
@@ -143,6 +144,12 @@ function ChatPage({ route }) {
 						contentContainerStyle={styles.messagesList}
 					/>
 					<View style={styles.inputContainer}>
+						<TouchableOpacity
+							style={styles.backButton}
+							onPress={() => navigation.goBack()}
+						>
+							<Text style={styles.backButtonText}>Back</Text>
+						</TouchableOpacity>
 						<TextInput
 							style={styles.input}
 							value={newMessage}
@@ -207,6 +214,18 @@ const styles = StyleSheet.create({
 	},
 	sendButtonText: {
 		color: "#fff",
+		fontSize: 16,
+		fontWeight: "bold",
+	},
+	backButton: {
+		alignSelf: "flex-start",
+		marginBottom: 10,
+		padding: 10,
+		backgroundColor: "#f2f2f2",
+		borderRadius: 5,
+	},
+	backButtonText: {
+		color: "#007BFF",
 		fontSize: 16,
 		fontWeight: "bold",
 	},
