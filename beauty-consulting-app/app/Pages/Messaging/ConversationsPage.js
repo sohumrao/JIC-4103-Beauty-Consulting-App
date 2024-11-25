@@ -16,6 +16,9 @@ import handleHTTPError from "utils/errorHandling";
 import ConversationList from "../../assets/components/ConversationList";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import { LogBox } from "react-native";
+
+LogBox.ignoreLogs(["VirtualizedLists should never be nested"]);
 
 function ConversationsPage() {
 	const userContext = useContext(UserContext);
@@ -114,8 +117,8 @@ const styles = StyleSheet.create({
 	},
 	headerBar: {
 		height: 60,
-		width: "100%",
-		backgroundColor: "#fa4e41", // Primary color
+		width: 350,
+		backgroundColor: "#fa4e41",
 		flexDirection: "row",
 		alignItems: "center",
 		justifyContent: "space-between",
@@ -126,7 +129,8 @@ const styles = StyleSheet.create({
 		shadowOpacity: 0.2,
 		shadowRadius: 2,
 		elevation: 2,
-		marginBottom: 10, // Space between header and content
+		marginBottom: 10,
+		alignSelf: "center",
 	},
 	profilePhoto: {
 		width: 40,
