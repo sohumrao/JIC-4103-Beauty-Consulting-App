@@ -150,6 +150,12 @@ router.get(
 			stylistUsername,
 		});
 
+		if (messages.length === 0) {
+			return res.status(200).json({
+				message: "No message history found between client and stylist.",
+			});
+		}
+
 		res.json(messages);
 	})
 );
