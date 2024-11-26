@@ -54,7 +54,7 @@ const ProfileView = ({ route }) => {
 	useEffect(() => {
 		setEditable(userContext.username == username);
 		fetchDetails(username);
-	}, [userContext.username, username]);
+	}, [userContext.username, username, photoChanged]);
 
 	const deleteAccount = async () => {
 		// TODO: update with a separate flow for password validation after backend rework
@@ -73,9 +73,9 @@ const ProfileView = ({ route }) => {
 				<View style={styles.headerBar}>
 					{/* Profile Photo */}
 					{profileDetails.profilePhoto ? (
-						<Image
-							source={{ uri: profileDetails.profilePhoto }}
-							style={styles.profilePhoto}
+						<ProfilePhotoDisplay
+							styleProp={styles.profilePhoto}
+							profilePhoto={profileDetails.profilePhoto}
 						/>
 					) : (
 						<View style={styles.placeholderPhoto}>
