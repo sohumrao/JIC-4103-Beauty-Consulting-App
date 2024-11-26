@@ -8,6 +8,7 @@ import { UserContext } from "../contexts/userContext";
 import DateTimePicker from "@react-native-community/datetimepicker";
 
 import ContinueButton from "../assets/components/ContinueButton";
+import KeyboardMove from "../assets/components/KeyboardMove";
 
 const ClientDetails = () => {
 	const navigation = useNavigation();
