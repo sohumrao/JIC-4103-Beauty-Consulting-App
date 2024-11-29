@@ -87,84 +87,6 @@ const StylistDetails2 = () => {
 		return [result[0], result[2]];
 	};
 
-	const styles = StyleSheet.create({
-		container: {
-			flex: 1,
-			padding: 20,
-			backgroundColor: "#fff",
-		},
-		header: {
-			fontSize: 22,
-			fontWeight: "bold",
-			marginBottom: 20,
-			textAlign: "center",
-		},
-		stepIndicator: {
-			flexDirection: "row",
-			justifyContent: "space-between",
-			marginBottom: 20,
-		},
-		step: {
-			flex: 1,
-			height: 5,
-			backgroundColor: "#eee",
-			borderRadius: 2.5,
-			marginHorizontal: 2,
-		},
-		stepCompleted: {
-			backgroundColor: "red",
-		},
-		form: {
-			marginBottom: 20,
-		},
-		label: {
-			fontSize: 16,
-			marginBottom: 10,
-		},
-		input: {
-			fontSize: 16,
-			borderWidth: 1,
-			borderColor: "#ccc",
-			borderRadius: 5,
-			padding: 10,
-			marginBottom: 20,
-		},
-		addressInput: {
-			fontSize: 16,
-			borderWidth: 1,
-			borderColor: "#ccc",
-			borderRadius: 5,
-			padding: 10,
-			marginBottom: 5,
-		},
-		stateAndZipContainer: {
-			flexDirection: "row",
-			justifyContent: "space-evenly",
-			alignSelf: "stretch",
-		},
-		stateAndZipInput: {
-			fontSize: 16,
-			borderWidth: 1,
-			padding: 10,
-			borderRadius: 5,
-			marginBottom: 20,
-			borderColor: "#ccc",
-			flex: 1,
-		},
-		continueButton: {
-			backgroundColor: "red",
-			padding: 15,
-			borderRadius: 5,
-			alignItems: "center",
-			justifyContent: "center",
-		},
-		continueButtonText: {
-			fontSize: 16,
-			color: "#fff",
-			fontWeight: "bold",
-		},
-	});
-
 	return (
 		<ScrollView style={styles.container}>
 			<Text style={styles.header}>Stylist Details</Text>
@@ -259,5 +181,83 @@ const StylistDetails2 = () => {
 		</ScrollView>
 	);
 };
+
+const styles = StyleSheet.create({
+	container: {
+		flex: 1,
+		padding: 20,
+		backgroundColor: "#fff",
+	},
+	header: {
+		fontSize: 22,
+		fontWeight: "bold",
+		marginBottom: 20,
+		textAlign: "center",
+	},
+	stepIndicator: {
+		flexDirection: "row",
+		justifyContent: "space-between",
+		marginBottom: 20,
+	},
+	step: {
+		flex: 1,
+		height: 5,
+		backgroundColor: "#eee",
+		borderRadius: 2.5,
+		marginHorizontal: 2,
+	},
+	stepCompleted: {
+		backgroundColor: "red",
+	},
+	form: {
+		marginBottom: 20,
+	},
+	label: {
+		fontSize: 16,
+		marginBottom: 10,
+	},
+	input: {
+		fontSize: 16,
+		borderWidth: 1,
+		borderColor: "#ccc",
+		borderRadius: 5,
+		padding: 10,
+		marginBottom: 20,
+	},
+	addressInput: {
+		fontSize: 16,
+		borderWidth: 1,
+		borderColor: "#ccc",
+		borderRadius: 5,
+		padding: 10,
+		marginBottom: 5,
+	},
+	stateAndZipContainer: {
+		flexDirection: "row",
+		justifyContent: "space-evenly",
+		alignSelf: "stretch",
+	},
+	stateAndZipInput: {
+		fontSize: 16,
+		borderWidth: 1,
+		padding: 10,
+		borderRadius: 5,
+		marginBottom: 20,
+		borderColor: "#ccc",
+		flex: 1,
+	},
+	continueButton: {
+		backgroundColor: "red",
+		padding: 15,
+		borderRadius: 5,
+		alignItems: "center",
+		justifyContent: "center",
+	},
+	continueButtonText: {
+		fontSize: 16,
+		color: "#fff",
+		fontWeight: "bold",
+	},
+});
 
 export default StylistDetails2;

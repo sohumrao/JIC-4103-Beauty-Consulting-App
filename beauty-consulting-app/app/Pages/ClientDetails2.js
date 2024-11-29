@@ -45,59 +45,6 @@ function ClientDetails2() {
 		navigation.navigate("ClientDetails3");
 	};
 
-	const styles = StyleSheet.create({
-		container: {
-			flex: 1,
-			padding: 20,
-			backgroundColor: "#fff",
-		},
-		header: {
-			fontSize: 22,
-			fontWeight: "bold",
-			marginBottom: 20,
-			textAlign: "center",
-		},
-		stepIndicator: {
-			flexDirection: "row",
-			justifyContent: "space-between",
-			marginBottom: 20,
-		},
-		step: {
-			flex: 1,
-			height: 5,
-			backgroundColor: "#eee",
-			borderRadius: 2.5,
-			marginHorizontal: 2,
-		},
-		stepCompleted: {
-			backgroundColor: "red",
-		},
-		form: {
-			marginBottom: 20,
-		},
-		label: {
-			fontSize: 16,
-			marginBottom: 10,
-		},
-		bubbleContainer: {
-			flexDirection: "row",
-			padding: 20,
-			backgroundColor: "#fff",
-		},
-		optionsContainer: {
-			flexDirection: "column",
-			flex: 1,
-			justifyContent: "space-between",
-			marginBottom: 20,
-		},
-		allOptionsContainer: {
-			flexDirection: "row",
-			flex: 1,
-			justifyContent: "space-between",
-			marginBottom: 20,
-		},
-	});
-
 	return (
 		<ScrollView style={styles.container}>
 			<Text style={styles.header}>Client Details</Text>
@@ -196,5 +143,58 @@ function ClientDetails2() {
 		</ScrollView>
 	);
 }
+
+const styles = StyleSheet.create({
+	container: {
+		flex: 1,
+		padding: 20,
+		backgroundColor: "#fff",
+	},
+	header: {
+		fontSize: 22,
+		fontWeight: "bold",
+		marginBottom: 20,
+		textAlign: "center",
+	},
+	stepIndicator: {
+		flexDirection: "row",
+		justifyContent: "space-between",
+		marginBottom: 20,
+	},
+	step: {
+		flex: 1,
+		height: 5,
+		backgroundColor: "#eee",
+		borderRadius: 2.5,
+		marginHorizontal: 2,
+	},
+	stepCompleted: {
+		backgroundColor: "red",
+	},
+	form: {
+		marginBottom: 20,
+	},
+	label: {
+		fontSize: 16,
+		marginBottom: 10,
+	},
+	bubbleContainer: {
+		flexDirection: "row",
+		padding: 20,
+		backgroundColor: "#fff",
+	},
+	optionsContainer: {
+		flexDirection: "column",
+		flex: 1,
+		justifyContent: "space-between",
+		marginBottom: 20,
+	},
+	allOptionsContainer: {
+		flexDirection: "row",
+		flex: 1,
+		justifyContent: "space-between",
+		marginBottom: 20,
+	},
+});
 
 export default ClientDetails2;
