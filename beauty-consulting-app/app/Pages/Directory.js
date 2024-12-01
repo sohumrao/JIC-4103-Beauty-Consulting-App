@@ -199,12 +199,51 @@ const Directory = () => {
 		);
 	}
 	return (
-		<View style={globalStyles.container}>
-			{renderHeaderWithInputs()}
-			{stylistData ? (
-				<View>
+		<SignupBackground>
+			<View style={globalStyles.container}>
+				{renderHeaderWithInputs()}
+				{stylistData ? (
+					<View>
+						<ScrollView
+							style={globalStyles.directoryContainer}
+							refreshControl={
+								<RefreshControl
+									refreshing={isLoading}
+									onRefresh={onRefresh}
+									colors={["#000"]}
+									tintColor="#000"
+								/>
+							}
+						>
+							{stylistData.map((stylist) => (
+								<View key={stylist.username}>
+									<StylistListing
+										profilePicture={stylist.profilePicture}
+										stylistName={stylist.name}
+										businessName={stylist.businessName}
+										businessAddress={
+											stylist.businessAddress
+										}
+										username={stylist.username}
+										booked={stylistsBooked}
+										handleBookingPress={() => {
+											handleBookPress(stylist.username);
+										}}
+									/>
+								</View>
+							))}
+						</ScrollView>
+						{modalVisible && (
+							<AppointmentModal
+								visible={modalVisible}
+								onClose={hideModal}
+								onCreateAppointment={createAppointment}
+								stylistUsername={currentStylist}
+							/>
+						)}
+					</View>
+				) : (
 					<ScrollView
-						style={globalStyles.directoryContainer}
 						refreshControl={
 							<RefreshControl
 								refreshing={isLoading}
@@ -214,48 +253,13 @@ const Directory = () => {
 							/>
 						}
 					>
-						{stylistData.map((stylist) => (
-							<View key={stylist.username}>
-								<StylistListing
-									profilePicture={stylist.profilePicture}
-									stylistName={stylist.name}
-									businessName={stylist.businessName}
-									businessAddress={stylist.businessAddress}
-									username={stylist.username}
-									booked={stylistsBooked}
-									handleBookingPress={() => {
-										handleBookPress(stylist.username);
-									}}
-								/>
-							</View>
-						))}
+						<ErrorMessage
+							message={`Could not find stylist in ${city}. \n Try a different search.`}
+						/>
 					</ScrollView>
-					{modalVisible && (
-						<AppointmentModal
-							visible={modalVisible}
-							onClose={hideModal}
-							onCreateAppointment={createAppointment}
-							stylistUsername={currentStylist}
-						/>
-					)}
-				</View>
-			) : (
-				<ScrollView
-					refreshControl={
-						<RefreshControl
-							refreshing={isLoading}
-							onRefresh={onRefresh}
-							colors={["#000"]}
-							tintColor="#000"
-						/>
-					}
-				>
-					<ErrorMessage
-						message={`Could not find stylist in ${city}. \n Try a different search.`}
-					/>
-				</ScrollView>
-			)}
-		</View>
+				)}
+			</View>
+		</SignupBackground>
 	);
 };
 
