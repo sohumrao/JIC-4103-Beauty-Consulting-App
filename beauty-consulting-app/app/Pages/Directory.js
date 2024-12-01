@@ -203,8 +203,11 @@ const Directory = () => {
 		<View style={globalStyles.container}>
 			{renderHeaderWithInputs()}
 			{stylistData ? (
-				<View>
-					<ScrollView style={globalStyles.directoryContainer}>
+				<View style={globalStyles.container}>
+					<ScrollView
+						style={globalStyles.directoryContainer}
+						contentContainerStyle={{ flexGrow: 1 }}
+					>
 						<RefreshControl
 							refreshing={isLoading}
 							onRefresh={onRefresh}
