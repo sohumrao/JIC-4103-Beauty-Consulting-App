@@ -1,4 +1,3 @@
-// ImageUploadButton.js
 import React, { useState } from "react";
 import { View, Text, Alert, TouchableOpacity } from "react-native";
 import * as ImagePicker from "expo-image-picker";
