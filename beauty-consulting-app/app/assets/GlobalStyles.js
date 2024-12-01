@@ -95,7 +95,7 @@ const globalStyles = StyleSheet.create({
 		shadowRadius: 5,
 		elevation: 5,
 	},
-	directoryContainer: {},
+	directoryContainer: { flex: 1 },
 	stylistImage: {
 		width: 80, // Fixed width for the image
 		height: 80, // Fixed height for the image

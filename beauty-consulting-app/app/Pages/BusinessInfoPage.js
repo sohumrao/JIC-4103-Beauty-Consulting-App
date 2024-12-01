@@ -1,19 +1,11 @@
 import React, { useContext, useEffect, useState } from "react";
-import {
-	View,
-	Text,
-	StyleSheet,
-	ScrollView,
-	Dimensions,
-	Image,
-} from "react-native";
+import { View, Text, StyleSheet, ScrollView, Dimensions } from "react-native";
 import { UserContext } from "../contexts/userContext";
 import globalStyles from "../assets/GlobalStyles";
 import SignupBackground from "../assets/components/SignupBackground";
 import api from "utils/axios";
 import { Button } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
-import Ionicons from "react-native-vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/native";
 import handleHTTPError from "utils/errorHandling";
 import { formatDate } from "utils/utils";

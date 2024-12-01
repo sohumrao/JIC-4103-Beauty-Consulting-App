@@ -7,7 +7,6 @@ import {
 	ScrollView,
 	RefreshControl,
 	ActivityIndicator,
-	Image,
 } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
 import globalStyles from "../assets/GlobalStyles";
@@ -18,7 +17,6 @@ import handleHTTPError from "utils/errorHandling";
 import { getCityFromZIP } from "utils/geocoding";
 import ErrorMessage from "../components/ErrorMessage";
 import AppointmentModal from "../assets/components/appointmentModal";
-import Ionicons from "react-native-vector-icons/Ionicons";
 import SignupBackground from "../assets/components/SignupBackground";
 import ProfilePhotoDisplay from "../assets/components/ProfilePhotoDisplay";
 
@@ -203,9 +201,10 @@ const Directory = () => {
 			<View style={globalStyles.container}>
 				{renderHeaderWithInputs()}
 				{stylistData ? (
-					<View>
+					<View style={globalStyles.container}>
 						<ScrollView
 							style={globalStyles.directoryContainer}
+							contentContainerStyle={{ flexGrow: 1 }}
 							refreshControl={
 								<RefreshControl
 									refreshing={isLoading}

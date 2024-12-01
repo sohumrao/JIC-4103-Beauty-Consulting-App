@@ -40,7 +40,7 @@ const StylistDetails2 = () => {
 				additionalInfo: additionalInfo || "",
 				name: businessName || "",
 				address: streetOne || "",
-				city: businessCity,
+				city: city,
 			},
 		});
 		console.log(userContext);
