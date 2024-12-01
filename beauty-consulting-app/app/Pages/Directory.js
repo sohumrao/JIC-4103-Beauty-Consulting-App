@@ -7,6 +7,7 @@ import {
 	ScrollView,
 	RefreshControl,
 	ActivityIndicator,
+	Image,
 } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
 import globalStyles from "../assets/GlobalStyles";
@@ -19,9 +20,10 @@ import ErrorMessage from "../components/ErrorMessage";
 import AppointmentModal from "../assets/components/appointmentModal";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import SignupBackground from "../assets/components/SignupBackground";
+import ProfilePhotoDisplay from "../assets/components/ProfilePhotoDisplay";
 
 const Directory = () => {
-	var userContext = useContext(UserContext);
+	const userContext = useContext(UserContext);
 	const [city, setCity] = useState("Atlanta"); // TODO: change default value once clients input address
 	const [prevReq, setPrevReq] = useState(null);
 	const [stylistData, setStylistData] = useState(null);
@@ -39,7 +41,7 @@ const Directory = () => {
 	const onRefresh = React.useCallback(() => {
 		setIsLoading(true);
 		refreshSearch().then(() => setIsLoading(false));
-	});
+	}, [zipCode, city, dropDownValue]); // Added dependencies
 
 	const retrieveStylistData = async (queryCity) => {
 		try {
@@ -52,11 +54,11 @@ const Directory = () => {
 			setPrevReq(req);
 			// prevent repeated requests with same information
 			// save API calls
-			// we still make one call to check city with each request but thats fine
+			// we still make one call to check city with each request but that's fine
 			if (
 				prevReq &&
-				req.distance == prevReq.distance &&
-				req.city == prevReq.city
+				req.distance === prevReq.distance &&
+				req.city === prevReq.city
 			) {
 				return;
 			}
@@ -102,13 +104,13 @@ const Directory = () => {
 	const createAppointment = async (date, time) => {
 		try {
 			if (!date || !time) {
-				console.error("AHHHHHH"); // TODO: handle better
+				console.error("Please select both date and time."); // Improved error message
 				return;
 			}
 			const req = {
 				clientUsername: userContext.username,
 				stylistUsername: currentStylist,
-				appointmentDate: date + "T" + time,
+				appointmentDate: `${date}T${time}`,
 				duration: 60,
 				notes: "",
 			};
@@ -116,11 +118,12 @@ const Directory = () => {
 				`/appointment/checkBooking?stylistUsername=${req.stylistUsername}&dateTime=${req.appointmentDate}`
 			);
 			if (!res.data.available) {
-				// TODO: handle error better
-				console.error("APPOINTMENT NOT AVAILABLE AT TIME ");
+				console.error(
+					"Appointment not available at the selected time."
+				);
+				// Optionally, set an error state to display a message to the user
 				return;
 			}
-			console.log(req);
 			await api.post("/appointment/create", req);
 			setModalVisible(false);
 			setStylistsBooked([...stylistsBooked, currentStylist]);
@@ -146,16 +149,10 @@ const Directory = () => {
 			{/* Styled Header */}
 			<View style={styles.headerBar}>
 				{/* Profile Photo */}
-				{userContext.userProfile?.profilePhoto ? (
-					<Image
-						source={{ uri: userContext.userProfile.profilePhoto }}
-						style={styles.profilePhoto}
-					/>
-				) : (
-					<View style={styles.placeholderPhoto}>
-						<Ionicons name="person" size={24} color="#fff" />
-					</View>
-				)}
+				<ProfilePhotoDisplay
+					profilePhoto={userContext.profilePhoto}
+					styleProp={styles.profilePhoto}
+				/>
 				<Text style={styles.headerTitle}>Stylists for You</Text>
 				{/* Placeholder to balance the layout */}
 				<View style={styles.headerRightPlaceholder} />
@@ -166,9 +163,10 @@ const Directory = () => {
 					style={styles.stateAndZipInput}
 					value={zipCode}
 					onChangeText={setZipCode}
-					inputMode="numeric"
+					keyboardType="numeric"
 					maxLength={5}
 					returnKeyType="done"
+					placeholder="Enter ZIP Code"
 				/>
 				<Dropdown
 					data={dropDownData}
@@ -180,6 +178,7 @@ const Directory = () => {
 					}}
 					style={styles.dropDown}
 					selectedTextStyle={styles.selectedText}
+					placeholder="Select Distance"
 				/>
 			</View>
 			<ErrorMessage message={messageError} />
@@ -204,13 +203,17 @@ const Directory = () => {
 			{renderHeaderWithInputs()}
 			{stylistData ? (
 				<View>
-					<ScrollView style={globalStyles.directoryContainer}>
-						<RefreshControl
-							refreshing={isLoading}
-							onRefresh={onRefresh}
-							colors={["#000"]}
-							tintColor="#000"
-						/>
+					<ScrollView
+						style={globalStyles.directoryContainer}
+						refreshControl={
+							<RefreshControl
+								refreshing={isLoading}
+								onRefresh={onRefresh}
+								colors={["#000"]}
+								tintColor="#000"
+							/>
+						}
+					>
 						{stylistData.map((stylist) => (
 							<View key={stylist.username}>
 								<StylistListing
@@ -227,29 +230,28 @@ const Directory = () => {
 							</View>
 						))}
 					</ScrollView>
-					{modalVisible ? (
+					{modalVisible && (
 						<AppointmentModal
 							visible={modalVisible}
 							onClose={hideModal}
 							onCreateAppointment={createAppointment}
 							stylistUsername={currentStylist}
 						/>
-					) : null}
+					)}
 				</View>
 			) : (
-				<ScrollView>
-					<RefreshControl
-						refreshing={isLoading}
-						onRefresh={onRefresh}
-						colors={["#000"]}
-						tintColor="#000"
-					/>
+				<ScrollView
+					refreshControl={
+						<RefreshControl
+							refreshing={isLoading}
+							onRefresh={onRefresh}
+							colors={["#000"]}
+							tintColor="#000"
+						/>
+					}
+				>
 					<ErrorMessage
-						message={
-							"Could not find stylist in " +
-							city +
-							". \n Try a different search."
-						}
+						message={`Could not find stylist in ${city}. \n Try a different search.`}
 					/>
 				</ScrollView>
 			)}
@@ -263,6 +265,7 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 		marginBottom: 8,
 		marginTop: 8,
+		paddingHorizontal: 10, // Added padding for better spacing
 	},
 	dropDown: {
 		flex: 1,
@@ -273,6 +276,7 @@ const styles = StyleSheet.create({
 		marginLeft: 8,
 		marginRight: 8,
 		borderRadius: 5,
+		backgroundColor: "#fff", // Ensure background is white
 	},
 	selectedText: {
 		fontSize: 16,
@@ -286,6 +290,7 @@ const styles = StyleSheet.create({
 		borderColor: "#ccc",
 		flex: 1,
 		marginLeft: 8,
+		backgroundColor: "#fff", // Ensure background is white
 	},
 	button: {
 		backgroundColor: "#FF5252",
