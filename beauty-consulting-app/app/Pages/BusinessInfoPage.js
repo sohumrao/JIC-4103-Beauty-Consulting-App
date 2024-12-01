@@ -32,7 +32,7 @@ const BusinessInfoPage = ({ route }) => {
 	useEffect(() => {
 		setEditable(userContext.username === username);
 		populateStylistData(username);
-	}, [username]);
+	}, [username, photoChanged]);
 
 	const populateStylistData = async (username) => {
 		try {
