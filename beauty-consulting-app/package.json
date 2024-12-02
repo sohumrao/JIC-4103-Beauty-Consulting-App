@@ -32,7 +32,8 @@
 		"react-native-screens": "~4.0.0",
 		"react-native-svg": "15.8.0",
 		"react-native-vector-icons": "^10.2.0",
-		"react-router-dom": "^6.27.0"
+		"react-router-dom": "^6.27.0",
+		"expo-splash-screen": "~0.29.13"
 	},
 	"devDependencies": {
 		"@babel/core": "^7.25.8",
