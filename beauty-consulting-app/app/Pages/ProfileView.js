@@ -6,7 +6,6 @@ import {
 	TouchableOpacity,
 	Dimensions,
 	StyleSheet,
-	Image,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { UserContext } from "../contexts/userContext";
@@ -38,21 +37,29 @@ const ProfileView = ({ route }) => {
 		try {
 			const res = await api.get(`/client/${username}`);
 			setProfile(res.data);
-			setProfileDetails({
+			const updatedProfileDetails = {
 				birthday: res.data?.info?.birthday || "",
 				gender: res.data?.info?.gender || "",
 				phoneNumber: res.data?.info?.phoneNumber || "",
 				email: res.data?.email || "",
 				profilePhoto: res.data?.profilePhoto || null,
 				username: res.data?.username,
-			});
+			};
+			setProfileDetails(updatedProfileDetails);
+
+			// Update UserContext if the fetched profile belongs to the current user
+			if (userContext.username === username) {
+				userContext.updateUserContext({
+					profilePhoto: res.data?.profilePhoto || null,
+				});
+			}
 		} catch (error) {
 			handleHTTPError(error);
 		}
 	};
 
 	useEffect(() => {
-		setEditable(userContext.username == username);
+		setEditable(userContext.username === username);
 		fetchDetails(username);
 	}, [userContext.username, username, photoChanged]);
 
@@ -95,15 +102,15 @@ const ProfileView = ({ route }) => {
 							<ProfilePhotoDisplay
 								profilePhoto={profileDetails.profilePhoto}
 								styleProp={styles.photo}
-							></ProfilePhotoDisplay>
+							/>
 
-							{profileDetails.username ==
+							{profileDetails.username ===
 								userContext.username && (
 								<ImageUploadButton
 									username={userContext.username}
 									photoChanged={photoChanged}
 									setPhotoChanged={setPhotoChanged}
-								></ImageUploadButton>
+								/>
 							)}
 						</View>
 						<View>
@@ -116,7 +123,7 @@ const ProfileView = ({ route }) => {
 							<AboutHairBox />
 						</View>
 					</View>
-					{profileDetails.username == userContext.username && (
+					{profileDetails.username === userContext.username && (
 						<TouchableOpacity
 							style={globalStyles.button}
 							onPress={deleteAccount}

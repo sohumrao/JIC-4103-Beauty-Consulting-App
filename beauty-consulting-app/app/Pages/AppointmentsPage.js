@@ -20,10 +20,12 @@ import AppointmentBlock from "../components/appointmentBlock";
 import globalStyles from "../assets/GlobalStyles";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Ionicons from "react-native-vector-icons/Ionicons"; // For icons
+import ProfilePhotoDisplay from "../assets/components/ProfilePhotoDisplay"; // Import the component
 
 function AppointmentsPage({ navigation }) {
-	// Receive navigation prop if needed
-	const { username, role, userProfile } = useContext(UserContext); // Ensure userProfile includes profilePhoto if needed
+	// Destructure profilePhoto directly from UserContext
+	const { username, role, profilePhoto, updateUserContext } =
+		useContext(UserContext);
 	const [appointments, setAppointments] = useState([]);
 	const [errorMessage, setErrorMessage] = useState("");
 	const [modalVisible, setModalVisible] = useState(false);
@@ -81,20 +83,10 @@ function AppointmentsPage({ navigation }) {
 					{/* Header Bar */}
 					<View style={styles.headerBar}>
 						{/* Profile Photo */}
-						{userProfile?.profilePhoto ? (
-							<Image
-								source={{ uri: userProfile.profilePhoto }}
-								style={styles.profilePhoto}
-							/>
-						) : (
-							<View style={styles.placeholderPhoto}>
-								<Ionicons
-									name="person"
-									size={24}
-									color="#fff"
-								/>
-							</View>
-						)}
+						<ProfilePhotoDisplay
+							profilePhoto={profilePhoto}
+							styleProp={styles.profilePhoto}
+						/>
 						{/* Title */}
 						<Text style={styles.headerTitle}>Appointments</Text>
 						{/* Placeholder for balancing the header layout */}
