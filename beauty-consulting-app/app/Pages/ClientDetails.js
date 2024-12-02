@@ -6,6 +6,8 @@ import { RadioButton } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 import { UserContext } from "../contexts/userContext";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import { KeyboardAvoidingView } from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 import ContinueButton from "../assets/components/ContinueButton";
 import KeyboardMove from "../assets/components/KeyboardMove";
@@ -112,9 +114,9 @@ const ClientDetails = () => {
 			fontWeight: "bold",
 		},
 	});
-	//add keyboardAvoidingView here - currently keyboard blocks input
+
 	return (
-		<ScrollView style={styles.container}>
+		<KeyboardAwareScrollView style={styles.container}>
 			<Text style={styles.header}>Client Details</Text>
 
 			<View style={styles.stepIndicator}>
@@ -210,7 +212,7 @@ const ClientDetails = () => {
 				/>
 			</View>
 			<ContinueButton onPress={() => handleContinue()} />
-		</ScrollView>
+		</KeyboardAwareScrollView>
 	);
 };
 
