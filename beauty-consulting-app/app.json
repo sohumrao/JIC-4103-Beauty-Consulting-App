@@ -11,6 +11,16 @@
 		"splash": {
 			"image": "./app/assets/images/splash.png"
 		},
-		"icon": "./app/assets/images/splash.png"
+		"icon": "./app/assets/images/splash.png",
+		"plugins": [
+			[
+				"expo-splash-screen",
+				{
+					"backgroundColor": "#232323",
+					"image": "./app/assets/images/splash.png",
+					"imageWidth": 200
+				}
+			]
+		]
 	}
 }
