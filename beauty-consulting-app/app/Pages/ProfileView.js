@@ -31,6 +31,11 @@ const ProfileView = ({ route }) => {
 		phoneNumber: "",
 		email: "",
 	});
+	const [hairProfile, setHairProfile] = useState({
+		hairDetails: {},
+		allergies: "",
+		concerns: "",
+	});
 	const [photoChanged, setPhotoChanged] = useState(false);
 
 	const fetchDetails = async (username) => {
@@ -47,7 +52,12 @@ const ProfileView = ({ route }) => {
 			};
 			setProfileDetails(updatedProfileDetails);
 
-			// Update UserContext if the fetched profile belongs to the current user
+			setHairProfile({
+				hairDetails: res.data?.hairDetails || {},
+				allergies: res.data?.allergies || "",
+				concerns: res.data?.concerns || "",
+			});
+
 			if (userContext.username === username) {
 				userContext.updateUserContext({
 					profilePhoto: res.data?.profilePhoto || null,
@@ -64,7 +74,6 @@ const ProfileView = ({ route }) => {
 	}, [userContext.username, username, photoChanged]);
 
 	const deleteAccount = async () => {
-		// TODO: update with a separate flow for password validation after backend rework
 		try {
 			await api.delete(`/client/${userContext.username}`);
 			navigation.navigate("Sign In");
@@ -76,9 +85,7 @@ const ProfileView = ({ route }) => {
 	return (
 		<SignupBackground>
 			<View style={styles.safeArea}>
-				{/* Header Bar */}
 				<View style={styles.headerBar}>
-					{/* Profile Photo */}
 					{profileDetails.profilePhoto ? (
 						<ProfilePhotoDisplay
 							styleProp={styles.profilePhoto}
@@ -89,12 +96,9 @@ const ProfileView = ({ route }) => {
 							<Ionicons name="person" size={24} color="#fff" />
 						</View>
 					)}
-					{/* Title */}
 					<Text style={styles.headerTitle}>Profile</Text>
-					{/* Placeholder for balancing the header layout */}
 					<View style={styles.headerRightPlaceholder} />
 				</View>
-				{/* End of Header Bar */}
 
 				<ScrollView>
 					<View style={{ flex: 1 }}>
@@ -120,7 +124,10 @@ const ProfileView = ({ route }) => {
 							/>
 						</View>
 						<View>
-							<AboutHairBox />
+							<AboutHairBox
+								hairProfile={hairProfile}
+								editable={editable}
+							/>
 						</View>
 					</View>
 					{profileDetails.username === userContext.username && (
