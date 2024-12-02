@@ -9,6 +9,8 @@ The goal of this project is to bridge the gap between beauty clients and stylist
 allowing users to share important details before appointments will alleviate concerns
 from both clients and stylists to improve the beauty appointment experience.
 
+[Install Guide](docs/INSTALL_GUIDE.md)
+
 # Release Notes
 
 ## Version 1.0.0
