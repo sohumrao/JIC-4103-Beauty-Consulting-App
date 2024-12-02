@@ -177,6 +177,9 @@ const StylistServices = ({ stylistData, setStylistData, editable }) => {
 					>
 						<View style={styles.centeredView}>
 							<View style={styles.modalView}>
+								<Text style={styles.inputLabel}>
+									Service Name
+								</Text>
 								<TextInput
 									style={styles.input}
 									value={editingService?.name}
@@ -188,6 +191,7 @@ const StylistServices = ({ stylistData, setStylistData, editable }) => {
 									}
 									placeholder="Service Name"
 								/>
+								<Text style={styles.inputLabel}>Price</Text>
 								<TextInput
 									style={styles.input}
 									value={editingService?.price.toString()}
@@ -200,6 +204,9 @@ const StylistServices = ({ stylistData, setStylistData, editable }) => {
 									placeholder="Price"
 									keyboardType="numeric"
 								/>
+								<Text style={styles.inputLabel}>
+									Description
+								</Text>
 								<TextInput
 									style={styles.input}
 									value={editingService?.description}
@@ -212,22 +219,30 @@ const StylistServices = ({ stylistData, setStylistData, editable }) => {
 									placeholder="Description"
 									multiline
 								/>
-								<TouchableOpacity
-									style={styles.button}
-									onPress={handleUpdateService}
-								>
-									<Text style={styles.buttonText}>
-										Update Service
-									</Text>
-								</TouchableOpacity>
-								<TouchableOpacity
-									style={styles.button}
-									onPress={() => setModalVisible(false)}
-								>
-									<Text style={styles.buttonText}>
-										Cancel
-									</Text>
-								</TouchableOpacity>
+								<View style={styles.modalButtons}>
+									<TouchableOpacity
+										style={[
+											styles.button,
+											styles.buttonCancel,
+										]}
+										onPress={() => setModalVisible(false)}
+									>
+										<Text style={styles.buttonText}>
+											Cancel
+										</Text>
+									</TouchableOpacity>
+									<TouchableOpacity
+										style={[
+											styles.button,
+											styles.buttonConfirm,
+										]}
+										onPress={handleUpdateService}
+									>
+										<Text style={styles.buttonText}>
+											Update Service
+										</Text>
+									</TouchableOpacity>
+								</View>
 							</View>
 						</View>
 					</Modal>
@@ -240,6 +255,9 @@ const StylistServices = ({ stylistData, setStylistData, editable }) => {
 					>
 						<View style={styles.centeredView}>
 							<View style={styles.modalView}>
+								<Text style={styles.inputLabel}>
+									Service Name
+								</Text>
 								<TextInput
 									style={styles.input}
 									value={newService.name}
@@ -251,6 +269,7 @@ const StylistServices = ({ stylistData, setStylistData, editable }) => {
 									}
 									placeholder="Service Name"
 								/>
+								<Text style={styles.inputLabel}>Price</Text>
 								<TextInput
 									style={styles.input}
 									value={newService.price.toString()}
@@ -263,6 +282,9 @@ const StylistServices = ({ stylistData, setStylistData, editable }) => {
 									placeholder="Price"
 									keyboardType="numeric"
 								/>
+								<Text style={styles.inputLabel}>
+									Description
+								</Text>
 								<TextInput
 									style={styles.input}
 									value={newService.description}
@@ -275,22 +297,32 @@ const StylistServices = ({ stylistData, setStylistData, editable }) => {
 									placeholder="Description"
 									multiline
 								/>
-								<TouchableOpacity
-									style={styles.button}
-									onPress={handleAddService}
-								>
-									<Text style={styles.buttonText}>
-										Add Service
-									</Text>
-								</TouchableOpacity>
-								<TouchableOpacity
-									style={styles.button}
-									onPress={() => setAddModalVisible(false)}
-								>
-									<Text style={styles.buttonText}>
-										Cancel
-									</Text>
-								</TouchableOpacity>
+								<View style={styles.modalButtons}>
+									<TouchableOpacity
+										style={[
+											styles.button,
+											styles.buttonCancel,
+										]}
+										onPress={() =>
+											setAddModalVisible(false)
+										}
+									>
+										<Text style={styles.buttonText}>
+											Cancel
+										</Text>
+									</TouchableOpacity>
+									<TouchableOpacity
+										style={[
+											styles.button,
+											styles.buttonConfirm,
+										]}
+										onPress={handleAddService}
+									>
+										<Text style={styles.buttonText}>
+											Add Service
+										</Text>
+									</TouchableOpacity>
+								</View>
 							</View>
 						</View>
 					</Modal>
@@ -344,10 +376,6 @@ const styles = StyleSheet.create({
 	label: {
 		fontSize: 18,
 		fontWeight: "bold",
-	},
-	servicesContainer: {
-		marginTop: 20,
-		paddingTop: 15,
 	},
 	sectionHeader: {
 		fontSize: 22,
@@ -417,20 +445,23 @@ const styles = StyleSheet.create({
 		height: 40,
 		margin: 12,
 		borderWidth: 1,
+		borderColor: "#ddd",
+		borderRadius: 8,
 		padding: 10,
-		width: 200,
+		width: "100%",
+		backgroundColor: "#fff",
 	},
-	centeredView: {
-		flex: 1,
-		justifyContent: "center",
-		alignItems: "center",
-		backgroundColor: "rgba(0,0,0,0.5)",
+	inputLabel: {
+		textAlign: "left",
+		fontWeight: "bold",
+		alignSelf: "flex-start",
+		width: "100%",
 	},
 	modalView: {
 		margin: 20,
 		backgroundColor: "white",
 		borderRadius: 20,
-		padding: 35,
+		padding: 20,
 		alignItems: "center",
 		shadowColor: "#000",
 		shadowOffset: {
@@ -440,11 +471,14 @@ const styles = StyleSheet.create({
 		shadowOpacity: 0.25,
 		shadowRadius: 4,
 		elevation: 5,
+		width: "90%",
+		maxWidth: 400,
 	},
 	modalText: {
 		marginBottom: 15,
 		textAlign: "center",
 		fontSize: 18,
+		color: "#2c3e50",
 	},
 	serviceNameText: {
 		marginBottom: 20,
@@ -454,18 +488,24 @@ const styles = StyleSheet.create({
 	},
 	modalButtons: {
 		flexDirection: "row",
-		justifyContent: "space-between",
+		justifyContent: "center",
+		alignItems: "center",
 		width: "100%",
+		marginTop: 20,
+		gap: 10,
 	},
 	button: {
-		borderRadius: 20,
-		padding: 10,
+		borderRadius: 12,
+		padding: 12,
 		elevation: 2,
-		minWidth: 100,
-		backgroundColor: "#FF5252",
+		flex: 0.5,
+		maxWidth: 150,
 	},
 	buttonCancel: {
-		backgroundColor: "#2196F3",
+		backgroundColor: "#95a5a6",
+	},
+	buttonConfirm: {
+		backgroundColor: "#3498db",
 	},
 	buttonDelete: {
 		backgroundColor: "#e74c3c",
@@ -474,6 +514,7 @@ const styles = StyleSheet.create({
 		color: "white",
 		fontWeight: "bold",
 		textAlign: "center",
+		fontSize: 16,
 	},
 });
 
