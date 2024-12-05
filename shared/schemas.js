@@ -10,7 +10,8 @@ const createAccountSchema = Joi.object({
 
 const clientSchema = Joi.object({
 	username: Joi.string().required(),
-	email: Joi.string().email({ tlds: false }),
+	// email: Joi.string().email({ tlds: false }),
+	email: Joi.string(), // NOTE: relaxed for now to avoid errors during display
 	info: Joi.object({
 		name: Joi.string().required(),
 		birthday: Joi.date().allow(""),
