@@ -24,6 +24,21 @@ const EditProfileView = ({ route }) => {
 		gender: "",
 		phoneNumber: "",
 		email: "",
+		hairDetails: {
+			Natural: false,
+			Relaxed: false,
+			Straight: false,
+			Wavy: false,
+			Curly: false,
+			DeepWave: false,
+			LooseCurl: false,
+			TightlyCoiled: false,
+			Fine: false,
+			Medium: false,
+			Thick: false,
+		},
+		allergies: "",
+		concerns: "",
 	});
 
 	useEffect(() => {
@@ -33,6 +48,9 @@ const EditProfileView = ({ route }) => {
 				gender: profile.info.gender,
 				phoneNumber: profile.info.phoneNumber,
 				email: profile.email,
+				hairDetails: profile.hairDetails || {},
+				allergies: profile.allergies || "",
+				concerns: profile.concerns || "",
 			});
 		}
 	}, [profile]);
@@ -54,6 +72,16 @@ const EditProfileView = ({ route }) => {
 		}
 	};
 
+	const toggleHairDetail = (type) => {
+		setFormData((prev) => ({
+			...prev,
+			hairDetails: {
+				...prev.hairDetails,
+				[type]: !prev.hairDetails[type],
+			},
+		}));
+	};
+
 	const handleSave = async () => {
 		const updatedData = {
 			email: formData.email,
@@ -62,6 +90,9 @@ const EditProfileView = ({ route }) => {
 				gender: formData.gender,
 				birthday: formData.birthday,
 			},
+			hairDetails: formData.hairDetails,
+			allergies: formData.allergies,
+			concerns: formData.concerns,
 		};
 
 		try {
@@ -151,6 +182,58 @@ const EditProfileView = ({ route }) => {
 						))}
 					</View>
 				</View>
+				<View style={styles.fieldContainer}>
+					<Text style={styles.fieldLabel}>Hair Details</Text>
+					<View style={styles.hairDetailsContainer}>
+						{Object.keys(formData.hairDetails).map((type) => (
+							<TouchableOpacity
+								key={type}
+								style={[
+									styles.hairOption,
+									formData.hairDetails[type] &&
+										styles.hairOptionSelected,
+								]}
+								onPress={() => toggleHairDetail(type)}
+							>
+								<Text
+									style={[
+										styles.hairOptionText,
+										formData.hairDetails[type] &&
+											styles.hairOptionTextSelected,
+									]}
+								>
+									{type}
+								</Text>
+							</TouchableOpacity>
+						))}
+					</View>
+				</View>
+
+				<View style={styles.fieldContainer}>
+					<Text style={styles.fieldLabel}>Allergies</Text>
+					<TextInput
+						style={styles.textArea}
+						value={formData.allergies}
+						onChangeText={(value) =>
+							handleInputChange("allergies", value)
+						}
+						placeholder="Enter any allergies"
+						multiline
+					/>
+				</View>
+
+				<View style={styles.fieldContainer}>
+					<Text style={styles.fieldLabel}>Concerns</Text>
+					<TextInput
+						style={styles.textArea}
+						value={formData.concerns}
+						onChangeText={(value) =>
+							handleInputChange("concerns", value)
+						}
+						placeholder="Enter any concerns"
+						multiline
+					/>
+				</View>
 			</ScrollView>
 		</SafeAreaView>
 	);
@@ -229,6 +312,39 @@ const styles = StyleSheet.create({
 	},
 	genderTextSelected: {
 		color: "#fff",
+	},
+	hairDetailsContainer: {
+		flexDirection: "row",
+		flexWrap: "wrap",
+		marginTop: 8,
+	},
+	hairOption: {
+		padding: 8,
+		borderRadius: 6,
+		borderWidth: 1,
+		borderColor: "#dbdbdb",
+		margin: 4,
+	},
+	hairOptionSelected: {
+		backgroundColor: "#FF5252",
+		borderColor: "#FF5252",
+	},
+	hairOptionText: {
+		color: "#262626",
+		fontSize: 14,
+	},
+	hairOptionTextSelected: {
+		color: "#fff",
+	},
+	textArea: {
+		fontSize: 16,
+		color: "#262626",
+		padding: 8,
+		borderWidth: 1,
+		borderColor: "#dbdbdb",
+		borderRadius: 6,
+		minHeight: 80,
+		textAlignVertical: "top",
 	},
 });
 

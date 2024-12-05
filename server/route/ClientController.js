@@ -124,6 +124,9 @@ router.put(
 					"info.gender": req.body.info.gender,
 					"info.phoneNumber": req.body.info.phoneNumber,
 					"info.birthday": req.body.info.birthday,
+					hairDetails: req.body.hairDetails,
+					allergies: req.body.allergies,
+					additionalConcerns: req.body.concerns,
 				},
 			}, // Update the user with the new data from the request body
 			{ new: true } // Return the updated document
