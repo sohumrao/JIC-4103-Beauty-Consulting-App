@@ -114,7 +114,10 @@ const ProfileView = ({ route }) => {
 					</View>
 					{editable && (
 						<TouchableOpacity
-							style={globalStyles.button}
+							style={[
+								globalStyles.button,
+								{ borderWidth: 2, borderColor: "white" },
+							]}
 							onPress={deleteAccount}
 						>
 							<Text style={globalStyles.buttonText}>
