@@ -12,7 +12,6 @@ import { UserContext } from "../contexts/userContext";
 import SignupBackground from "../assets/components/SignupBackground";
 import api from "utils/axios";
 import AboutMeBox from "../assets/components/AboutMeBox";
-import AboutHairBox from "../assets/components/AboutHairBox";
 import handleHTTPError from "utils/errorHandling";
 import globalStyles from "../assets/GlobalStyles";
 import ProfilePhotoDisplay from "../assets/components/ProfilePhotoDisplay";
@@ -118,19 +117,13 @@ const ProfileView = ({ route }) => {
 						<View>
 							<AboutMeBox
 								fieldValues={profileDetails}
-								setFieldValues={setProfileDetails}
+								hairProfile={hairProfile}
 								onEdit={() =>
 									navigation.navigate("Edit Profile", {
 										profileDetails,
 										setProfileDetails,
 									})
 								}
-							/>
-						</View>
-						<View>
-							<AboutHairBox
-								hairProfile={hairProfile}
-								editable={editable}
 							/>
 						</View>
 					</View>

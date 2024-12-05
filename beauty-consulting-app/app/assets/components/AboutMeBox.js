@@ -4,13 +4,21 @@ import AgeIcon from "../images/birthday-cake.svg";
 import PhoneIcon from "../images/phone-call.svg";
 import EmailIcon from "../images/email.svg";
 import GenderIcon from "../images/genders.svg";
+import HairIcon from "../images/hair-icon.svg";
+import Allergies from "../images/allergies.svg";
+import Concerns from "../images/concerns.svg";
 import { formatDate } from "../../utils/utils";
 import globalStyles from "../GlobalStyles";
-import Ionicons from "react-native-vector-icons/Ionicons"; // Import the icon library
+import Ionicons from "react-native-vector-icons/Ionicons";
 
-const AboutMeBox = ({ fieldValues, setFieldValues, onEdit }) => {
-	// TODO: do not let someone who is not the client update the profile
-	// David's latest change has easy to implement logic for this
+const AboutMeBox = ({ fieldValues, onEdit, hairProfile, editable }) => {
+	const formatHairDetails = (hairDetails) => {
+		return Object.entries(hairDetails)
+			.filter(([key, value]) => value === true)
+			.map(([key]) => key.replace(/([A-Z])/g, " $1").trim())
+			.join(", ");
+	};
+
 	return (
 		<View>
 			<View style={styles.headerRow}>
@@ -54,6 +62,35 @@ const AboutMeBox = ({ fieldValues, setFieldValues, onEdit }) => {
 						ellipsizeMode="tail"
 					>
 						{fieldValues.email}
+					</Text>
+				</View>
+				<View style={styles.infoRow}>
+					<HairIcon width={20} height={20} style={styles.icon} />
+					<Text style={styles.label}>Hair Type:</Text>
+					<Text style={styles.value}>
+						{formatHairDetails(hairProfile.hairDetails || {})}
+					</Text>
+				</View>
+				<View style={styles.infoRow}>
+					<Allergies width={20} height={20} style={styles.icon} />
+					<Text style={styles.label}>Allergies:</Text>
+					<Text
+						style={styles.value}
+						numberOfLines={1}
+						ellipsizeMode="tail"
+					>
+						{hairProfile.allergies || "None"}
+					</Text>
+				</View>
+				<View style={styles.infoRow}>
+					<Concerns width={20} height={20} style={styles.icon} />
+					<Text style={styles.label}>Concerns:</Text>
+					<Text
+						style={styles.value}
+						numberOfLines={1}
+						ellipsizeMode="tail"
+					>
+						{hairProfile.concerns || "None"}
 					</Text>
 				</View>
 			</View>
