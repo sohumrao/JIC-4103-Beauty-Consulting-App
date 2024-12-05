@@ -19,7 +19,6 @@ import handleHTTPError from "utils/errorHandling";
 import api from "utils/axios";
 import { RadioButton } from "react-native-paper";
 import SignupBackground from "../assets/components/SignupBackground";
-import { Profiler } from "react-native-calendars";
 
 const EditProfileView = ({ route }) => {
 	const { profileDetails: initialProfileDetails, setProfileDetails } =

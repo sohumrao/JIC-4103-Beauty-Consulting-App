@@ -24,7 +24,6 @@ const ProfileView = ({ route }) => {
 	const navigation = useNavigation();
 	const userContext = useContext(UserContext);
 	const [editable, setEditable] = useState(true);
-	const [profile, setProfile] = useState();
 	const [profileDetails, setProfileDetails] = useState({
 		birthday: "",
 		gender: "",
@@ -41,7 +40,6 @@ const ProfileView = ({ route }) => {
 	const fetchDetails = async (username) => {
 		try {
 			const res = await api.get(`/client/${username}`);
-			setProfile(res.data);
 			const updatedProfileDetails = {
 				birthday: res.data?.info?.birthday || "",
 				gender: res.data?.info?.gender || "",
