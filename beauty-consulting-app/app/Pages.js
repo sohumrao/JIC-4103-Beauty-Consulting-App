@@ -7,6 +7,7 @@ import ProfilePage from "./Pages/ProfilePage";
 import SignInPage from "./Pages/SignInPage";
 import CreateAccountPage from "./Pages/CreateAccountPage";
 import ProfileView from "./Pages/ProfileView";
+import EditProfilePage from "./Pages/EditProfilePage";
 import ForgotPasswordPage from "./Pages/ResetPassword/ForgotPasswordPage";
 import ResetPasswordPage from "./Pages/ResetPassword/ResetPasswordPage";
 import StylistDetails from "./Pages/StylistDetails";
@@ -26,6 +27,7 @@ export {
 	ClientDetails3,
 	ClientDetailsComplete,
 	ProfilePage,
+	EditProfilePage,
 	SignInPage,
 	CreateAccountPage,
 	ProfileView,

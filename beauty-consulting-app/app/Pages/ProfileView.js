@@ -121,6 +121,12 @@ const ProfileView = ({ route }) => {
 							<AboutMeBox
 								fieldValues={profileDetails}
 								setFieldValues={setProfileDetails}
+								onEdit={() =>
+									navigation.navigate("Edit Profile", {
+										profileDetails,
+										setProfileDetails,
+									})
+								}
 							/>
 						</View>
 						<View>

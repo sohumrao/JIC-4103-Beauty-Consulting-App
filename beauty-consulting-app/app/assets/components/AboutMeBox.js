@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import AgeIcon from "../images/birthday-cake.svg";
 import PhoneIcon from "../images/phone-call.svg";
@@ -6,43 +6,16 @@ import EmailIcon from "../images/email.svg";
 import GenderIcon from "../images/genders.svg";
 import { formatDate } from "../../utils/utils";
 import globalStyles from "../GlobalStyles";
-import EditProfileViewModal from "./EditProfileViewModal";
 import Ionicons from "react-native-vector-icons/Ionicons"; // Import the icon library
 
-const AboutMeBox = ({ fieldValues, setFieldValues }) => {
-	const [modalVisible, setModalVisible] = React.useState(false);
-
-	const handleInputChange = (field, value) => {
-		setFieldValues((prev) => ({
-			...prev,
-			[field]: value,
-		}));
-	};
-
-	const openEditModal = () => {
-		setModalVisible(true);
-	};
-
-	const closeEditModal = (updatedData) => {
-		setModalVisible(false);
-		Object.entries(updatedData).forEach(([key, value]) => {
-			handleInputChange(key, value);
-		});
-	};
-
+const AboutMeBox = ({ fieldValues, setFieldValues, onEdit }) => {
 	// TODO: do not let someone who is not the client update the profile
 	// David's latest change has easy to implement logic for this
-
 	return (
 		<View>
-			<EditProfileViewModal
-				visible={modalVisible}
-				onClose={closeEditModal}
-				profileDetails={fieldValues}
-			/>
 			<View style={styles.headerRow}>
 				<Text style={styles.title}>About Me</Text>
-				<TouchableOpacity onPress={openEditModal}>
+				<TouchableOpacity onPress={onEdit}>
 					<Ionicons
 						name="pencil"
 						size={24}
