@@ -15,7 +15,8 @@ function handleHTTPError(
 	consoleLogErrors = true
 ) {
 	if (error.isJoi && error.name === "ValidationError") {
-		setErrorMessage(error.message);
+		if (setErrorMessage) setErrorMessage(error.message);
+		else console.error(error.message);
 	} else if (error.response) {
 		// The request was made and the server responded with a status code
 		// that falls out of the range of 2xx
