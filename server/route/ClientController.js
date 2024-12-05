@@ -97,7 +97,15 @@ router.get(
 		}
 
 		// Return user data
-		res.send(user);
+		res.send({
+			username: user.username,
+			email: user.email,
+			info: user.info,
+			hairDetails: user.hairDetails,
+			allergies: user.allergies,
+			concerns: user.additionalConcerns,
+			profilePhoto: user.profilePhoto,
+		});
 	})
 );
 
