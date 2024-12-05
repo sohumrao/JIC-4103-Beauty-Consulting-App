@@ -1,43 +1,47 @@
 import React, { useContext, useEffect, useState } from "react";
-import {
-	View,
-	Text,
-	StyleSheet,
-	ScrollView,
-	Dimensions,
-	Image,
-} from "react-native";
+import { View, Text, StyleSheet, ScrollView, Dimensions } from "react-native";
 import { UserContext } from "../contexts/userContext";
 import globalStyles from "../assets/GlobalStyles";
 import SignupBackground from "../assets/components/SignupBackground";
 import api from "utils/axios";
 import { Button } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
-import Ionicons from "react-native-vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/native";
 import handleHTTPError from "utils/errorHandling";
 import { formatDate } from "utils/utils";
 import StylistServices from "../components/StylistServices";
 import ImageUploadButton from "../assets/components/ImageUploadButton";
-import ProfilePhotoDisplay from "../assets/components/ProfilePhotoDisplay";
+import ProfilePhotoDisplay from "../assets/components/ProfilePhotoDisplay"; // Import the component
 
 const BusinessInfoPage = ({ route }) => {
 	const { username } = route.params;
-	const userContext = useContext(UserContext);
+	const {
+		username: contextUsername,
+		role,
+		profilePhoto,
+		updateUserContext,
+	} = useContext(UserContext);
 	const navigation = useNavigation();
 	const [stylistData, setStylistData] = useState(null);
 	const [editable, setEditable] = useState(true);
 	const [photoChanged, setPhotoChanged] = useState(false);
 
 	useEffect(() => {
-		setEditable(userContext.username === username);
+		setEditable(contextUsername === username);
 		populateStylistData(username);
-	}, [username]);
+	}, [username, contextUsername, photoChanged]);
 
 	const populateStylistData = async (username) => {
 		try {
 			const res = await api.get(`/stylist/${username}`);
 			setStylistData(res.data);
+
+			// Update UserContext if the fetched stylist is the current user
+			if (contextUsername === username) {
+				updateUserContext({
+					profilePhoto: res.data.profilePhoto || null,
+				});
+			}
 		} catch (error) {
 			handleHTTPError(error);
 		}
@@ -60,22 +64,10 @@ const BusinessInfoPage = ({ route }) => {
 					{/* Header Bar */}
 					<View style={styles.headerBar}>
 						{/* Profile Photo */}
-						{userContext.userProfile?.profilePhoto ? (
-							<Image
-								source={{
-									uri: userContext.userProfile.profilePhoto,
-								}}
-								style={styles.profilePhoto}
-							/>
-						) : (
-							<View style={styles.placeholderPhoto}>
-								<Ionicons
-									name="person"
-									size={24}
-									color="#fff"
-								/>
-							</View>
-						)}
+						<ProfilePhotoDisplay
+							profilePhoto={profilePhoto}
+							styleProp={styles.profilePhoto}
+						/>
 						{/* Title */}
 						<Text style={styles.headerTitle}>Business Info</Text>
 						{/* Placeholder for balancing the header layout */}
@@ -92,11 +84,11 @@ const BusinessInfoPage = ({ route }) => {
 						<ProfilePhotoDisplay
 							profilePhoto={stylistData.profilePhoto}
 							styleProp={styles.photo}
-						></ProfilePhotoDisplay>
+						/>
 
-						{stylistData.username === userContext.username && (
+						{stylistData.username === contextUsername && (
 							<ImageUploadButton
-								username={userContext.username}
+								username={contextUsername}
 								photoChanged={photoChanged}
 								setPhotoChanged={setPhotoChanged}
 							/>
@@ -162,7 +154,7 @@ const BusinessInfoPage = ({ route }) => {
 							/>
 						</View>
 
-						{userContext.role === "client" && (
+						{role === "client" && (
 							<Button
 								style={{ marginBottom: 50 }}
 								onPress={() => navigation.goBack()}

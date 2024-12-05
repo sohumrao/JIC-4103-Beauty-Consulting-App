@@ -89,6 +89,7 @@ export const setUpWebSocketServer = (server) => {
 									sender,
 									content,
 									createdAt: newMessage.createdAt,
+									_id: newMessage._id,
 								})
 							);
 						}

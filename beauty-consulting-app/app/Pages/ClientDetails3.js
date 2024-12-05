@@ -48,68 +48,6 @@ function ClientDetails3() {
 		navigation.navigate("ClientDetailsComplete");
 	};
 
-	const styles = StyleSheet.create({
-		container: {
-			flex: 1,
-			padding: 20,
-			backgroundColor: "#fff",
-		},
-		header: {
-			fontSize: 22,
-			fontWeight: "bold",
-			marginBottom: 20,
-			textAlign: "center",
-		},
-		stepIndicator: {
-			flexDirection: "row",
-			justifyContent: "space-between",
-			marginBottom: 20,
-		},
-		step: {
-			flex: 1,
-			height: 5,
-			backgroundColor: "#eee",
-			borderRadius: 2.5,
-			marginHorizontal: 2,
-		},
-		stepCompleted: {
-			backgroundColor: "red",
-		},
-		form: {
-			marginBottom: 20,
-		},
-		label: {
-			fontSize: 16,
-			marginBottom: 10,
-		},
-		input: {
-			fontSize: 16,
-			borderWidth: 1,
-			borderColor: "#ccc",
-			borderRadius: 5,
-			padding: 10,
-			marginBottom: 20,
-		},
-		textBoxHeader: {
-			fontSize: 18,
-			marginBottom: 10,
-			fontWeight: "bold",
-			textAlign: "center",
-		},
-		optionsContainer: {
-			flexDirection: "column",
-			flex: 1,
-			justifyContent: "space-between",
-			marginBottom: 20,
-		},
-		allOptionsContainer: {
-			flexDirection: "row",
-			flex: 1,
-			justifyContent: "space-between",
-			marginBottom: 20,
-		},
-	});
-
 	return (
 		<ScrollView style={styles.container}>
 			<Text style={styles.header}>Client Details</Text>
@@ -194,5 +132,67 @@ function ClientDetails3() {
 		</ScrollView>
 	);
 }
+
+const styles = StyleSheet.create({
+	container: {
+		flex: 1,
+		padding: 20,
+		backgroundColor: "#fff",
+	},
+	header: {
+		fontSize: 22,
+		fontWeight: "bold",
+		marginBottom: 20,
+		textAlign: "center",
+	},
+	stepIndicator: {
+		flexDirection: "row",
+		justifyContent: "space-between",
+		marginBottom: 20,
+	},
+	step: {
+		flex: 1,
+		height: 5,
+		backgroundColor: "#eee",
+		borderRadius: 2.5,
+		marginHorizontal: 2,
+	},
+	stepCompleted: {
+		backgroundColor: "red",
+	},
+	form: {
+		marginBottom: 20,
+	},
+	label: {
+		fontSize: 16,
+		marginBottom: 10,
+	},
+	input: {
+		fontSize: 16,
+		borderWidth: 1,
+		borderColor: "#ccc",
+		borderRadius: 5,
+		padding: 10,
+		marginBottom: 20,
+	},
+	textBoxHeader: {
+		fontSize: 18,
+		marginBottom: 10,
+		fontWeight: "bold",
+		textAlign: "center",
+	},
+	optionsContainer: {
+		flexDirection: "column",
+		flex: 1,
+		justifyContent: "space-between",
+		marginBottom: 20,
+	},
+	allOptionsContainer: {
+		flexDirection: "row",
+		flex: 1,
+		justifyContent: "space-between",
+		marginBottom: 20,
+	},
+});
 
 export default ClientDetails3;

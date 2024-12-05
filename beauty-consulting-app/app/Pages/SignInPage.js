@@ -40,34 +40,32 @@ const SignInPage = () => {
 				username: formData.username,
 				role: "client",
 			});
+			userProfileDataExists = true;
 			navigation.replace("Main");
 			return;
 		} catch (error) {
-			handleHTTPError(error, setError);
-		}
-
-		if (!userProfileDataExists) {
-			try {
-				// FIXME: should use data from database
-				const stylistRes = await api.get(
-					`/stylist/${formData.username}`
-				);
+			if (error.status === 409) {
+				if (!userProfileDataExists) {
+					// FIXME: should use data from database
+					const stylistRes = await api.get(
+						`/stylist/${formData.username}`
+					);
+					userContext.updateUserContext({
+						username: formData.username,
+						role: "stylist",
+					});
+				}
 				userProfileDataExists = true;
-				userContext.updateUserContext({
-					username: formData.username,
-					role: "stylist",
-				});
-
 				navigation.replace("Main");
 				return;
-			} catch (error) {
-				handleHTTPError(error, setError);
-				return;
 			}
-		}
-		if (!userProfileDataExists) {
-			console.log("no navigation");
-			navigation.replace("LandingPage");
+
+			handleHTTPError(error, setError);
+		} finally {
+			if (!userProfileDataExists) {
+				console.log("no navigation");
+				navigation.replace("LandingPage");
+			}
 		}
 	};
 

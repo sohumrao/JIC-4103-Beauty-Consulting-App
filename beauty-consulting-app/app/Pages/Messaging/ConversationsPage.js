@@ -16,12 +16,14 @@ import handleHTTPError from "utils/errorHandling";
 import ConversationList from "../../assets/components/ConversationList";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import ProfilePhotoDisplay from "../../assets/components/ProfilePhotoDisplay"; // Import the component
 import { LogBox } from "react-native";
 
 LogBox.ignoreLogs(["VirtualizedLists should never be nested"]);
 
 function ConversationsPage() {
-	const userContext = useContext(UserContext);
+	// Destructure profilePhoto directly from UserContext
+	const { username, role, profilePhoto } = useContext(UserContext);
 	const [errorMessage, setErrorMessage] = useState("");
 	const [recentMessages, setRecentMessages] = useState();
 	const [refreshing, setRefreshing] = useState(false);
@@ -30,10 +32,11 @@ function ConversationsPage() {
 		try {
 			const response = await api.get("/messages/recent", {
 				params: {
-					username: userContext.username,
+					username: username,
 				},
 			});
 			setRecentMessages(response.data);
+			setErrorMessage(null);
 		} catch (error) {
 			handleHTTPError(error, setErrorMessage);
 		}
@@ -48,7 +51,7 @@ function ConversationsPage() {
 	const onRefresh = React.useCallback(() => {
 		setRefreshing(true);
 		fetchMessages().then(() => setRefreshing(false));
-	}, []);
+	}, [username]);
 
 	return (
 		<SignupBackground>
@@ -57,22 +60,10 @@ function ConversationsPage() {
 					{/* Header Bar */}
 					<View style={styles.headerBar}>
 						{/* Profile Photo */}
-						{userContext.userProfile?.profilePhoto ? (
-							<Image
-								source={{
-									uri: userContext.userProfile.profilePhoto,
-								}}
-								style={styles.profilePhoto}
-							/>
-						) : (
-							<View style={styles.placeholderPhoto}>
-								<Ionicons
-									name="person"
-									size={24}
-									color="#fff"
-								/>
-							</View>
-						)}
+						<ProfilePhotoDisplay
+							profilePhoto={profilePhoto}
+							styleProp={styles.profilePhoto}
+						/>
 						{/* Title */}
 						<Text style={styles.headerTitle}>Conversations</Text>
 						{/* Placeholder for balancing the header layout */}

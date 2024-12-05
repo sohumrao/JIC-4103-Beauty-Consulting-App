@@ -6,7 +6,6 @@ import {
 	TouchableOpacity,
 	Dimensions,
 	StyleSheet,
-	Image,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { UserContext } from "../contexts/userContext";
@@ -32,32 +31,49 @@ const ProfileView = ({ route }) => {
 		phoneNumber: "",
 		email: "",
 	});
+	const [hairProfile, setHairProfile] = useState({
+		hairDetails: {},
+		allergies: "",
+		concerns: "",
+	});
 	const [photoChanged, setPhotoChanged] = useState(false);
 
 	const fetchDetails = async (username) => {
 		try {
 			const res = await api.get(`/client/${username}`);
 			setProfile(res.data);
-			setProfileDetails({
+			const updatedProfileDetails = {
 				birthday: res.data?.info?.birthday || "",
 				gender: res.data?.info?.gender || "",
 				phoneNumber: res.data?.info?.phoneNumber || "",
 				email: res.data?.email || "",
 				profilePhoto: res.data?.profilePhoto || null,
 				username: res.data?.username,
+			};
+			setProfileDetails(updatedProfileDetails);
+
+			setHairProfile({
+				hairDetails: res.data?.hairDetails || {},
+				allergies: res.data?.allergies || "",
+				concerns: res.data?.concerns || "",
 			});
+
+			if (userContext.username === username) {
+				userContext.updateUserContext({
+					profilePhoto: res.data?.profilePhoto || null,
+				});
+			}
 		} catch (error) {
 			handleHTTPError(error);
 		}
 	};
 
 	useEffect(() => {
-		setEditable(userContext.username == username);
+		setEditable(userContext.username === username);
 		fetchDetails(username);
-	}, [userContext.username, username]);
+	}, [userContext.username, username, photoChanged]);
 
 	const deleteAccount = async () => {
-		// TODO: update with a separate flow for password validation after backend rework
 		try {
 			await api.delete(`/client/${userContext.username}`);
 			navigation.navigate("Sign In");
@@ -69,25 +85,20 @@ const ProfileView = ({ route }) => {
 	return (
 		<SignupBackground>
 			<View style={styles.safeArea}>
-				{/* Header Bar */}
 				<View style={styles.headerBar}>
-					{/* Profile Photo */}
 					{profileDetails.profilePhoto ? (
-						<Image
-							source={{ uri: profileDetails.profilePhoto }}
-							style={styles.profilePhoto}
+						<ProfilePhotoDisplay
+							styleProp={styles.profilePhoto}
+							profilePhoto={profileDetails.profilePhoto}
 						/>
 					) : (
 						<View style={styles.placeholderPhoto}>
 							<Ionicons name="person" size={24} color="#fff" />
 						</View>
 					)}
-					{/* Title */}
 					<Text style={styles.headerTitle}>Profile</Text>
-					{/* Placeholder for balancing the header layout */}
 					<View style={styles.headerRightPlaceholder} />
 				</View>
-				{/* End of Header Bar */}
 
 				<ScrollView>
 					<View style={{ flex: 1 }}>
@@ -95,15 +106,15 @@ const ProfileView = ({ route }) => {
 							<ProfilePhotoDisplay
 								profilePhoto={profileDetails.profilePhoto}
 								styleProp={styles.photo}
-							></ProfilePhotoDisplay>
+							/>
 
-							{profileDetails.username ==
+							{profileDetails.username ===
 								userContext.username && (
 								<ImageUploadButton
 									username={userContext.username}
 									photoChanged={photoChanged}
 									setPhotoChanged={setPhotoChanged}
-								></ImageUploadButton>
+								/>
 							)}
 						</View>
 						<View>
@@ -113,10 +124,13 @@ const ProfileView = ({ route }) => {
 							/>
 						</View>
 						<View>
-							<AboutHairBox />
+							<AboutHairBox
+								hairProfile={hairProfile}
+								editable={editable}
+							/>
 						</View>
 					</View>
-					{profileDetails.username == userContext.username && (
+					{profileDetails.username === userContext.username && (
 						<TouchableOpacity
 							style={globalStyles.button}
 							onPress={deleteAccount}

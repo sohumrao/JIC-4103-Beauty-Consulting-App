@@ -5,7 +5,7 @@ const globalStyles = StyleSheet.create({
 		flex: 1,
 		// justifyContent: 'center',
 		// alignItems: 'center',
-		backgroundColor: "#fff",
+		// backgroundColor: "#fff",
 	},
 	centeringContainer: {
 		justifyContent: "center",
@@ -95,7 +95,7 @@ const globalStyles = StyleSheet.create({
 		shadowRadius: 5,
 		elevation: 5,
 	},
-	directoryContainer: {},
+	directoryContainer: { flex: 1 },
 	stylistImage: {
 		width: 80, // Fixed width for the image
 		height: 80, // Fixed height for the image

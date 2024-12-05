@@ -28,6 +28,7 @@ function ChatPage({ route }) {
 	const ws = useRef(null);
 	const [isConnected, setIsConnected] = useState(false);
 	const navigation = useNavigation();
+	const flatListRef = useRef(null);
 
 	const fetchConversation = async () => {
 		try {
@@ -72,11 +73,21 @@ function ChatPage({ route }) {
 			};
 			ws.current.onmessage = (event) => {
 				const data = JSON.parse(event.data);
-				if (data.event === "messageReceived") {
-					setMessageHistory((prevMessages) => [
-						...prevMessages,
-						data.message,
-					]);
+				console.log(data);
+				if (data.event === "receiveMessage") {
+					const isRelevantMessage =
+						(data.clientUsername === clientUsername ||
+							data.clientUsername === stylistUsername) &&
+						(data.stylistUsername === clientUsername ||
+							data.stylistUsername === stylistUsername);
+
+					if (isRelevantMessage) {
+						setMessageHistory((prevMessages) => [
+							...prevMessages,
+							data,
+						]);
+						setTimeout(scrollToBottom, 100);
+					}
 				}
 			};
 			ws.current.onclose = () => {
@@ -110,6 +121,7 @@ function ChatPage({ route }) {
 		ws.current.send(JSON.stringify(message));
 		setMessageHistory((prevMessages) => [...prevMessages, message]);
 		setNewMessage("");
+		scrollToBottom();
 	};
 
 	const renderMessage = ({ item }) => {
@@ -121,6 +133,10 @@ function ChatPage({ route }) {
 				isClient={isClient}
 			/>
 		);
+	};
+
+	const scrollToBottom = () => {
+		flatListRef.current?.scrollToEnd({ animated: true });
 	};
 
 	return (
@@ -140,6 +156,7 @@ function ChatPage({ route }) {
 					style={styles.container}
 				>
 					<FlatList
+						ref={flatListRef}
 						data={messageHistory}
 						renderItem={renderMessage}
 						keyExtractor={(item) =>

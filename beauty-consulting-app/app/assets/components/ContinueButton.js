@@ -3,6 +3,14 @@ import { Text } from "react-native";
 import { TouchableOpacity } from "react-native";
 import React from "react";
 
+const ContinueButton = ({ onPress, title = "Continue" }) => {
+	return (
+		<TouchableOpacity style={styles.button} onPress={onPress}>
+			<Text style={styles.buttonText}>{title}</Text>
+		</TouchableOpacity>
+	);
+};
+
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
@@ -28,13 +36,5 @@ const styles = StyleSheet.create({
 		alignSelf: "center",
 	},
 });
-
-const ContinueButton = ({ onPress, title = "Continue" }) => {
-	return (
-		<TouchableOpacity style={styles.button} onPress={onPress}>
-			<Text style={styles.buttonText}>{title}</Text>
-		</TouchableOpacity>
-	);
-};
 
 export default ContinueButton;

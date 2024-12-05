@@ -47,6 +47,7 @@ const UserContextProvider = ({ children }) => {
 				Thick: false,
 			},
 		},
+		profilePhoto: null, // Added field
 	});
 
 	const updateUserContext = (newContext) => {

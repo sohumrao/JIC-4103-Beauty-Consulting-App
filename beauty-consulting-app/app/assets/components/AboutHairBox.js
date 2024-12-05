@@ -1,44 +1,47 @@
 import React, { useContext, useEffect } from "react";
-import { View, Text, StyleSheet, ScrollView } from "react-native";
+import {
+	View,
+	Text,
+	StyleSheet,
+	ScrollView,
+	TouchableOpacity,
+} from "react-native";
 import HairIcon from "../images/hair-icon.svg";
 import Allergies from "../images/allergies.svg";
 import Concerns from "../images/concerns.svg";
-import EditImage from "../images/pen.svg";
-import { UserContext } from "../../contexts/userContext";
+import Ionicons from "react-native-vector-icons/Ionicons";
 
-const HairDetailsBox = () => {
-	const userContext = useContext(UserContext);
-
-	const [hairTypes, setHairTypes] = React.useState([]);
-	const [allergies, setAllergies] = React.useState("");
-	const [concerns, setConcerns] = React.useState("");
-
-	useEffect(() => {
-		console.log(userContext);
-		if (userContext?.hairDetails) {
-			const types = Object.entries(userContext.hairDetails || {})
-				.filter(([key, value]) => value === true)
-				.map(([key]) => key)
-				.join(", ");
-
-			setHairTypes(types);
-			setAllergies(userContext.allergies || "");
-			setConcerns(userContext.concerns || "");
-			console.log(hairTypes);
-		}
-	}, [userContext]);
+const HairDetailsBox = ({ hairProfile, editable }) => {
+	const formatHairDetails = (hairDetails) => {
+		return Object.entries(hairDetails)
+			.filter(([key, value]) => value === true)
+			.map(([key]) => key.replace(/([A-Z])/g, " $1").trim())
+			.join(", ");
+	};
 
 	return (
 		<View>
 			<View style={styles.headerRow}>
 				<Text style={styles.title}>My Hair</Text>
+				{editable && (
+					<TouchableOpacity>
+						<Ionicons
+							name="pencil"
+							size={24}
+							color="#000"
+							style={styles.editIcon}
+						/>
+					</TouchableOpacity>
+				)}
 			</View>
 			<View style={styles.container}>
 				<ScrollView showsVerticalScrollIndicator={false}>
 					<View style={styles.infoRow}>
 						<HairIcon width={20} height={20} style={styles.icon} />
 						<Text style={styles.label}>Hair Type:</Text>
-						<Text style={styles.value}>{hairTypes}</Text>
+						<Text style={styles.value}>
+							{formatHairDetails(hairProfile.hairDetails || {})}
+						</Text>
 					</View>
 					<View style={styles.infoRow}>
 						<Allergies width={20} height={20} style={styles.icon} />
@@ -48,7 +51,7 @@ const HairDetailsBox = () => {
 							numberOfLines={1}
 							ellipsizeMode="tail"
 						>
-							{allergies}
+							{hairProfile.allergies || "None"}
 						</Text>
 					</View>
 					<View style={styles.infoRow}>
@@ -59,7 +62,7 @@ const HairDetailsBox = () => {
 							numberOfLines={1}
 							ellipsizeMode="tail"
 						>
-							{concerns}
+							{hairProfile.concerns || "None"}
 						</Text>
 					</View>
 				</ScrollView>
