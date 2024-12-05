@@ -6,19 +6,13 @@ import {
 	StyleSheet,
 	TextInput,
 	SafeAreaView,
+	ScrollView,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import globalStyles from "../assets/GlobalStyles";
-import AgeIcon from "../assets/images/birthday-cake.svg";
-import PhoneIcon from "../assets/images/phone-call.svg";
-import EmailIcon from "../assets/images/email.svg";
-import GenderIcon from "../assets/images/genders.svg";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { UserContext } from "../contexts/userContext";
 import handleHTTPError from "utils/errorHandling";
 import api from "utils/axios";
-import { RadioButton } from "react-native-paper";
-import SignupBackground from "../assets/components/SignupBackground";
 
 const EditProfileView = ({ route }) => {
 	const { profileDetails: initialProfileDetails, setProfileDetails } =
@@ -87,150 +81,161 @@ const EditProfileView = ({ route }) => {
 	};
 
 	return (
-		<SignupBackground>
-			<SafeAreaView style={styles.container}>
-				<View style={styles.headerRow}>
-					<Text style={styles.title}>Edit Profile</Text>
-					<TouchableOpacity
-						style={globalStyles.button}
-						onPress={handleSave}
-					>
-						<Text style={globalStyles.buttonText}>
-							Save Changes
-						</Text>
-					</TouchableOpacity>
+		<SafeAreaView style={styles.container}>
+			<View style={styles.header}>
+				<TouchableOpacity onPress={() => navigation.goBack()}>
+					<Text style={styles.cancelButton}>Cancel</Text>
+				</TouchableOpacity>
+				<Text style={styles.headerTitle}>Edit Profile</Text>
+				<TouchableOpacity onPress={handleSave}>
+					<Text style={styles.doneButton}>Done</Text>
+				</TouchableOpacity>
+			</View>
+
+			<ScrollView style={styles.formContainer}>
+				<View style={styles.fieldContainer}>
+					<Text style={styles.fieldLabel}>Email</Text>
+					<TextInput
+						style={styles.input}
+						value={formData.email}
+						onChangeText={(value) =>
+							handleInputChange("email", value)
+						}
+						keyboardType="email-address"
+						placeholder="Email"
+					/>
 				</View>
 
-				<View style={styles.formContainer}>
-					<View style={styles.infoRow}>
-						<AgeIcon width={20} height={20} style={styles.icon} />
-						<Text style={styles.label}>Birthday:</Text>
-						<DateTimePicker
-							value={formData.birthday}
-							mode="date"
-							onChange={handleDateChange}
-						/>
-					</View>
+				<View style={styles.fieldContainer}>
+					<Text style={styles.fieldLabel}>Phone</Text>
+					<TextInput
+						style={styles.input}
+						value={formData.phoneNumber}
+						onChangeText={(value) =>
+							handleInputChange("phoneNumber", value)
+						}
+						keyboardType="phone-pad"
+						placeholder="Phone Number"
+					/>
+				</View>
 
-					<View style={styles.infoRow}>
-						<PhoneIcon width={20} height={20} style={styles.icon} />
-						<Text style={styles.label}>Phone:</Text>
-						<TextInput
-							style={[styles.input, styles.value]}
-							value={formData.phoneNumber}
-							keyboardType="phone-pad"
-							onChangeText={(value) =>
-								handleInputChange("phoneNumber", value)
-							}
-						/>
-					</View>
+				<View style={styles.fieldContainer}>
+					<Text style={styles.fieldLabel}>Birthday</Text>
+					<DateTimePicker
+						value={formData.birthday}
+						mode="date"
+						onChange={handleDateChange}
+						style={styles.datePicker}
+					/>
+				</View>
 
-					<View style={styles.infoRow}>
-						<GenderIcon
-							width={20}
-							height={20}
-							style={styles.icon}
-						/>
-						<Text style={styles.label}>Gender:</Text>
-						<View style={styles.radioContainer}>
-							{["male", "female", "other"].map((gender) => (
-								<View key={gender} style={styles.radioOption}>
-									<RadioButton
-										value={gender}
-										status={
-											formData.gender === gender
-												? "checked"
-												: "unchecked"
-										}
-										onPress={() =>
-											setFormData({ ...formData, gender })
-										}
-									/>
-									<Text style={styles.radioLabel}>
-										{gender.charAt(0).toUpperCase() +
-											gender.slice(1)}
-									</Text>
-								</View>
-							))}
-						</View>
-					</View>
-
-					<View style={styles.infoRow}>
-						<EmailIcon width={20} height={20} style={styles.icon} />
-						<Text style={styles.label}>Email:</Text>
-						<TextInput
-							style={[styles.input, styles.value]}
-							value={formData.email}
-							onChangeText={(value) =>
-								handleInputChange("email", value)
-							}
-							keyboardType="email-address"
-						/>
+				<View style={styles.fieldContainer}>
+					<Text style={styles.fieldLabel}>Gender</Text>
+					<View style={styles.genderContainer}>
+						{["male", "female", "other"].map((gender) => (
+							<TouchableOpacity
+								key={gender}
+								style={[
+									styles.genderOption,
+									formData.gender === gender &&
+										styles.genderOptionSelected,
+								]}
+								onPress={() =>
+									setFormData({ ...formData, gender })
+								}
+							>
+								<Text
+									style={[
+										styles.genderText,
+										formData.gender === gender &&
+											styles.genderTextSelected,
+									]}
+								>
+									{gender.charAt(0).toUpperCase() +
+										gender.slice(1)}
+								</Text>
+							</TouchableOpacity>
+						))}
 					</View>
 				</View>
-			</SafeAreaView>
-		</SignupBackground>
+			</ScrollView>
+		</SafeAreaView>
 	);
 };
 
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		padding: 20,
-		marginTop: 40,
+		backgroundColor: "#fff",
 	},
-	headerRow: {
+	header: {
 		flexDirection: "row",
 		justifyContent: "space-between",
 		alignItems: "center",
-		marginBottom: 30,
+		padding: 16,
+		borderBottomWidth: 1,
+		borderBottomColor: "#dbdbdb",
+	},
+	headerTitle: {
+		fontSize: 16,
+		fontWeight: "600",
+	},
+	cancelButton: {
+		fontSize: 16,
+		color: "#262626",
+	},
+	doneButton: {
+		fontSize: 16,
+		color: "#FF5252",
+		fontWeight: "600",
 	},
 	formContainer: {
-		backgroundColor: "#fff",
-		borderRadius: 10,
-		padding: 20,
-		shadowColor: "#000",
-		shadowOffset: { width: 0, height: 2 },
-		shadowOpacity: 0.25,
-		shadowRadius: 3.84,
-		elevation: 5,
+		flex: 1,
 	},
-	title: {
-		fontSize: 24,
-		fontWeight: "bold",
+	fieldContainer: {
+		paddingVertical: 12,
+		paddingHorizontal: 16,
+		borderBottomWidth: 1,
+		borderBottomColor: "#dbdbdb",
 	},
-	infoRow: {
-		flexDirection: "row",
-		alignItems: "center",
-		marginBottom: 20,
-	},
-	label: {
-		fontWeight: "bold",
-		fontSize: 16,
-		width: "30%",
-	},
-	value: {
-		fontSize: 16,
-		flexGrow: 1,
-	},
-	icon: {
-		marginRight: 10,
+	fieldLabel: {
+		fontSize: 14,
+		color: "#8e8e8e",
+		marginBottom: 8,
 	},
 	input: {
-		borderBottomWidth: 1,
-		padding: 5,
-	},
-	radioContainer: {
-		flexDirection: "row",
-		flexWrap: "wrap",
-	},
-	radioOption: {
-		flexDirection: "row",
-		alignItems: "center",
-		marginRight: 15,
-	},
-	radioLabel: {
 		fontSize: 16,
+		color: "#262626",
+		padding: 0,
+	},
+	datePicker: {
+		marginLeft: -8,
+	},
+	genderContainer: {
+		flexDirection: "row",
+		justifyContent: "space-between",
+		marginTop: 8,
+	},
+	genderOption: {
+		flex: 1,
+		paddingVertical: 8,
+		paddingHorizontal: 12,
+		borderRadius: 6,
+		borderWidth: 1,
+		borderColor: "#dbdbdb",
+		marginHorizontal: 4,
+		alignItems: "center",
+	},
+	genderOptionSelected: {
+		backgroundColor: "#FF5252",
+		borderColor: "#FF5252",
+	},
+	genderText: {
+		color: "#262626",
+		fontSize: 14,
+	},
+	genderTextSelected: {
+		color: "#fff",
 	},
 });
 
