@@ -183,9 +183,45 @@ const EditProfileView = ({ route }) => {
 					</View>
 				</View>
 				<View style={styles.fieldContainer}>
-					<Text style={styles.fieldLabel}>Hair Details</Text>
+					<Text style={styles.fieldLabel}>Hair Type</Text>
 					<View style={styles.hairDetailsContainer}>
-						{Object.keys(formData.hairDetails).map((type) => (
+						{[
+							"Natural",
+							"Relaxed",
+							"Straight",
+							"Wavy",
+							"Curly",
+							"DeepWave",
+							"LooseCurl",
+							"TightlyCoiled",
+						].map((type) => (
+							<TouchableOpacity
+								key={type}
+								style={[
+									styles.hairOption,
+									formData.hairDetails[type] &&
+										styles.hairOptionSelected,
+								]}
+								onPress={() => toggleHairDetail(type)}
+							>
+								<Text
+									style={[
+										styles.hairOptionText,
+										formData.hairDetails[type] &&
+											styles.hairOptionTextSelected,
+									]}
+								>
+									{type}
+								</Text>
+							</TouchableOpacity>
+						))}
+					</View>
+
+					<Text style={[styles.fieldLabel, { marginTop: 20 }]}>
+						Hair Density
+					</Text>
+					<View style={styles.hairDetailsContainer}>
+						{["Fine", "Medium", "Thick"].map((type) => (
 							<TouchableOpacity
 								key={type}
 								style={[
