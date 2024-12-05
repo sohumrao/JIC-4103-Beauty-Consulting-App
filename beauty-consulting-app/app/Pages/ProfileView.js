@@ -17,58 +17,39 @@ import globalStyles from "../assets/GlobalStyles";
 import ProfilePhotoDisplay from "../assets/components/ProfilePhotoDisplay";
 import ImageUploadButton from "../assets/components/ImageUploadButton";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import Loading from "../components/Loading";
+import { clientSchema } from "../../../shared/schemas";
 
 const ProfileView = ({ route }) => {
 	const { username } = route.params;
 	const navigation = useNavigation();
 	const userContext = useContext(UserContext);
 	const [editable, setEditable] = useState(true);
-	const [profileDetails, setProfileDetails] = useState({
-		birthday: "",
-		gender: "",
-		phoneNumber: "",
-		email: "",
-	});
-	const [hairProfile, setHairProfile] = useState({
-		hairDetails: {},
-		allergies: "",
-		concerns: "",
-	});
+	const [profile, setProfile] = useState(null);
+	const [loading, setLoading] = useState(true);
 	const [photoChanged, setPhotoChanged] = useState(false);
 
-	const fetchDetails = async (username) => {
-		try {
-			const res = await api.get(`/client/${username}`);
-			const updatedProfileDetails = {
-				birthday: res.data?.info?.birthday || "",
-				gender: res.data?.info?.gender || "",
-				phoneNumber: res.data?.info?.phoneNumber || "",
-				email: res.data?.email || "",
-				profilePhoto: res.data?.profilePhoto || null,
-				username: res.data?.username,
-			};
-			setProfileDetails(updatedProfileDetails);
-
-			setHairProfile({
-				hairDetails: res.data?.hairDetails || {},
-				allergies: res.data?.allergies || "",
-				concerns: res.data?.concerns || "",
+	useEffect(() => {
+		fetchProfile(username);
+		setEditable(userContext.username === username);
+		if (profile && editable) {
+			userContext.updateUserContext({
+				profilePhoto: profile.profilePhoto || null,
 			});
+		}
+	}, [userContext.username, username]);
 
-			if (userContext.username === username) {
-				userContext.updateUserContext({
-					profilePhoto: res.data?.profilePhoto || null,
-				});
-			}
+	const fetchProfile = async (username) => {
+		setLoading(true);
+		try {
+			const { data } = await api.get(`/client/${username}`);
+			const validatedData = await clientSchema.validateAsync(data);
+			setProfile(validatedData);
+			setLoading(false);
 		} catch (error) {
 			handleHTTPError(error);
 		}
 	};
-
-	useEffect(() => {
-		setEditable(userContext.username === username);
-		fetchDetails(username);
-	}, [userContext.username, username, photoChanged]);
 
 	const deleteAccount = async () => {
 		try {
@@ -83,10 +64,10 @@ const ProfileView = ({ route }) => {
 		<SignupBackground>
 			<View style={styles.safeArea}>
 				<View style={styles.headerBar}>
-					{profileDetails.profilePhoto ? (
+					{userContext.profilePhoto ? (
 						<ProfilePhotoDisplay
 							styleProp={styles.profilePhoto}
-							profilePhoto={profileDetails.profilePhoto}
+							profilePhoto={userContext.profilePhoto}
 						/>
 					) : (
 						<View style={styles.placeholderPhoto}>
@@ -101,12 +82,11 @@ const ProfileView = ({ route }) => {
 					<View style={{ flex: 1 }}>
 						<View style={{ marginTop: 20 }}>
 							<ProfilePhotoDisplay
-								profilePhoto={profileDetails.profilePhoto}
+								profilePhoto={userContext.profilePhoto}
 								styleProp={styles.photo}
 							/>
 
-							{profileDetails.username ===
-								userContext.username && (
+							{editable && (
 								<ImageUploadButton
 									username={userContext.username}
 									photoChanged={photoChanged}
@@ -114,20 +94,25 @@ const ProfileView = ({ route }) => {
 								/>
 							)}
 						</View>
-						<View>
-							<AboutMeBox
-								fieldValues={profileDetails}
-								hairProfile={hairProfile}
-								onEdit={() =>
-									navigation.navigate("Edit Profile", {
-										profileDetails,
-										setProfileDetails,
-									})
-								}
-							/>
-						</View>
+						{!loading ? (
+							<View>
+								<AboutMeBox
+									profile={profile}
+									editable={editable}
+									onEdit={() =>
+										navigation.navigate("Edit Profile", {
+											profile,
+											refetchProfile: () =>
+												fetchProfile(username),
+										})
+									}
+								/>
+							</View>
+						) : (
+							<Loading />
+						)}
 					</View>
-					{profileDetails.username === userContext.username && (
+					{editable && (
 						<TouchableOpacity
 							style={globalStyles.button}
 							onPress={deleteAccount}

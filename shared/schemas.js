@@ -8,4 +8,19 @@ const createAccountSchema = Joi.object({
 		.required(),
 });
 
-module.exports = { createAccountSchema };
+const clientSchema = Joi.object({
+	username: Joi.string().required(),
+	email: Joi.string().email({ tlds: false }),
+	info: Joi.object({
+		name: Joi.string().required(),
+		birthday: Joi.date().allow(""),
+		gender: Joi.string().allow(""),
+		phoneNumber: Joi.string().allow(""),
+	}),
+	profilePhoto: Joi.object(),
+	hairDetails: Joi.object(),
+	allergies: Joi.string().allow(""),
+	concerns: Joi.string().allow(""),
+});
+
+module.exports = { createAccountSchema, clientSchema };

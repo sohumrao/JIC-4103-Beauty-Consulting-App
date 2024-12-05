@@ -11,7 +11,7 @@ import { formatDate } from "../../utils/utils";
 import globalStyles from "../GlobalStyles";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
-const AboutMeBox = ({ fieldValues, onEdit, hairProfile, editable }) => {
+const AboutMeBox = ({ profile, editable, onEdit }) => {
 	const formatHairDetails = (hairDetails) => {
 		return Object.entries(hairDetails)
 			.filter(([key, value]) => value === true)
@@ -23,34 +23,36 @@ const AboutMeBox = ({ fieldValues, onEdit, hairProfile, editable }) => {
 		<View>
 			<View style={styles.headerRow}>
 				<Text style={styles.title}>About Me</Text>
-				<TouchableOpacity onPress={onEdit}>
-					<Ionicons
-						name="pencil"
-						size={24}
-						color="#000"
-						style={styles.editIcon}
-					/>
-				</TouchableOpacity>
+				{editable && (
+					<TouchableOpacity onPress={onEdit}>
+						<Ionicons
+							name="pencil"
+							size={24}
+							color="#000"
+							style={styles.editIcon}
+						/>
+					</TouchableOpacity>
+				)}
 			</View>
 			<View style={styles.container}>
 				<View style={styles.infoRow}>
 					<AgeIcon width={20} height={20} style={styles.icon} />
 					<Text style={styles.label}>Birthday:</Text>
 					<Text style={styles.value}>
-						{formatDate(fieldValues.birthday)}
+						{formatDate(profile.info.birthday)}
 					</Text>
 				</View>
 
 				<View style={styles.infoRow}>
 					<PhoneIcon width={20} height={20} style={styles.icon} />
 					<Text style={styles.label}>Phone:</Text>
-					<Text style={styles.value}>{fieldValues.phoneNumber}</Text>
+					<Text style={styles.value}>{profile.info.phoneNumber}</Text>
 				</View>
 
 				<View style={styles.infoRow}>
 					<GenderIcon width={20} height={20} style={styles.icon} />
 					<Text style={styles.label}>Gender:</Text>
-					<Text style={styles.value}>{fieldValues.gender}</Text>
+					<Text style={styles.value}>{profile.info.gender}</Text>
 				</View>
 
 				<View style={styles.infoRow}>
@@ -61,14 +63,14 @@ const AboutMeBox = ({ fieldValues, onEdit, hairProfile, editable }) => {
 						numberOfLines={1}
 						ellipsizeMode="tail"
 					>
-						{fieldValues.email}
+						{profile.email}
 					</Text>
 				</View>
 				<View style={styles.infoRow}>
 					<HairIcon width={20} height={20} style={styles.icon} />
 					<Text style={styles.label}>Hair Type:</Text>
 					<Text style={styles.value}>
-						{formatHairDetails(hairProfile.hairDetails || {})}
+						{formatHairDetails(profile.hairDetails || {})}
 					</Text>
 				</View>
 				<View style={styles.infoRow}>
@@ -79,7 +81,7 @@ const AboutMeBox = ({ fieldValues, onEdit, hairProfile, editable }) => {
 						numberOfLines={1}
 						ellipsizeMode="tail"
 					>
-						{hairProfile.allergies || "None"}
+						{profile.allergies || "None"}
 					</Text>
 				</View>
 				<View style={styles.infoRow}>
@@ -90,7 +92,7 @@ const AboutMeBox = ({ fieldValues, onEdit, hairProfile, editable }) => {
 						numberOfLines={1}
 						ellipsizeMode="tail"
 					>
-						{hairProfile.concerns || "None"}
+						{profile.concerns || "None"}
 					</Text>
 				</View>
 			</View>

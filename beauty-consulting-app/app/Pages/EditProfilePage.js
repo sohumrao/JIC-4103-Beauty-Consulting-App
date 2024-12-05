@@ -15,8 +15,7 @@ import handleHTTPError from "utils/errorHandling";
 import api from "utils/axios";
 
 const EditProfileView = ({ route }) => {
-	const { profileDetails: initialProfileDetails, setProfileDetails } =
-		route.params;
+	const { profile, refetchProfile } = route.params;
 	const navigation = useNavigation();
 	const userContext = useContext(UserContext);
 
@@ -28,15 +27,15 @@ const EditProfileView = ({ route }) => {
 	});
 
 	useEffect(() => {
-		if (initialProfileDetails) {
+		if (profile) {
 			setFormData({
-				birthday: new Date(initialProfileDetails.birthday),
-				gender: initialProfileDetails.gender,
-				phoneNumber: initialProfileDetails.phoneNumber,
-				email: initialProfileDetails.email,
+				birthday: new Date(profile.info.birthday),
+				gender: profile.info.gender,
+				phoneNumber: profile.info.phoneNumber,
+				email: profile.email,
 			});
 		}
-	}, [initialProfileDetails]);
+	}, [profile]);
 
 	const handleInputChange = (field, value) => {
 		setFormData((prev) => ({
@@ -67,13 +66,7 @@ const EditProfileView = ({ route }) => {
 
 		try {
 			await api.put(`client/${userContext.username}`, updatedData);
-			setProfileDetails({
-				...initialProfileDetails,
-				birthday: formData.birthday,
-				gender: formData.gender,
-				phoneNumber: formData.phoneNumber,
-				email: formData.email,
-			});
+			refetchProfile();
 			navigation.goBack();
 		} catch (error) {
 			handleHTTPError(error);
