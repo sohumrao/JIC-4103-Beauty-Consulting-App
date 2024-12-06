@@ -40,7 +40,7 @@ const ClientDetails = () => {
 			console.log(error);
 		}
 	};
-  
+
 	return (
 		<KeyboardAwareScrollView style={styles.container}>
 			<Text style={styles.header}>Client Details</Text>
