@@ -197,7 +197,7 @@ router.get(
 		]);
 
 		// Fetch additional details for each conversation
-		const enrichedMessages = await Promise.all(
+		let enrichedMessages = await Promise.all(
 			messages.map(async (msg) => {
 				const otherUsername =
 					msg.mostRecentMessage.clientUsername === username
@@ -210,11 +210,10 @@ router.get(
 					(await Stylist.findOne({ username: otherUsername }));
 
 				if (!otherUser) {
-					return next(
-						new ConflictError(
-							`User with username ${otherUsername} not found.`
-						)
+					console.error(
+						`User with username ${otherUsername} not found.`
 					);
+					return null;
 				}
 
 				return {
@@ -229,6 +228,8 @@ router.get(
 			})
 		);
 
+		// Filter out any null messages
+		enrichedMessages = enrichedMessages.filter((msg) => msg !== null);
 		// Sort enriched messages to return the most recent messages first
 		enrichedMessages.sort(
 			(a, b) => new Date(b.timestamp) - new Date(a.timestamp)

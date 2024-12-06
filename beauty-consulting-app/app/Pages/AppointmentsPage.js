@@ -20,10 +20,9 @@ import globalStyles from "../assets/GlobalStyles";
 import { SafeAreaView } from "react-native-safe-area-context";
 import ProfilePhotoDisplay from "../assets/components/ProfilePhotoDisplay"; // Import the component
 
-function AppointmentsPage({ navigation }) {
+function AppointmentsPage() {
 	// Destructure profilePhoto directly from UserContext
-	const { username, role, profilePhoto, updateUserContext } =
-		useContext(UserContext);
+	const { username, role, profilePhoto } = useContext(UserContext);
 	const [appointments, setAppointments] = useState([]);
 	const [errorMessage, setErrorMessage] = useState("");
 	const [modalVisible, setModalVisible] = useState(false);
