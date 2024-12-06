@@ -59,6 +59,7 @@ router.post(
 				},
 				hairDetails: req.body.hairDetails,
 				allergies: req.body.allergies,
+				concerns: req.body.concerns,
 				/* -------------------------------------------------------------------------- */
 				//needed to cast User into Stylist, can be removed after refactoring one-step account creation
 				__t: "Client",
@@ -103,7 +104,7 @@ router.get(
 			info: user.info,
 			hairDetails: user.hairDetails,
 			allergies: user.allergies,
-			concerns: user.additionalConcerns,
+			concerns: user.concerns,
 			profilePhoto: user.profilePhoto,
 		});
 	})
@@ -126,7 +127,7 @@ router.put(
 					"info.birthday": req.body.info.birthday,
 					hairDetails: req.body.hairDetails,
 					allergies: req.body.allergies,
-					additionalConcerns: req.body.concerns,
+					concerns: req.body.concerns,
 				},
 			}, // Update the user with the new data from the request body
 			{ new: true } // Return the updated document

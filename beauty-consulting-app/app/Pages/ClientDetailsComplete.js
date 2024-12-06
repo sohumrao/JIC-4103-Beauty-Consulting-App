@@ -21,6 +21,7 @@ function ClientDetailsComplete() {
 			phoneNumber: userContext.phoneNumber,
 			hairDetails: userContext.hairDetails,
 			allergies: userContext.allergies,
+			concerns: userContext.concerns,
 			role: "client",
 		};
 		console.log(req.body);

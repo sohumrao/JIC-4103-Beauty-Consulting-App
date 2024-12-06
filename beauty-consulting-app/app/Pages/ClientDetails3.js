@@ -21,8 +21,6 @@ function ClientDetails3() {
 		otherConcerns: "",
 	});
 	const [showChemicalSection, setShowChemicalSection] = useState(false);
-	const [allergies, setAllergies] = useState("");
-
 	const [showOtherSection, setShowOtherSection] = useState(false);
 
 	const userContext = useContext(UserContext);
@@ -37,13 +35,11 @@ function ClientDetails3() {
 			email: userContext.email,
 			hairDetails: userContext.hairDetails,
 			allergies: formData.allergies,
-			concerns: {
-				...userContext.concerns,
-				chemicals: formData.chemicals,
-				otherConcerns: formData.otherConcerns,
-			},
-			allergies: allergies,
-			concerns: userContext.concerns,
+			concerns: formData.otherConcerns,
+			// concerns: {
+			// 	chemicals: formData.chemicals,
+			// 	otherConcerns: formData.otherConcerns,
+			// },
 		});
 		navigation.navigate("ClientDetailsComplete");
 	};
@@ -122,7 +118,15 @@ function ClientDetails3() {
 						<Text style={styles.textBoxHeader}>
 							What are your other concerns?
 						</Text>
-						<TextInput style={styles.input} />
+						<TextInput
+							style={styles.input}
+							onChangeText={(text) =>
+								setFormData({
+									...formData,
+									otherConcerns: text,
+								})
+							}
+						/>
 					</View>
 				)}
 			</View>

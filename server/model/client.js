@@ -16,7 +16,7 @@ const ClientSchema = new mongoose.Schema({
 		Thick: Boolean,
 	},
 	allergies: String,
-	additionalConcerns: { type: String },
+	concerns: { type: String },
 	//TODO: refactor this with frontend
 	// hairDetails: {
 	//     type: { type: String, required: true },
