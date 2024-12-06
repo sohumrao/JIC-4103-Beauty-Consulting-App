@@ -8,6 +8,7 @@ import globalStyles from "../assets/GlobalStyles";
 import ErrorMessage from "../components/ErrorMessage";
 import handleHTTPError from "utils/errorHandling";
 import { createAccountSchema } from "../../../shared/schemas";
+import KeyboardMove from "../assets/components/KeyboardMove";
 
 const CreateAccountPage = () => {
 	const [formData, setFormData] = useState({
@@ -35,49 +36,53 @@ const CreateAccountPage = () => {
 	};
 
 	return (
-		<SignupBackground>
-			<View style={globalStyles.box}>
-				<Text style={globalStyles.title}>Create Your Account</Text>
-				<Text style={globalStyles.linkText}>Username</Text>
-				<TextInput
-					style={globalStyles.input}
-					placeholder="Username"
-					value={formData.username}
-					onChangeText={(text) =>
-						setFormData({ ...formData, username: text })
-					}
-					keyboardType="email-address"
-					autoCapitalize="none"
-				/>
-				<Text style={globalStyles.linkText}>Password</Text>
-				<TextInput
-					style={globalStyles.input}
-					placeholder="Password"
-					value={formData.password}
-					onChangeText={(text) =>
-						setFormData({ ...formData, password: text })
-					}
-					secureTextEntry
-					autoCapitalize="none"
-				/>
-				<ErrorMessage message={error} />
-				<TouchableOpacity
-					style={globalStyles.button}
-					onPress={handleCreateAccount}
-				>
-					<Text style={globalStyles.buttonText}>Create Account</Text>
-				</TouchableOpacity>
-				<Text style={globalStyles.promptText}>
-					Already have an account?
-				</Text>
-				<Text
-					style={globalStyles.linkText}
-					onPress={() => navigation.navigate("Sign In")}
-				>
-					Sign in.
-				</Text>
-			</View>
-		</SignupBackground>
+		<KeyboardMove>
+			<SignupBackground>
+				<View style={globalStyles.box}>
+					<Text style={globalStyles.title}>Create Your Account</Text>
+					<Text style={globalStyles.linkText}>Username</Text>
+					<TextInput
+						style={globalStyles.input}
+						placeholder="Username"
+						value={formData.username}
+						onChangeText={(text) =>
+							setFormData({ ...formData, username: text })
+						}
+						keyboardType="email-address"
+						autoCapitalize="none"
+					/>
+					<Text style={globalStyles.linkText}>Password</Text>
+					<TextInput
+						style={globalStyles.input}
+						placeholder="Password"
+						value={formData.password}
+						onChangeText={(text) =>
+							setFormData({ ...formData, password: text })
+						}
+						secureTextEntry
+						autoCapitalize="none"
+					/>
+					<ErrorMessage message={error} />
+					<TouchableOpacity
+						style={globalStyles.button}
+						onPress={handleCreateAccount}
+					>
+						<Text style={globalStyles.buttonText}>
+							Create Account
+						</Text>
+					</TouchableOpacity>
+					<Text style={globalStyles.promptText}>
+						Already have an account?
+					</Text>
+					<Text
+						style={globalStyles.linkText}
+						onPress={() => navigation.navigate("Sign In")}
+					>
+						Sign in.
+					</Text>
+				</View>
+			</SignupBackground>
+		</KeyboardMove>
 	);
 };
 

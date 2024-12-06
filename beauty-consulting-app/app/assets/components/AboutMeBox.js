@@ -104,7 +104,7 @@ const styles = StyleSheet.create({
 		marginBottom: 20,
 	},
 	title: {
-		fontSize: 24,
+		fontSize: 18,
 		fontWeight: "bold",
 	},
 	infoRow: {
@@ -115,11 +115,11 @@ const styles = StyleSheet.create({
 	},
 	label: {
 		fontWeight: "bold",
-		fontSize: 20,
+		fontSize: 16,
 		width: "30%",
 	},
 	value: {
-		fontSize: 20,
+		fontSize: 16,
 		fontWeight: "bold",
 		width: "55%",
 		flexGrow: 1,
