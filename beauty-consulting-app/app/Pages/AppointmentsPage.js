@@ -8,7 +8,6 @@ import {
 	TouchableOpacity,
 	RefreshControl,
 	Dimensions,
-	Image,
 } from "react-native";
 import SignupBackground from "../assets/components/SignupBackground";
 import { UserContext } from "../contexts/userContext";
@@ -19,13 +18,11 @@ import { formatDate, formatTime } from "utils/utils";
 import AppointmentBlock from "../components/appointmentBlock";
 import globalStyles from "../assets/GlobalStyles";
 import { SafeAreaView } from "react-native-safe-area-context";
-import Ionicons from "react-native-vector-icons/Ionicons"; // For icons
 import ProfilePhotoDisplay from "../assets/components/ProfilePhotoDisplay"; // Import the component
 
-function AppointmentsPage({ navigation }) {
+function AppointmentsPage() {
 	// Destructure profilePhoto directly from UserContext
-	const { username, role, profilePhoto, updateUserContext } =
-		useContext(UserContext);
+	const { username, role, profilePhoto } = useContext(UserContext);
 	const [appointments, setAppointments] = useState([]);
 	const [errorMessage, setErrorMessage] = useState("");
 	const [modalVisible, setModalVisible] = useState(false);
@@ -144,52 +141,55 @@ function AppointmentsPage({ navigation }) {
 					</ScrollView>
 					{/* End of Main Content */}
 
-					{/* Modal for Cancel Confirmation */}
 					<Modal
 						visible={modalVisible}
 						transparent={true} // Allows overlay effect
 						animationType="fade" // Smooth transition
 					>
-						<View style={styles.modalOverlay}>
-							<View style={styles.modalContent}>
-								<Text style={styles.modalTitle}>
+						<View style={globalStyles.modalOverlay}>
+							<View style={globalStyles.modalContent}>
+								<Text style={globalStyles.modalTitle}>
 									Cancel Appointment
 								</Text>
-								<Text style={styles.promptText}>
+								<Text style={globalStyles.modalText}>
 									Cancel your appointment with{" "}
 									{cancelUsername} at {formatTime(cancelTime)}{" "}
 									on {formatDate(cancelTime)}?
 								</Text>
-								<TouchableOpacity
-									style={[
-										globalStyles.button,
-										styles.modalButton,
-									]}
-									onPress={confirmCancel}
-								>
-									<Text style={globalStyles.buttonText}>
-										Confirm Cancel
-									</Text>
-								</TouchableOpacity>
-								<TouchableOpacity
-									style={[
-										globalStyles.button,
-										styles.modalButton,
-									]}
-									onPress={() => {
-										setModalVisible(false);
-										setErrorMessage(null);
-									}}
-								>
-									<Text style={globalStyles.buttonText}>
-										Go Back
-									</Text>
-								</TouchableOpacity>
+								<View style={globalStyles.modalButtonContainer}>
+									<TouchableOpacity
+										style={[
+											globalStyles.button,
+											{
+												backgroundColor: "#808080",
+												width: "45%",
+											},
+										]}
+										onPress={() => {
+											setModalVisible(false);
+											setErrorMessage(null);
+										}}
+									>
+										<Text style={globalStyles.buttonText}>
+											Go Back
+										</Text>
+									</TouchableOpacity>
+									<TouchableOpacity
+										style={[
+											globalStyles.button,
+											{ width: "45%" },
+										]}
+										onPress={confirmCancel}
+									>
+										<Text style={globalStyles.buttonText}>
+											Confirm Cancel
+										</Text>
+									</TouchableOpacity>
+								</View>
 								<ErrorMessage message={errorMessage} />
 							</View>
 						</View>
 					</Modal>
-					{/* End of Modal */}
 				</View>
 			</SafeAreaView>
 		</SignupBackground>
@@ -253,34 +253,6 @@ const styles = StyleSheet.create({
 		color: "#555",
 		textAlign: "center",
 		marginTop: 20,
-	},
-	modalOverlay: {
-		flex: 1,
-		backgroundColor: "rgba(0, 0, 0, 0.5)", // Semi-transparent background
-		justifyContent: "center",
-		alignItems: "center",
-	},
-	modalContent: {
-		width: "80%",
-		backgroundColor: "white",
-		borderRadius: 10,
-		padding: 20,
-		alignItems: "center",
-	},
-	modalTitle: {
-		fontSize: 22,
-		fontWeight: "bold",
-		marginBottom: 20,
-		textAlign: "center",
-	},
-	promptText: {
-		fontSize: 16,
-		textAlign: "center",
-		marginBottom: 20,
-	},
-	modalButton: {
-		width: "100%",
-		marginVertical: 5,
 	},
 	photo: {
 		width: screenWidth * 0.5,

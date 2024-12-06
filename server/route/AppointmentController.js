@@ -93,6 +93,9 @@ router.get(
 			);
 		}
 
+		appointments = appointments.filter(
+			(appointment) => appointment.client && appointment.stylist
+		);
 		res.json(appointments);
 	})
 );

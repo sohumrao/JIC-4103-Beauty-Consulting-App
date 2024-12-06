@@ -138,6 +138,36 @@ const globalStyles = StyleSheet.create({
 		textAlign: "center",
 		paddingBottom: 10,
 	},
+	modalOverlay: {
+		flex: 1,
+		backgroundColor: "rgba(0, 0, 0, 0.5)", // Semi-transparent background
+		justifyContent: "center",
+		alignItems: "center",
+	},
+	modalContent: {
+		width: "80%",
+		backgroundColor: "white",
+		borderRadius: 10,
+		padding: 20,
+		alignItems: "center",
+	},
+	modalTitle: {
+		fontSize: 22,
+		fontWeight: "bold",
+		marginBottom: 20,
+		textAlign: "center",
+	},
+	modalText: {
+		fontSize: 16,
+		textAlign: "center",
+		marginBottom: 20,
+	},
+	modalButtonContainer: {
+		padding: 10,
+		flexDirection: "row",
+		justifyContent: "space-between",
+		gap: 10,
+	},
 });
 
 export default globalStyles;
