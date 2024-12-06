@@ -100,7 +100,7 @@ const createClients = async () => {
 					max: 3,
 				})
 				.join(", "),
-			additionalConcerns: faker.helpers
+			concerns: faker.helpers
 				.arrayElements(concerns, {
 					min: 1,
 					max: 3,
