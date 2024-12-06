@@ -12,6 +12,7 @@ import {
 	SignInPage,
 	CreateAccountPage,
 	ProfileView,
+	EditProfilePage,
 	ForgotPasswordPage,
 	ResetPasswordPage,
 	StylistDetails,
@@ -180,6 +181,10 @@ function App() {
 						component={AppointmentsPage}
 					/>
 					<Tab.Screen name="ProfileView" component={ProfileView} />
+					<Tab.Screen
+						name="Edit Profile"
+						component={EditProfilePage}
+					/>
 					<Tab.Screen name="Chat" component={ChatPage} />
 				</Stack.Navigator>
 			</NavigationContainer>

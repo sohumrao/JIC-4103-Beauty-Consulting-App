@@ -97,7 +97,15 @@ router.get(
 		}
 
 		// Return user data
-		res.send(user);
+		res.send({
+			username: user.username,
+			email: user.email,
+			info: user.info,
+			hairDetails: user.hairDetails,
+			allergies: user.allergies,
+			concerns: user.additionalConcerns,
+			profilePhoto: user.profilePhoto,
+		});
 	})
 );
 
@@ -116,6 +124,9 @@ router.put(
 					"info.gender": req.body.info.gender,
 					"info.phoneNumber": req.body.info.phoneNumber,
 					"info.birthday": req.body.info.birthday,
+					hairDetails: req.body.hairDetails,
+					allergies: req.body.allergies,
+					additionalConcerns: req.body.concerns,
 				},
 			}, // Update the user with the new data from the request body
 			{ new: true } // Return the updated document

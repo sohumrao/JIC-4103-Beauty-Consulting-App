@@ -1,75 +1,58 @@
-import React, { useState } from "react";
+import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import AgeIcon from "../images/birthday-cake.svg";
 import PhoneIcon from "../images/phone-call.svg";
 import EmailIcon from "../images/email.svg";
 import GenderIcon from "../images/genders.svg";
+import HairIcon from "../images/hair-icon.svg";
+import Allergies from "../images/allergies.svg";
+import Concerns from "../images/concerns.svg";
 import { formatDate } from "../../utils/utils";
 import globalStyles from "../GlobalStyles";
-import EditProfileViewModal from "./EditProfileViewModal";
-import Ionicons from "react-native-vector-icons/Ionicons"; // Import the icon library
+import Ionicons from "react-native-vector-icons/Ionicons";
 
-const AboutMeBox = ({ fieldValues, setFieldValues }) => {
-	const [modalVisible, setModalVisible] = React.useState(false);
-
-	const handleInputChange = (field, value) => {
-		setFieldValues((prev) => ({
-			...prev,
-			[field]: value,
-		}));
+const AboutMeBox = ({ profile, editable, onEdit }) => {
+	const formatHairDetails = (hairDetails) => {
+		return Object.entries(hairDetails)
+			.filter(([key, value]) => value === true)
+			.map(([key]) => key.replace(/([A-Z])/g, " $1").trim())
+			.join(", ");
 	};
-
-	const openEditModal = () => {
-		setModalVisible(true);
-	};
-
-	const closeEditModal = (updatedData) => {
-		setModalVisible(false);
-		Object.entries(updatedData).forEach(([key, value]) => {
-			handleInputChange(key, value);
-		});
-	};
-
-	// TODO: do not let someone who is not the client update the profile
-	// David's latest change has easy to implement logic for this
 
 	return (
 		<View>
-			<EditProfileViewModal
-				visible={modalVisible}
-				onClose={closeEditModal}
-				profileDetails={fieldValues}
-			/>
 			<View style={styles.headerRow}>
 				<Text style={styles.title}>About Me</Text>
-				<TouchableOpacity onPress={openEditModal}>
-					<Ionicons
-						name="pencil"
-						size={24}
-						color="#000"
-						style={styles.editIcon}
-					/>
-				</TouchableOpacity>
+				{editable && (
+					<TouchableOpacity onPress={onEdit}>
+						<Ionicons
+							name="pencil"
+							size={24}
+							color="#000"
+							style={styles.editIcon}
+						/>
+					</TouchableOpacity>
+				)}
 			</View>
 			<View style={styles.container}>
 				<View style={styles.infoRow}>
 					<AgeIcon width={20} height={20} style={styles.icon} />
 					<Text style={styles.label}>Birthday:</Text>
 					<Text style={styles.value}>
-						{formatDate(fieldValues.birthday)}
+						{formatDate(profile.info.birthday)}
 					</Text>
 				</View>
 
 				<View style={styles.infoRow}>
 					<PhoneIcon width={20} height={20} style={styles.icon} />
 					<Text style={styles.label}>Phone:</Text>
-					<Text style={styles.value}>{fieldValues.phoneNumber}</Text>
+					<Text style={styles.value}>{profile.info.phoneNumber}</Text>
 				</View>
 
 				<View style={styles.infoRow}>
 					<GenderIcon width={20} height={20} style={styles.icon} />
 					<Text style={styles.label}>Gender:</Text>
-					<Text style={styles.value}>{fieldValues.gender}</Text>
+					<Text style={styles.value}>{profile.info.gender}</Text>
 				</View>
 
 				<View style={styles.infoRow}>
@@ -80,7 +63,36 @@ const AboutMeBox = ({ fieldValues, setFieldValues }) => {
 						numberOfLines={1}
 						ellipsizeMode="tail"
 					>
-						{fieldValues.email}
+						{profile.email}
+					</Text>
+				</View>
+				<View style={styles.infoRow}>
+					<HairIcon width={20} height={20} style={styles.icon} />
+					<Text style={styles.label}>Hair Type:</Text>
+					<Text style={styles.value}>
+						{formatHairDetails(profile.hairDetails || {})}
+					</Text>
+				</View>
+				<View style={styles.infoRow}>
+					<Allergies width={20} height={20} style={styles.icon} />
+					<Text style={styles.label}>Allergies:</Text>
+					<Text
+						style={styles.value}
+						numberOfLines={1}
+						ellipsizeMode="tail"
+					>
+						{profile.allergies || "None"}
+					</Text>
+				</View>
+				<View style={styles.infoRow}>
+					<Concerns width={20} height={20} style={styles.icon} />
+					<Text style={styles.label}>Concerns:</Text>
+					<Text
+						style={styles.value}
+						numberOfLines={1}
+						ellipsizeMode="tail"
+					>
+						{profile.concerns || "None"}
 					</Text>
 				</View>
 			</View>

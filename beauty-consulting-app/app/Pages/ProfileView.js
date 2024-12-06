@@ -12,66 +12,43 @@ import { UserContext } from "../contexts/userContext";
 import SignupBackground from "../assets/components/SignupBackground";
 import api from "utils/axios";
 import AboutMeBox from "../assets/components/AboutMeBox";
-import AboutHairBox from "../assets/components/AboutHairBox";
 import handleHTTPError from "utils/errorHandling";
 import globalStyles from "../assets/GlobalStyles";
 import ProfilePhotoDisplay from "../assets/components/ProfilePhotoDisplay";
 import ImageUploadButton from "../assets/components/ImageUploadButton";
-import Ionicons from "react-native-vector-icons/Ionicons";
+import Loading from "../components/Loading";
+import { clientSchema } from "../../../shared/schemas";
 
 const ProfileView = ({ route }) => {
 	const { username } = route.params;
 	const navigation = useNavigation();
 	const userContext = useContext(UserContext);
 	const [editable, setEditable] = useState(true);
-	const [profile, setProfile] = useState();
-	const [profileDetails, setProfileDetails] = useState({
-		birthday: "",
-		gender: "",
-		phoneNumber: "",
-		email: "",
-	});
-	const [hairProfile, setHairProfile] = useState({
-		hairDetails: {},
-		allergies: "",
-		concerns: "",
-	});
+	const [profile, setProfile] = useState(null);
+	const [loading, setLoading] = useState(true);
 	const [photoChanged, setPhotoChanged] = useState(false);
 
-	const fetchDetails = async (username) => {
+	useEffect(() => {
+		fetchProfile(username);
+		setEditable(userContext.username === username);
+	}, [userContext.username, username, photoChanged]);
+
+	const fetchProfile = async (username) => {
+		setLoading(true);
 		try {
-			const res = await api.get(`/client/${username}`);
-			setProfile(res.data);
-			const updatedProfileDetails = {
-				birthday: res.data?.info?.birthday || "",
-				gender: res.data?.info?.gender || "",
-				phoneNumber: res.data?.info?.phoneNumber || "",
-				email: res.data?.email || "",
-				profilePhoto: res.data?.profilePhoto || null,
-				username: res.data?.username,
-			};
-			setProfileDetails(updatedProfileDetails);
-
-			setHairProfile({
-				hairDetails: res.data?.hairDetails || {},
-				allergies: res.data?.allergies || "",
-				concerns: res.data?.concerns || "",
-			});
-
-			if (userContext.username === username) {
+			const { data } = await api.get(`/client/${username}`);
+			const validatedData = await clientSchema.validateAsync(data);
+			setProfile(validatedData);
+			if (username === userContext.username) {
 				userContext.updateUserContext({
-					profilePhoto: res.data?.profilePhoto || null,
+					profilePhoto: validatedData?.profilePhoto || null,
 				});
 			}
+			setLoading(false);
 		} catch (error) {
 			handleHTTPError(error);
 		}
 	};
-
-	useEffect(() => {
-		setEditable(userContext.username === username);
-		fetchDetails(username);
-	}, [userContext.username, username, photoChanged]);
 
 	const deleteAccount = async () => {
 		try {
@@ -82,20 +59,14 @@ const ProfileView = ({ route }) => {
 		}
 	};
 
-	return (
+	return !loading ? (
 		<SignupBackground>
 			<View style={styles.safeArea}>
 				<View style={styles.headerBar}>
-					{profileDetails.profilePhoto ? (
-						<ProfilePhotoDisplay
-							styleProp={styles.profilePhoto}
-							profilePhoto={profileDetails.profilePhoto}
-						/>
-					) : (
-						<View style={styles.placeholderPhoto}>
-							<Ionicons name="person" size={24} color="#fff" />
-						</View>
-					)}
+					<ProfilePhotoDisplay
+						styleProp={styles.profilePhoto}
+						profilePhoto={userContext.profilePhoto}
+					/>
 					<Text style={styles.headerTitle}>Profile</Text>
 					<View style={styles.headerRightPlaceholder} />
 				</View>
@@ -104,12 +75,11 @@ const ProfileView = ({ route }) => {
 					<View style={{ flex: 1 }}>
 						<View style={{ marginTop: 20 }}>
 							<ProfilePhotoDisplay
-								profilePhoto={profileDetails.profilePhoto}
+								profilePhoto={userContext.profilePhoto}
 								styleProp={styles.photo}
 							/>
 
-							{profileDetails.username ===
-								userContext.username && (
+							{editable && (
 								<ImageUploadButton
 									username={userContext.username}
 									photoChanged={photoChanged}
@@ -119,20 +89,24 @@ const ProfileView = ({ route }) => {
 						</View>
 						<View>
 							<AboutMeBox
-								fieldValues={profileDetails}
-								setFieldValues={setProfileDetails}
-							/>
-						</View>
-						<View>
-							<AboutHairBox
-								hairProfile={hairProfile}
+								profile={profile}
 								editable={editable}
+								onEdit={() =>
+									navigation.navigate("Edit Profile", {
+										profile,
+										refetchProfile: () =>
+											fetchProfile(username),
+									})
+								}
 							/>
 						</View>
 					</View>
-					{profileDetails.username === userContext.username && (
+					{editable && (
 						<TouchableOpacity
-							style={globalStyles.button}
+							style={[
+								globalStyles.button,
+								{ borderWidth: 2, borderColor: "white" },
+							]}
 							onPress={deleteAccount}
 						>
 							<Text style={globalStyles.buttonText}>
@@ -143,6 +117,8 @@ const ProfileView = ({ route }) => {
 				</ScrollView>
 			</View>
 		</SignupBackground>
+	) : (
+		<Loading />
 	);
 };
 
