@@ -5,6 +5,7 @@ import { useNavigation } from "@react-navigation/native";
 import { UserContext } from "../contexts/userContext";
 import ContinueButton from "../assets/components/ContinueButton";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 const StylistDetails = () => {
 	const navigation = useNavigation();
@@ -38,7 +39,7 @@ const StylistDetails = () => {
 	};
 
 	return (
-		<ScrollView style={styles.container}>
+		<KeyboardAwareScrollView style={styles.container}>
 			<Text style={styles.header}>Stylist Details</Text>
 
 			<View style={styles.stepIndicator}>
@@ -108,7 +109,7 @@ const StylistDetails = () => {
 			</View>
 
 			<ContinueButton onPress={handleContinue} />
-		</ScrollView>
+		</KeyboardAwareScrollView>
 	);
 };
 

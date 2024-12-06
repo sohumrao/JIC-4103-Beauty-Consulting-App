@@ -5,6 +5,7 @@ import { UserContext } from "../contexts/userContext";
 import ContinueButton from "../assets/components/ContinueButton";
 import ErrorMessage from "../components/ErrorMessage";
 import { validateAddress } from "utils/geocoding";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 const StylistDetails2 = () => {
 	const navigation = useNavigation();
@@ -88,7 +89,7 @@ const StylistDetails2 = () => {
 	};
 
 	return (
-		<ScrollView style={styles.container}>
+		<KeyboardAwareScrollView style={styles.container}>
 			<Text style={styles.header}>Stylist Details</Text>
 
 			<View style={styles.stepIndicator}>
@@ -178,7 +179,7 @@ const StylistDetails2 = () => {
 
 			<ErrorMessage message={message} />
 			<ContinueButton onPress={handleContinue} />
-		</ScrollView>
+		</KeyboardAwareScrollView>
 	);
 };
 
