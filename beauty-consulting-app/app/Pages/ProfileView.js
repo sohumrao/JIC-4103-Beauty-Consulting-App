@@ -6,6 +6,7 @@ import {
 	TouchableOpacity,
 	Dimensions,
 	StyleSheet,
+	Modal,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { UserContext } from "../contexts/userContext";
@@ -49,10 +50,12 @@ const ProfileView = ({ route }) => {
 			handleHTTPError(error);
 		}
 	};
+	const [modalVisible, setModalVisible] = useState(false);
 
 	const deleteAccount = async () => {
 		try {
 			await api.delete(`/client/${userContext.username}`);
+			setModalVisible(false);
 			navigation.navigate("Sign In");
 		} catch (error) {
 			handleHTTPError(error);
@@ -70,7 +73,6 @@ const ProfileView = ({ route }) => {
 					<Text style={styles.headerTitle}>Profile</Text>
 					<View style={styles.headerRightPlaceholder} />
 				</View>
-
 				<ScrollView>
 					<View style={{ flex: 1 }}>
 						<View style={{ marginTop: 20 }}>
@@ -107,7 +109,7 @@ const ProfileView = ({ route }) => {
 								globalStyles.button,
 								{ borderWidth: 2, borderColor: "white" },
 							]}
-							onPress={deleteAccount}
+							onPress={() => setModalVisible(true)}
 						>
 							<Text style={globalStyles.buttonText}>
 								Delete Account
@@ -115,6 +117,51 @@ const ProfileView = ({ route }) => {
 						</TouchableOpacity>
 					)}
 				</ScrollView>
+				<Modal
+					visible={modalVisible}
+					transparent={true} // Allows overlay effect
+					animationType="fade" // Smooth transition
+				>
+					<View style={globalStyles.modalOverlay}>
+						<View style={globalStyles.modalContent}>
+							<Text style={globalStyles.modalTitle}>
+								Delete Account
+							</Text>
+							<Text style={globalStyles.modalText}>
+								Are you sure you want to delete your account?
+							</Text>
+							<View style={globalStyles.modalButtonContainer}>
+								<TouchableOpacity
+									style={[
+										globalStyles.button,
+										{
+											backgroundColor: "#808080",
+											width: "45%",
+										},
+									]}
+									onPress={() => {
+										setModalVisible(false);
+									}}
+								>
+									<Text style={globalStyles.buttonText}>
+										Cancel
+									</Text>
+								</TouchableOpacity>
+								<TouchableOpacity
+									style={[
+										globalStyles.button,
+										{ width: "45%" },
+									]}
+									onPress={deleteAccount}
+								>
+									<Text style={globalStyles.buttonText}>
+										Yes
+									</Text>
+								</TouchableOpacity>
+							</View>
+						</View>
+					</View>
+				</Modal>
 			</View>
 		</SignupBackground>
 	) : (

@@ -1,5 +1,7 @@
 import express from "express";
 import { Account } from "../model/account.js";
+import Appointment from "../model/appointment.js";
+import { Message } from "../model/message.js";
 import nodemailer from "nodemailer";
 import { body, validationResult } from "express-validator";
 import sharp from "sharp";
@@ -261,6 +263,41 @@ router.post(
 			message: "Profile photo uploaded and updated successfully!",
 			data: updatedAccount,
 		});
+	})
+);
+
+// Delete user
+router.delete(
+	"/:username",
+	asyncHandler(async (req, res, next) => {
+		console.log(req.params.username);
+		// Find the user by username and delete them
+		const deletedUser = await Account.findOneAndDelete({
+			username: req.params.username,
+		});
+
+		console.log(req.params.username);
+		console.log(deletedUser);
+
+		if (!deletedUser) {
+			return next(new ConflictError("User not found."));
+		}
+		// Delete associated appointments and messages
+		await Promise.all([
+			Appointment.deleteMany({
+				$or: [
+					{ client: deletedUser._id },
+					{ stylist: deletedUser._id },
+				],
+			}),
+			Message.deleteMany({
+				$or: [
+					{ clientUsername: deletedUser.username },
+					{ StylistUsername: deletedUser.username },
+				],
+			}),
+		]);
+		res.send({ message: "User deleted successfully." });
 	})
 );
 

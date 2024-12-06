@@ -35,7 +35,9 @@ function ConversationsPage() {
 					username: username,
 				},
 			});
-			setRecentMessages(response.data);
+			setRecentMessages(
+				response.data.filter((message) => message !== null)
+			);
 			setErrorMessage(null);
 		} catch (error) {
 			handleHTTPError(error, setErrorMessage);
