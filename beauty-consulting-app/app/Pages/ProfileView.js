@@ -16,7 +16,6 @@ import handleHTTPError from "utils/errorHandling";
 import globalStyles from "../assets/GlobalStyles";
 import ProfilePhotoDisplay from "../assets/components/ProfilePhotoDisplay";
 import ImageUploadButton from "../assets/components/ImageUploadButton";
-import Ionicons from "react-native-vector-icons/Ionicons";
 import Loading from "../components/Loading";
 import { clientSchema } from "../../../shared/schemas";
 
@@ -32,12 +31,7 @@ const ProfileView = ({ route }) => {
 	useEffect(() => {
 		fetchProfile(username);
 		setEditable(userContext.username === username);
-		if (profile && editable) {
-			userContext.updateUserContext({
-				profilePhoto: profile.profilePhoto || null,
-			});
-		}
-	}, [userContext.username, username]);
+	}, [userContext.username, username, photoChanged]);
 
 	const fetchProfile = async (username) => {
 		setLoading(true);
@@ -45,6 +39,11 @@ const ProfileView = ({ route }) => {
 			const { data } = await api.get(`/client/${username}`);
 			const validatedData = await clientSchema.validateAsync(data);
 			setProfile(validatedData);
+			if (username === userContext.username) {
+				userContext.updateUserContext({
+					profilePhoto: validatedData?.profilePhoto || null,
+				});
+			}
 			setLoading(false);
 		} catch (error) {
 			handleHTTPError(error);
@@ -60,20 +59,14 @@ const ProfileView = ({ route }) => {
 		}
 	};
 
-	return (
+	return !loading ? (
 		<SignupBackground>
 			<View style={styles.safeArea}>
 				<View style={styles.headerBar}>
-					{userContext.profilePhoto ? (
-						<ProfilePhotoDisplay
-							styleProp={styles.profilePhoto}
-							profilePhoto={userContext.profilePhoto}
-						/>
-					) : (
-						<View style={styles.placeholderPhoto}>
-							<Ionicons name="person" size={24} color="#fff" />
-						</View>
-					)}
+					<ProfilePhotoDisplay
+						styleProp={styles.profilePhoto}
+						profilePhoto={userContext.profilePhoto}
+					/>
 					<Text style={styles.headerTitle}>Profile</Text>
 					<View style={styles.headerRightPlaceholder} />
 				</View>
@@ -94,23 +87,19 @@ const ProfileView = ({ route }) => {
 								/>
 							)}
 						</View>
-						{!loading ? (
-							<View>
-								<AboutMeBox
-									profile={profile}
-									editable={editable}
-									onEdit={() =>
-										navigation.navigate("Edit Profile", {
-											profile,
-											refetchProfile: () =>
-												fetchProfile(username),
-										})
-									}
-								/>
-							</View>
-						) : (
-							<Loading />
-						)}
+						<View>
+							<AboutMeBox
+								profile={profile}
+								editable={editable}
+								onEdit={() =>
+									navigation.navigate("Edit Profile", {
+										profile,
+										refetchProfile: () =>
+											fetchProfile(username),
+									})
+								}
+							/>
+						</View>
 					</View>
 					{editable && (
 						<TouchableOpacity
@@ -128,6 +117,8 @@ const ProfileView = ({ route }) => {
 				</ScrollView>
 			</View>
 		</SignupBackground>
+	) : (
+		<Loading />
 	);
 };
 
