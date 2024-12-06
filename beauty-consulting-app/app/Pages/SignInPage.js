@@ -62,10 +62,10 @@ const SignInPage = () => {
 
 			handleHTTPError(error, setError);
 		} finally {
-			if (!userProfileDataExists) {
-				console.log("no navigation");
-				navigation.replace("LandingPage");
-			}
+			if (!userProfileDataExists)
+				setError(
+					"Account with that username and password does not exist."
+				);
 		}
 	};
 
